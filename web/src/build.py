@@ -48,7 +48,7 @@ if not body:
     sys.exit("CONTENT markers missing from template.html")
 artifact = SRC / "artifact.html"
 artifact.write_text(
-    "<title>Muhandislar Urushi — ChronoShift</title>\n" + body.group(1).strip(),
+    "<title>ChronoShift — Harbiy-muhandislik o'yini</title>\n" + body.group(1).strip(),
     encoding="utf-8",
 )
 

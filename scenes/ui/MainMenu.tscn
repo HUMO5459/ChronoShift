@@ -171,7 +171,7 @@ layout_mode = 2
 theme_type_variation = &"TitleXL"
 theme_override_constants/line_spacing = -12
 theme_override_font_sizes/font_size = 78
-text = "MUHANDISLAR URUSHI"
+text = "CHRONOSHIFT"
 autowrap_mode = 3
 
 [node name="Subtitle" type="Label" parent="Left/TitleBlock"]
@@ -179,7 +179,7 @@ layout_mode = 2
 theme_type_variation = &"Body"
 theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
 theme_override_font_sizes/font_size = 17
-text = "CHRONOSHIFT — MVP VERTICAL SLICE"
+text = "MVP VERTICAL SLICE — 1900 → 2050"
 
 [node name="Menu" type="VBoxContainer" parent="Left"]
 custom_minimum_size = Vector2(410, 0)

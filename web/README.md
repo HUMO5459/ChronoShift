@@ -34,7 +34,7 @@ o'tmaydi. Fayllar (306–371 MB) repo'ga sig'maydi — ularni GitHub Releases'ga
    qo'ying, matnni "Yuklab olish" ga o'zgartiring:
 
    ```html
-   <a class="dl-btn" href="https://github.com/HUMO5459/ChronoShift/releases/download/v1.0.0/War.of.Engineers.dmg">
+   <a class="dl-btn" href="https://github.com/HUMO5459/ChronoShift/releases/download/v1.0.0/ChronoShift.dmg">
      <span><span class="uz">Yuklab olish</span><span class="en">Download</span></span>
      <span class="sz">371 MB</span>
    </a>
