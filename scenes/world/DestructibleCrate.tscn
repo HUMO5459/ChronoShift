@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://dcrate01mission"]
+
+[ext_resource type="Script" path="res://scripts/world/DestructibleProp.cs" id="1_d"]
+[ext_resource type="PackedScene" uid="uid://cimpactfx7m2q" path="res://scenes/fx/ImpactFx.tscn" id="2_fx"]
+
+[sub_resource type="BoxMesh" id="Box_m"]
+size = Vector3(1.6, 1.6, 1.6)
+
+[sub_resource type="BoxShape3D" id="Box_s"]
+size = Vector3(1.6, 1.6, 1.6)
+
+[sub_resource type="StandardMaterial3D" id="Mat_crate"]
+albedo_color = Color(0.6, 0.5, 0.35, 1)
+roughness = 1.0
+
+[node name="DestructibleCrate" type="StaticBody3D"]
+script = ExtResource("1_d")
+_health = 45.0
+_meshPaths = [NodePath("MeshInstance3D")]
+_destroyFxScene = ExtResource("2_fx")
+_rewardMoney = 8
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("Box_m")
+material_override = SubResource("Mat_crate")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("Box_s")

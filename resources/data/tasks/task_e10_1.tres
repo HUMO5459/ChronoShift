@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=2 format=3 uid="uid://woetsk101"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e10_1"
+DisplayName = "Termoyadro reaktori"
+Kind = "QURILISH"
+Description = "Bazaning termoyadro reaktorini yig'ing va ishga tushiring."
+DurationSeconds = 5.0
+RewardMoney = 176
+RewardXp = 53
+; --- production layer (generated) ---
+AdvanceDays = 1460.0

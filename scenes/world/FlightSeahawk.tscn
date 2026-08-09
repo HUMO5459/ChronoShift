@@ -1,0 +1,62 @@
+[gd_scene load_steps=7 format=3 uid="uid://dflightseahwk3"]
+
+[ext_resource type="Script" path="res://scripts/world/Aircraft.cs" id="1_air"]
+[ext_resource type="ArrayMesh" path="res://assets/models/aircraft/seahawk/seahawk_body.obj" id="2_body"]
+[ext_resource type="Script" path="res://scripts/player/PlayerCamera.cs" id="3_cam"]
+[ext_resource type="Script" path="res://scripts/world/Rotor.cs" id="4_rotor"]
+[ext_resource type="ArrayMesh" path="res://assets/models/aircraft/seahawk/seahawk_toprotor.obj" id="5_top"]
+[ext_resource type="ArrayMesh" path="res://assets/models/aircraft/seahawk/seahawk_tailrotor.obj" id="6_tail"]
+
+[sub_resource type="BoxShape3D" id="Box_air"]
+size = Vector3(3, 3, 8)
+
+[node name="FlightSeahawk" type="CharacterBody3D"]
+script = ExtResource("1_air")
+_mode = 1
+_meshPath = NodePath("MeshRoot")
+
+[node name="MeshRoot" type="Node3D" parent="."]
+
+[node name="BodyOrient" type="Node3D" parent="MeshRoot"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="Body" type="MeshInstance3D" parent="MeshRoot/BodyOrient"]
+transform = Transform3D(0.0827, 0, 0, 0, 0.0827, 0, 0, 0, 0.0827, 0, 0, 0)
+mesh = ExtResource("2_body")
+
+[node name="TopRotor" type="Node3D" parent="MeshRoot/BodyOrient"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.334, 2.093)
+script = ExtResource("4_rotor")
+_axis = Vector3(0, 1, 0)
+_speed = 5.0
+
+[node name="Mesh" type="MeshInstance3D" parent="MeshRoot/BodyOrient/TopRotor"]
+transform = Transform3D(0.0827, 0, 0, 0, 0.0827, 0, 0, 0, 0.0827, 0, 0, 0)
+mesh = ExtResource("5_top")
+
+[node name="TailRotor" type="Node3D" parent="MeshRoot/BodyOrient"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.191, 3.961, -8.313)
+script = ExtResource("4_rotor")
+_axis = Vector3(1, 0, 0)
+_speed = 8.0
+
+[node name="Mesh" type="MeshInstance3D" parent="MeshRoot/BodyOrient/TailRotor"]
+transform = Transform3D(0.0827, 0, 0, 0, 0.0827, 0, 0, 0, 0.0827, 0, 0, 0)
+mesh = ExtResource("6_tail")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("Box_air")
+
+[node name="CameraRig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+script = ExtResource("3_cam")
+_shoulderOffset = Vector3(0, 0, 0)
+_firstPersonOffset = Vector3(0.000, 0.400, -4.200)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, 0, 0, 0)
+spring_length = 12.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/SpringArm3D"]
+fov = 75.0

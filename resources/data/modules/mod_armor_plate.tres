@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ModuleData" load_steps=3 format=3 uid="uid://woemod05"]
+
+[ext_resource type="Script" path="res://scripts/data/ModuleData.cs" id="1_s"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="3_i0"]
+
+[resource]
+script = ExtResource("1_s")
+ModuleId = "armor_plate"
+DisplayName = "Polat plita"
+Description = "Oddiy qoshimcha zirh."
+Kind = 0
+Slot = 2
+ArmorBonus = 0.08
+HealthBonus = 60.0
+SpeedBonus = -0.4
+CostMoney = 400
+Inputs = [ExtResource("3_i0")]
+InputAmounts = PackedInt32Array(10)

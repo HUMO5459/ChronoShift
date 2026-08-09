@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=3 uid="uid://c4rackn7m2x8"]
+
+[ext_resource type="PackedScene" uid="uid://cwpickup4m7k2" path="res://scenes/world/WeaponPickup.tscn" id="1_pickup"]
+[ext_resource type="Resource" uid="uid://cwpistol01a2" path="res://resources/data/weapons/weapon_pistol.tres" id="2_pistol"]
+[ext_resource type="Resource" uid="uid://cwglock01b3c" path="res://resources/data/weapons/weapon_glock.tres" id="3_glock"]
+[ext_resource type="Resource" uid="uid://cwawp01f5a6" path="res://resources/data/weapons/weapon_awp.tres" id="4_awp"]
+[ext_resource type="Resource" uid="uid://cwak4701d4e" path="res://resources/data/weapons/weapon_ak47.tres" id="5_ak47"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_table"]
+size = Vector3(2.4, 0.9, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_table"]
+size = Vector3(2.4, 0.9, 0.8)
+
+[node name="WeaponRack" type="StaticBody3D"]
+
+[node name="Table" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("BoxMesh_table")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_table")
+
+[node name="Pistol" parent="." instance=ExtResource("1_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.9, 0)
+_weapon = ExtResource("2_pistol")
+
+[node name="Glock" parent="." instance=ExtResource("1_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.9, 0)
+_weapon = ExtResource("3_glock")
+
+[node name="Awp" parent="." instance=ExtResource("1_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.9, 0)
+_weapon = ExtResource("4_awp")
+
+[node name="Ak47" parent="." instance=ExtResource("1_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.9, 0)
+_weapon = ExtResource("5_ak47")

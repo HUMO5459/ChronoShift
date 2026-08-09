@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TechNodeData" load_steps=2 format=3 uid="uid://dq6m2vb0k8sxe"]
+
+[ext_resource type="Script" path="res://scripts/data/TechNodeData.cs" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+TechId = "reinforced_boots"
+DisplayName = "Mustahkam etiklar"
+Description = "Maydonda tezroq harakat. Yurish tezligi +30%."
+CostMoney = 200
+RequiredLevel = 0
+PrerequisiteIds = PackedStringArray()
+Effect = 2
+EffectValue = 0.3

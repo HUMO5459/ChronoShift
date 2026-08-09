@@ -1,0 +1,13 @@
+[gd_scene load_steps=5 format=3 uid="uid://d2awpq6k4n8w"]
+
+[ext_resource type="Script" path="res://scripts/world/ModelDresser.cs" id="1_dresser"]
+[ext_resource type="PackedScene" uid="uid://rqdeyywcd5y" path="res://assets/models/weapons/awp/awp_dragon_lore.fbx" id="2_model"]
+[ext_resource type="Texture2D" uid="uid://d38tvdlw00cvg" path="res://assets/models/weapons/awp/awp_color.png" id="3_col"]
+[ext_resource type="Texture2D" uid="uid://5uguekqfoc7h" path="res://assets/models/weapons/awp/awp_scope.png" id="4_scope"]
+
+[node name="WeaponAwp" type="Node3D"]
+script = ExtResource("1_dresser")
+_materialNames = PackedStringArray("Awp_DL", "Awp_DL_scope")
+_textures = Array[Texture2D]([ExtResource("3_col"), ExtResource("4_scope")])
+
+[node name="Model" parent="." instance=ExtResource("2_model")]

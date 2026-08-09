@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://woeitm01"]
+
+[ext_resource type="Script" path="res://scripts/data/ItemData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+ItemId = "res_wood"
+DisplayName = "Yog'och"
+Description = "O'rmondan kesilgan xom yog'och. Ko'prik, istehkom va yordamchi qurilmalar uchun asos."
+Category = 0
+ShortLabel = "YOG'OCH"
+Tint = Color(0.55, 0.38, 0.2, 1)
+SortOrder = 0

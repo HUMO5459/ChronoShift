@@ -1,0 +1,12 @@
+[gd_scene load_steps=4 format=3 uid="uid://c5glok8m3x7p"]
+
+[ext_resource type="Script" path="res://scripts/world/ModelDresser.cs" id="1_dresser"]
+[ext_resource type="PackedScene" uid="uid://bnderqak6k4ii" path="res://assets/models/weapons/glock.fbx" id="2_model"]
+[ext_resource type="Texture2D" uid="uid://c3vqy5syvvaot" path="res://assets/models/weapons/glock.jpg" id="3_tex"]
+
+[node name="WeaponGlock" type="Node3D"]
+script = ExtResource("1_dresser")
+_albedoAll = ExtResource("3_tex")
+
+[node name="Model" parent="." instance=ExtResource("2_model")]
+transform = Transform3D(0.0205, 0, 0, 0, 0.0205, 0, 0, 0, 0.0205, 0, 0, 0)

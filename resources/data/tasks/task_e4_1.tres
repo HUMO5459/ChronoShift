@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=2 format=3 uid="uid://woetsk41"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e4_1"
+DisplayName = "Tank yo'lagi"
+Kind = "QURILISH"
+Description = "Qorli maydonda tanklar o'tishi uchun yo'lak tayyorlang."
+DurationSeconds = 3.8
+RewardMoney = 92
+RewardXp = 29
+; --- production layer (generated) ---
+AdvanceDays = 2007.5

@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://ctracer8n3k4"]
+
+[ext_resource type="Script" path="res://scripts/fx/Tracer.cs" id="1_tracer"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_beam"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.9, 0.55, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.5, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_beam"]
+resource_local_to_scene = true
+material = SubResource("Mat_beam")
+size = Vector3(0.035, 0.035, 1)
+
+[node name="Tracer" type="Node3D"]
+script = ExtResource("1_tracer")
+
+[node name="Beam" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_beam")

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://woeitm03"]
+
+[ext_resource type="Script" path="res://scripts/data/ItemData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+ItemId = "res_coal"
+DisplayName = "Ko'mir"
+Description = "Yoqilg'i. Ko'mirsiz na pech, na bug' mashinasi ishlaydi."
+Category = 0
+ShortLabel = "KO'MIR"
+Tint = Color(0.16, 0.16, 0.18, 1)
+SortOrder = 2

@@ -1,0 +1,66 @@
+[gd_scene load_steps=16 format=3 uid="uid://denemy01target"]
+
+[ext_resource type="Script" path="res://scripts/world/Enemy.cs" id="1_enemy"]
+[ext_resource type="Script" path="res://scripts/world/NpcVisual.cs" id="2_npcvis"]
+[ext_resource type="PackedScene" uid="uid://cvgeqdpo1dgdr" path="res://assets/models/npc/rp_sophia_animated_003_idling.fbx" id="3_model"]
+[ext_resource type="Texture2D" uid="uid://ciu8kkkdg2rtg" path="res://assets/models/npc/rp_sophia_animated_003_dif.jpg" id="4_albedo"]
+[ext_resource type="Texture2D" uid="uid://dnomm0j05dbtq" path="res://assets/models/npc/rp_sophia_animated_003_norm.jpg" id="5_normal"]
+[ext_resource type="PackedScene" uid="uid://cimpactfx7m2q" path="res://scenes/fx/ImpactFx.tscn" id="6_fx"]
+[ext_resource type="PackedScene" uid="uid://cmuzzlefx4k9x" path="res://scenes/fx/MuzzleFx.tscn" id="7_muzzle"]
+[ext_resource type="PackedScene" uid="uid://ctracer8n3k4" path="res://scenes/fx/Tracer.tscn" id="8_tracer"]
+[ext_resource type="AudioStream" uid="uid://cds4sgd3ydkmd" path="res://assets/audio/impacts/explosion_big.wav" id="aud_0"]
+[ext_resource type="AudioStream" uid="uid://fnjwdtf336po" path="res://assets/audio/weapons/fire_rifle.wav" id="aud_fire"]
+
+[sub_resource type="CapsuleShape3D" id="Cap_enemy"]
+radius = 0.35
+height = 1.7
+
+[sub_resource type="StandardMaterial3D" id="Bg_mat"]
+shading_mode = 0
+albedo_color = Color(0.06, 0.06, 0.08, 1)
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="Bg_mesh"]
+material = SubResource("Bg_mat")
+size = Vector2(0.84, 0.14)
+
+[sub_resource type="StandardMaterial3D" id="Fill_mat"]
+shading_mode = 0
+albedo_color = Color(0.3, 0.8, 0.35, 1)
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="Fill_mesh"]
+material = SubResource("Fill_mat")
+size = Vector2(0.8, 0.12)
+
+[node name="Enemy" type="CharacterBody3D"]
+script = ExtResource("1_enemy")
+_deathFxScene = ExtResource("6_fx")
+_muzzleFxScene = ExtResource("7_muzzle")
+_tracerScene = ExtResource("8_tracer")
+_deathSound = ExtResource("aud_0")
+_fireSound = ExtResource("aud_fire")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("Cap_enemy")
+
+[node name="Visual" type="Node3D" parent="."]
+script = ExtResource("2_npcvis")
+_albedo = ExtResource("4_albedo")
+_normal = ExtResource("5_normal")
+
+[node name="Model" parent="Visual" instance=ExtResource("3_model")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="HealthBar" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0)
+
+[node name="Bg" type="MeshInstance3D" parent="HealthBar"]
+mesh = SubResource("Bg_mesh")
+
+[node name="Fill" type="MeshInstance3D" parent="HealthBar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+mesh = SubResource("Fill_mesh")

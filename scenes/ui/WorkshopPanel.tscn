@@ -1,0 +1,148 @@
+[gd_scene load_steps=6 format=3 uid="uid://cwshoppanel3x9"]
+
+[ext_resource type="Script" path="res://scripts/ui/WorkshopPanel.cs" id="1_shop"]
+[ext_resource type="PackedScene" uid="uid://creciperow6k2" path="res://scenes/ui/RecipeRow.tscn" id="2_row"]
+
+[sub_resource type="StyleBoxFlat" id="SB_board"]
+content_margin_left = 42.0
+content_margin_top = 36.0
+content_margin_right = 42.0
+content_margin_bottom = 22.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 1)
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 30
+shadow_offset = Vector2(0, 18)
+
+[sub_resource type="StyleBoxFlat" id="SB_headerRule"]
+content_margin_bottom = 18.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 0)
+border_width_bottom = 3
+border_color = Color(0.8627, 0.9137, 0.9686, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_status"]
+content_margin_left = 18.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+bg_color = Color(0.6235, 0.7647, 0.9098, 0.12)
+border_width_left = 3
+border_color = Color(0.6235, 0.7647, 0.9098, 1)
+
+[node name="WorkshopPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_shop")
+_rowScene = ExtResource("2_row")
+
+[node name="Scrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0314, 0.0392, 0.0549, 0.62)
+
+[node name="Center" type="CenterContainer" parent="Scrim"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Board" type="PanelContainer" parent="Scrim/Center"]
+custom_minimum_size = Vector2(820, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_board")
+
+[node name="Rows" type="VBoxContainer" parent="Scrim/Center/Board"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="Scrim/Center/Board/Rows"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_headerRule")
+
+[node name="HeaderRow" type="HBoxContainer" parent="Scrim/Center/Board/Rows/Header"]
+layout_mode = 2
+
+[node name="Titles" type="VBoxContainer" parent="Scrim/Center/Board/Rows/Header/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="Scrim/Center/Board/Rows/Header/HeaderRow/Titles"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 40
+text = "MASTSERSKAYA"
+
+[node name="Sub" type="Label" parent="Scrim/Center/Board/Rows/Header/HeaderRow/Titles"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+text = "ISHLAB CHIQARISH · BUYURTMANI TANLANG"
+
+[node name="Designer" type="Button" parent="Scrim/Center/Board/Rows/Header/HeaderRow"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_type_variation = &"BlueprintPrimary"
+text = "KONSTRUKTOR"
+
+[node name="Close" type="Button" parent="Scrim/Center/Board/Rows/Header/HeaderRow"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_type_variation = &"BlueprintOutline"
+text = "YOPISH [ESC]"
+
+[node name="Scroll" type="ScrollContainer" parent="Scrim/Center/Board/Rows"]
+custom_minimum_size = Vector2(0, 480)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Recipes" type="VBoxContainer" parent="Scrim/Center/Board/Rows/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Empty" type="Label" parent="Scrim/Center/Board/Rows"]
+layout_mode = 2
+theme_type_variation = &"Body"
+theme_override_colors/font_color = Color(0.5608, 0.7059, 0.8627, 1)
+text = "Bu davr uchun buyurtma yo'q."
+horizontal_alignment = 1
+
+[node name="Status" type="PanelContainer" parent="Scrim/Center/Board/Rows"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_status")
+
+[node name="Rows" type="VBoxContainer" parent="Scrim/Center/Board/Rows/Status"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Text" type="Label" parent="Scrim/Center/Board/Rows/Status/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 14
+text = "ISHLAB CHIQARILMOQDA"
+
+[node name="Bar" type="ColorRect" parent="Scrim/Center/Board/Rows/Status/Rows"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+color = Color(0.8627, 0.9137, 0.9686, 0.18)
+
+[node name="Fill" type="ColorRect" parent="Scrim/Center/Board/Rows/Status/Rows/Bar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+grow_vertical = 2
+color = Color(0.6235, 0.7647, 0.9098, 1)

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="CharacterRosterData" load_steps=3 format=3 uid="uid://croster9k2x4"]
+
+[ext_resource type="Script" path="res://scripts/data/CharacterRosterData.cs" id="1_script"]
+[ext_resource type="Resource" uid="uid://cnathanchar7x2" path="res://resources/data/characters/character_nathan.tres" id="2_nathan"]
+
+[resource]
+script = ExtResource("1_script")
+Characters = [ExtResource("2_nathan")]

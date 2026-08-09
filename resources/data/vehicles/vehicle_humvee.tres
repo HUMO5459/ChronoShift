@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="VehicleData" load_steps=3 format=3 uid="uid://dvehhumvee4k"]
+
+[ext_resource type="Script" path="res://scripts/data/VehicleData.cs" id="1_s"]
+[ext_resource type="PackedScene" uid="uid://bq7v3n8xk2m4r" path="res://scenes/world/Vehicle.tscn" id="2_v"]
+
+[resource]
+script = ExtResource("1_s")
+VehicleId = "humvee"
+DisplayName = "Humvee"
+Kind = "YENGIL TRANSPORT"
+Description = "Yengil g'ildirakli transport. Tez, chaqqon, lekin qurolsiz."
+VehicleScene = ExtResource("2_v")
+MaxHealth = 260.0
+MoveSpeed = 8.0
+TurnSpeed = 2.0
+Armor = 0.05
+ProductionCost = 900

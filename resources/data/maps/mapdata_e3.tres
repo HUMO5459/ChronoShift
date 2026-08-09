@@ -1,0 +1,54 @@
+[gd_resource type="Resource" script_class="MapData" load_steps=19 format=3 uid="uid://woemapc3"]
+
+[ext_resource type="Script" path="res://scripts/data/MapData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woetsk31" path="res://resources/data/tasks/task_e3_1.tres" id="2"]
+[ext_resource type="Resource" uid="uid://woetsk32" path="res://resources/data/tasks/task_e3_2.tres" id="3"]
+[ext_resource type="Resource" uid="uid://woetsk33" path="res://resources/data/tasks/task_e3_3.tres" id="4"]
+[ext_resource type="Resource" uid="uid://woeitm01" path="res://resources/data/items/item_res_wood.tres" id="gen_i0"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="gen_i1"]
+[ext_resource type="Resource" uid="uid://woeitm03" path="res://resources/data/items/item_res_coal.tres" id="gen_i2"]
+[ext_resource type="Resource" uid="uid://woeitm04" path="res://resources/data/items/item_res_stone.tres" id="gen_i3"]
+[ext_resource type="Resource" uid="uid://woercp01" path="res://resources/data/recipes/rec_infantry.tres" id="gen_r0"]
+[ext_resource type="Resource" uid="uid://woercp02" path="res://resources/data/recipes/rec_repair.tres" id="gen_r1"]
+[ext_resource type="Resource" uid="uid://woercp03" path="res://resources/data/recipes/rec_install.tres" id="gen_r2"]
+[ext_resource type="Resource" uid="uid://woercp04" path="res://resources/data/recipes/rec_bridge.tres" id="gen_r3"]
+[ext_resource type="Resource" uid="uid://woercp05" path="res://resources/data/recipes/rec_fortify.tres" id="gen_r4"]
+[ext_resource type="Resource" uid="uid://woercp06" path="res://resources/data/recipes/rec_tools.tres" id="gen_r5"]
+[ext_resource type="Resource" uid="uid://woenpc02" path="res://resources/data/npcs/npc_engineer.tres" id="gen_n0"]
+[ext_resource type="Resource" uid="uid://woenpc01" path="res://resources/data/npcs/npc_worker.tres" id="gen_n1"]
+[ext_resource type="Resource" uid="uid://woenpc03" path="res://resources/data/npcs/npc_soldier.tres" id="gen_n2"]
+[ext_resource type="Resource" uid="uid://woenpc06" path="res://resources/data/npcs/npc_courier.tres" id="gen_n3"]
+
+[resource]
+script = ExtResource("1")
+EraName = "1939 — Ikkinchi jahon urushi"
+GroundSize = 70.0
+GroundColor = Color(0.4, 0.36, 0.24, 1)
+SkyTopColor = Color(0.55, 0.6, 0.66, 1)
+SkyHorizonColor = Color(0.72, 0.7, 0.62, 1)
+SkyGroundColor = Color(0.34, 0.3, 0.22, 1)
+AmbientColor = Color(0.7, 0.7, 0.66, 1)
+FogColor = Color(0.74, 0.72, 0.66, 1)
+FogDensity = 0.012
+SunColor = Color(1.0, 0.95, 0.82, 1)
+SunEnergy = 1.0
+SunRotationDegrees = Vector3(-55, 48, 0)
+SpawnPosition = Vector3(0, 1, 6)
+Tasks = [ExtResource("2"), ExtResource("3"), ExtResource("4")]
+TaskPositions = PackedVector3Array(8, 0, -6, 5, 0, -13, 12, 0, -11)
+TaskRotationsY = PackedFloat32Array(-15, 10, -30)
+CratePositions = PackedVector3Array(2, 0, -4, -4, 0, -9, -8, 0, -3)
+GrovePositions = PackedVector3Array(-18, 0, -16, 24, 0, -8)
+EnemyPositions = PackedVector3Array(-6, 0, -12, -14, 0, -10, 16, 0, -16)
+; --- production layer (generated) ---
+ResourceNodes = [ExtResource("gen_i0"), ExtResource("gen_i0"), ExtResource("gen_i1"), ExtResource("gen_i1"), ExtResource("gen_i2"), ExtResource("gen_i3")]
+ResourceNodePositions = PackedVector3Array(8.9, 0.0, -17.2, -21.4, 0.0, 14.8, -12.6, 0.0, 12.4, 14.0, 0.0, 11.5, -0.4, 0.0, -19.8, 22.0, 0.0, -16.9)
+ResourceNodeAmounts = PackedInt32Array(5, 5, 8, 8, 5, 5)
+ResourceNodeUses = 3
+HasWorkshop = true
+WorkshopPosition = Vector3(-14.7, 0, 0.9)
+WorkshopRotationY = 34.3
+Recipes = [ExtResource("gen_r0"), ExtResource("gen_r1"), ExtResource("gen_r2"), ExtResource("gen_r3"), ExtResource("gen_r4"), ExtResource("gen_r5")]
+Npcs = [ExtResource("gen_n0"), ExtResource("gen_n1"), ExtResource("gen_n2"), ExtResource("gen_n3")]
+NpcPositions = PackedVector3Array(17.8, 0.0, 8.5, -8.2, 0.0, -15.2, -4.2, 0.0, 17.1, -3.4, 0.0, 8.3)
+NpcRotationsY = PackedFloat32Array(164.9, 13.0, 74.8, -9.8)

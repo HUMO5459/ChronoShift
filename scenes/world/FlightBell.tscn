@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://dflightbell4x9"]
+
+[ext_resource type="Script" path="res://scripts/world/Aircraft.cs" id="1_air"]
+[ext_resource type="PackedScene" uid="uid://c66x5osn3i6y" path="res://assets/models/aircraft/bell/bell-oh58d_lowpoly.fbx" id="2_mesh"]
+[ext_resource type="Script" path="res://scripts/player/PlayerCamera.cs" id="3_cam"]
+[ext_resource type="Script" path="res://scripts/world/Rotor.cs" id="4_rotor"]
+
+[sub_resource type="BoxShape3D" id="Box_air"]
+size = Vector3(2.5, 2.5, 7)
+
+[node name="FlightBell" type="CharacterBody3D"]
+script = ExtResource("1_air")
+_mode = 1
+_meshPath = NodePath("MeshRoot")
+
+[node name="MeshRoot" type="Node3D" parent="."]
+
+[node name="BodyOrient" type="Node3D" parent="MeshRoot"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 0)
+
+[node name="Body" parent="MeshRoot/BodyOrient" instance=ExtResource("2_mesh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="MainRotor" parent="MeshRoot/BodyOrient/Body" index="9"]
+script = ExtResource("4_rotor")
+_axis = Vector3(0, 0, 1)
+_speed = 5.0
+
+[node name="RearRotor" parent="MeshRoot/BodyOrient/Body" index="1"]
+script = ExtResource("4_rotor")
+_axis = Vector3(0, 0, 1)
+_speed = 7.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("Box_air")
+
+[node name="CameraRig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+script = ExtResource("3_cam")
+_shoulderOffset = Vector3(0, 0, 0)
+_firstPersonOffset = Vector3(1.775, 2.350, -2.800)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, 0, 0, 0)
+spring_length = 10.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/SpringArm3D"]
+fov = 75.0

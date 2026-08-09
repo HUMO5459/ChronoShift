@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ModuleData" load_steps=5 format=3 uid="uid://woemod10"]
+
+[ext_resource type="Script" path="res://scripts/data/ModuleData.cs" id="1_s"]
+[ext_resource type="Resource" uid="uid://cwak4701d4e" path="res://resources/data/weapons/weapon_ak47.tres" id="2_b"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="3_i0"]
+[ext_resource type="Resource" uid="uid://woeitm03" path="res://resources/data/items/item_res_wood.tres" id="3_i1"]
+
+[resource]
+script = ExtResource("1_s")
+ModuleId = "frame_rifle"
+DisplayName = "Miltiq ramkasi"
+Description = "Avtomatik ot ochadigan asos."
+Kind = 1
+Slot = 4
+BaseWeapon = ExtResource("2_b")
+CostMoney = 550
+Inputs = [ExtResource("3_i0"), ExtResource("3_i1")]
+InputAmounts = PackedInt32Array(8, 3)

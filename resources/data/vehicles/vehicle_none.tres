@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="VehicleData" load_steps=2 format=3 uid="uid://dvehnone7x1"]
+
+[ext_resource type="Script" path="res://scripts/data/VehicleData.cs" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+VehicleId = "none"
+DisplayName = "Piyoda"
+Kind = "TEXNIKASIZ"
+Description = "Missiyaga piyoda borasiz. Texnika hubda qoladi."

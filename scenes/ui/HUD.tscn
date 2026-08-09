@@ -1,0 +1,784 @@
+[gd_scene load_steps=10 format=3 uid="uid://dhud4q8m2k7vw"]
+
+[ext_resource type="Script" path="res://scripts/ui/HUD.cs" id="1_hud"]
+[ext_resource type="PackedScene" uid="uid://dhudtoast7m3q" path="res://scenes/ui/HudToast.tscn" id="2_toast"]
+[ext_resource type="Script" path="res://scripts/ui/ScopeOverlay.cs" id="9_scope"]
+[ext_resource type="AudioStream" uid="uid://2ii5vbb3f6o1" path="res://assets/audio/ui/tone.ogg" id="aud_0"]
+
+[sub_resource type="StyleBoxFlat" id="SB_coin"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.6235, 0.7647, 0.9098, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6235, 0.7647, 0.9098, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="SB_tracker"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 0.88)
+border_width_left = 3
+border_color = Color(0.6235, 0.7647, 0.9098, 1)
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+
+[sub_resource type="StyleBoxFlat" id="SB_prompt"]
+content_margin_left = 24.0
+content_margin_top = 14.0
+content_margin_right = 24.0
+content_margin_bottom = 14.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6235, 0.7647, 0.9098, 0.26)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="SB_keycap"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0.9137, 0.9137, 0.9294, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8627, 0.9137, 0.9686, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="SB_hintcap"]
+content_margin_left = 8.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 1, 1, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.4)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+_toastScene = ExtResource("2_toast")
+_toastSound = ExtResource("aud_0")
+
+[node name="TopLeft" type="VBoxContainer" parent="."]
+anchors_preset = 0
+offset_left = 28.0
+offset_top = 24.0
+offset_right = 278.0
+offset_bottom = 140.0
+theme_override_constants/separation = 10
+
+[node name="Money" type="PanelContainer" parent="TopLeft"]
+layout_mode = 2
+theme_type_variation = &"HudPanel"
+
+[node name="Row" type="HBoxContainer" parent="TopLeft/Money"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Coin" type="PanelContainer" parent="TopLeft/Money/Row"]
+custom_minimum_size = Vector2(27, 27)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("SB_coin")
+
+[node name="Mark" type="Label" parent="TopLeft/Money/Row/Coin"]
+layout_mode = 2
+theme_type_variation = &"MonoValue"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 13
+text = "₳"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Amount" type="Label" parent="TopLeft/Money/Row"]
+layout_mode = 2
+theme_type_variation = &"HudNumber"
+text = "0"
+
+[node name="Caption" type="Label" parent="TopLeft/Money/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"HudCaption"
+text = "AXCHA"
+horizontal_alignment = 2
+
+[node name="Health" type="PanelContainer" parent="TopLeft"]
+layout_mode = 2
+theme_type_variation = &"HudPanel"
+
+[node name="Rows" type="VBoxContainer" parent="TopLeft/Health"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Head" type="HBoxContainer" parent="TopLeft/Health/Rows"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TopLeft/Health/Rows/Head"]
+layout_mode = 2
+theme_type_variation = &"HudCaption"
+theme_override_colors/font_color = Color(0.902, 0.5216, 0.4667, 1)
+theme_override_font_sizes/font_size = 13
+text = "SOG'LIQ"
+
+[node name="Value" type="Label" parent="TopLeft/Health/Rows/Head"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+text = "100/100"
+horizontal_alignment = 2
+
+[node name="Bar" type="ColorRect" parent="TopLeft/Health/Rows"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+color = Color(1, 1, 1, 0.14)
+
+[node name="Fill" type="ColorRect" parent="TopLeft/Health/Rows/Bar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_vertical = 2
+color = Color(0.851, 0.3059, 0.2784, 1)
+
+[node name="Stamina" type="PanelContainer" parent="TopLeft"]
+layout_mode = 2
+theme_type_variation = &"HudPanel"
+
+[node name="Rows" type="VBoxContainer" parent="TopLeft/Stamina"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Head" type="HBoxContainer" parent="TopLeft/Stamina/Rows"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TopLeft/Stamina/Rows/Head"]
+layout_mode = 2
+theme_type_variation = &"HudCaption"
+theme_override_colors/font_color = Color(0.5216, 0.8, 0.6118, 1)
+theme_override_font_sizes/font_size = 13
+text = "CHIDAM"
+
+[node name="Value" type="Label" parent="TopLeft/Stamina/Rows/Head"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+text = "100/100"
+horizontal_alignment = 2
+
+[node name="Bar" type="ColorRect" parent="TopLeft/Stamina/Rows"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+color = Color(1, 1, 1, 0.14)
+
+[node name="Fill" type="ColorRect" parent="TopLeft/Stamina/Rows/Bar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_vertical = 2
+color = Color(0.3216, 0.7098, 0.4784, 1)
+
+[node name="Xp" type="PanelContainer" parent="TopLeft"]
+layout_mode = 2
+theme_type_variation = &"HudPanel"
+
+[node name="Rows" type="VBoxContainer" parent="TopLeft/Xp"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Head" type="HBoxContainer" parent="TopLeft/Xp/Rows"]
+layout_mode = 2
+
+[node name="Level" type="Label" parent="TopLeft/Xp/Rows/Head"]
+layout_mode = 2
+theme_type_variation = &"HudCaption"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 13
+text = "DARAJA 1"
+
+[node name="Xp" type="Label" parent="TopLeft/Xp/Rows/Head"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+text = "0/100 XP"
+horizontal_alignment = 2
+
+[node name="Bar" type="ColorRect" parent="TopLeft/Xp/Rows"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+color = Color(1, 1, 1, 0.14)
+
+[node name="Fill" type="ColorRect" parent="TopLeft/Xp/Rows/Bar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+grow_vertical = 2
+color = Color(0.6235, 0.7647, 0.9098, 1)
+
+[node name="TopRight" type="VBoxContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -430.0
+offset_top = 24.0
+offset_right = -28.0
+offset_bottom = 150.0
+grow_horizontal = 0
+alignment = 2
+theme_override_constants/separation = 10
+
+[node name="Date" type="PanelContainer" parent="TopRight"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"HudPanel"
+
+[node name="Row" type="HBoxContainer" parent="TopRight/Date"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Date" type="Label" parent="TopRight/Date/Row"]
+layout_mode = 2
+theme_type_variation = &"Heading"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+theme_override_font_sizes/font_size = 24
+text = "1900-YANVAR"
+
+[node name="Clock" type="Label" parent="TopRight/Date/Row"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 15
+text = "00:00"
+
+[node name="Time" type="PanelContainer" parent="TopRight"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"HudPanel"
+
+[node name="Row" type="HBoxContainer" parent="TopRight/Time"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Caption" type="Label" parent="TopRight/Time/Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HudCaption"
+text = "DAVR"
+
+[node name="Scale" type="Label" parent="TopRight/Time/Row"]
+layout_mode = 2
+theme_type_variation = &"TimeScale"
+text = "1900"
+
+[node name="Chevron" type="Label" parent="TopRight/Time/Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"TimeScale"
+theme_override_font_sizes/font_size = 16
+text = "»»"
+
+[node name="Mission" type="PanelContainer" parent="TopRight"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"HudPanel"
+
+[node name="Row" type="HBoxContainer" parent="TopRight/Mission"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Caption" type="Label" parent="TopRight/Mission/Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HudCaption"
+theme_override_font_sizes/font_size = 12
+text = "MISSIYA"
+
+[node name="Name" type="Label" parent="TopRight/Mission/Row"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HudBody"
+theme_override_font_sizes/font_size = 14
+text = ""
+horizontal_alignment = 2
+clip_text = true
+
+[node name="Count" type="Label" parent="TopRight/Mission/Row"]
+layout_mode = 2
+theme_type_variation = &"MonoValue"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 15
+text = "0/3"
+
+[node name="Hint" type="Label" parent="TopRight"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.38)
+theme_override_font_sizes/font_size = 11
+text = "VAZIFA BAJARILGANDA YILLAR O'TADI"
+horizontal_alignment = 2
+
+[node name="Resources" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(186, 0)
+anchors_preset = 0
+offset_left = 28.0
+offset_top = 300.0
+offset_right = 214.0
+offset_bottom = 420.0
+theme_type_variation = &"HudPanel"
+
+[node name="Rows" type="VBoxContainer" parent="Resources"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Caption" type="Label" parent="Resources/Rows"]
+layout_mode = 2
+theme_type_variation = &"HudCaption"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 12
+text = "MATERIAL"
+
+[node name="List" type="VBoxContainer" parent="Resources/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Tracker" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(250, 0)
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 28.0
+offset_top = -44.0
+offset_right = 278.0
+offset_bottom = 44.0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("SB_tracker")
+
+[node name="Rows" type="VBoxContainer" parent="Tracker"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Caption" type="Label" parent="Tracker/Rows"]
+layout_mode = 2
+theme_type_variation = &"HudCaption"
+text = "JORIY MAQSAD"
+
+[node name="Name" type="Label" parent="Tracker/Rows"]
+layout_mode = 2
+theme_type_variation = &"Heading"
+theme_override_font_sizes/font_size = 21
+text = "VAZIFA"
+
+[node name="Meta" type="Label" parent="Tracker/Rows"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 13
+text = "0 M · —"
+
+[node name="Prompt" type="PanelContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -158.0
+offset_right = 220.0
+offset_bottom = -120.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("SB_prompt")
+
+[node name="Row" type="HBoxContainer" parent="Prompt"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Key" type="PanelContainer" parent="Prompt/Row"]
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("SB_keycap")
+
+[node name="Label" type="Label" parent="Prompt/Row/Key"]
+layout_mode = 2
+theme_type_variation = &"TimeScale"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+theme_override_font_sizes/font_size = 21
+text = "E"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Text" type="VBoxContainer" parent="Prompt/Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 3
+
+[node name="Title" type="Label" parent="Prompt/Row/Text"]
+layout_mode = 2
+theme_type_variation = &"HudBody"
+theme_override_font_sizes/font_size = 19
+text = "Vazifani boshlash"
+
+[node name="Sub" type="Label" parent="Prompt/Row/Text"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.5)
+text = "JOYINGIZDA TURING"
+
+[node name="TaskProgress" type="PanelContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -200.0
+offset_right = 260.0
+offset_bottom = -110.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("SB_prompt")
+
+[node name="Rows" type="VBoxContainer" parent="TaskProgress"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Head" type="HBoxContainer" parent="TaskProgress/Rows"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="TaskProgress/Rows/Head"]
+layout_mode = 2
+theme_type_variation = &"Heading"
+theme_override_font_sizes/font_size = 21
+text = "VAZIFA"
+
+[node name="Percent" type="Label" parent="TaskProgress/Rows/Head"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"MonoValue"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+text = "0%"
+horizontal_alignment = 2
+
+[node name="Bar" type="ColorRect" parent="TaskProgress/Rows"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+color = Color(1, 1, 1, 0.14)
+
+[node name="Fill" type="ColorRect" parent="TaskProgress/Rows/Bar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+grow_vertical = 2
+color = Color(0.6235, 0.7647, 0.9098, 1)
+
+[node name="Note" type="Label" parent="TaskProgress/Rows"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_font_sizes/font_size = 11
+text = "HARAKATLANSANGIZ VAZIFA TO'XTAYDI"
+
+[node name="Reload" type="PanelContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -164.0
+offset_right = 150.0
+offset_bottom = -110.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("SB_prompt")
+
+[node name="Rows" type="VBoxContainer" parent="Reload"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Head" type="HBoxContainer" parent="Reload/Rows"]
+layout_mode = 2
+
+[node name="Caption" type="Label" parent="Reload/Rows/Head"]
+layout_mode = 2
+theme_type_variation = &"HudCaption"
+text = "TO'P"
+
+[node name="State" type="Label" parent="Reload/Rows/Head"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 13
+text = "TAYYOR"
+horizontal_alignment = 2
+
+[node name="Bar" type="ColorRect" parent="Reload/Rows"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+color = Color(1, 1, 1, 0.14)
+
+[node name="Fill" type="ColorRect" parent="Reload/Rows/Bar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_vertical = 2
+color = Color(0.6235, 0.7647, 0.9098, 1)
+
+[node name="Vehicle" type="PanelContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -228.0
+offset_right = 150.0
+offset_bottom = -174.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("SB_prompt")
+
+[node name="Rows" type="VBoxContainer" parent="Vehicle"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Head" type="HBoxContainer" parent="Vehicle/Rows"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Vehicle/Rows/Head"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HudCaption"
+text = "TEXNIKA"
+
+[node name="Value" type="Label" parent="Vehicle/Rows/Head"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.7)
+theme_override_font_sizes/font_size = 13
+text = "0/0"
+horizontal_alignment = 2
+
+[node name="Bar" type="ColorRect" parent="Vehicle/Rows"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+color = Color(1, 1, 1, 0.14)
+
+[node name="Fill" type="ColorRect" parent="Vehicle/Rows/Bar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_vertical = 2
+color = Color(0.8235, 0.5216, 0.2549, 1)
+
+[node name="Toasts" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(330, 0)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -358.0
+offset_top = 220.0
+offset_right = -28.0
+offset_bottom = 620.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="QuickSlots" type="HBoxContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -102.0
+offset_right = 340.0
+offset_bottom = -54.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="BottomLeft" type="Label" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 28.0
+offset_top = -44.0
+offset_right = 700.0
+offset_bottom = -24.0
+grow_vertical = 0
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.5)
+text = "[W A S D] yurish"
+
+[node name="Hints" type="HBoxContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -48.0
+offset_right = -28.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0
+alignment = 2
+theme_override_constants/separation = 18
+
+[node name="Tech" type="HBoxContainer" parent="Hints"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Key" type="PanelContainer" parent="Hints/Tech"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("SB_hintcap")
+
+[node name="Label" type="Label" parent="Hints/Tech/Key"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.75)
+text = "T"
+
+[node name="Text" type="Label" parent="Hints/Tech"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+text = "Tex daraxti"
+
+[node name="Pause" type="HBoxContainer" parent="Hints"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Key" type="PanelContainer" parent="Hints/Pause"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("SB_hintcap")
+
+[node name="Label" type="Label" parent="Hints/Pause/Key"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.75)
+text = "Esc"
+
+[node name="Text" type="Label" parent="Hints/Pause"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+text = "Pauza"
+
+[node name="Surge" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Rows" type="VBoxContainer" parent="Surge"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -340.0
+offset_right = 260.0
+offset_bottom = -220.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+
+[node name="Scale" type="Label" parent="Surge/Rows"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 66
+text = "1914"
+horizontal_alignment = 1
+
+[node name="Caption" type="Label" parent="Surge/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 17
+text = "YILLAR O'TDI"
+horizontal_alignment = 1
+
+[node name="Crosshair" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -26.0
+offset_right = 20.0
+offset_bottom = 26.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9294, 0.6, 0.95)
+theme_override_colors/font_outline_color = Color(0.0157, 0.0235, 0.0392, 0.85)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 34
+text = "+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Scope" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("9_scope")

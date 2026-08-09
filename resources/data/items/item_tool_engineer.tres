@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://woeitm10"]
+
+[ext_resource type="Script" path="res://scripts/data/ItemData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+ItemId = "tool_engineer"
+DisplayName = "Muhandis asboblari"
+Description = "Shaxsiy asbob to'plami. Sarflanmaydi — bir marta yasaladi va qoladi."
+Category = 2
+ShortLabel = ""
+Tint = Color(0.75, 0.72, 0.66, 1)
+SortOrder = 9

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://woeitm06"]
+
+[ext_resource type="Script" path="res://scripts/data/ItemData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+ItemId = "eq_install"
+DisplayName = "O'rnatish komplekti"
+Description = "Kabel, mahkamlagich va o'lchov asboblari. Yangi qurilmani joyiga o'rnatadi."
+Category = 1
+ShortLabel = ""
+Tint = Color(0.4, 0.62, 0.8, 1)
+SortOrder = 5

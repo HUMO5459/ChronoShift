@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TechNodeData" load_steps=2 format=3 uid="uid://b5w9j4p2r6nyc"]
+
+[ext_resource type="Script" path="res://scripts/data/TechNodeData.cs" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+TechId = "advanced_tooling"
+DisplayName = "Ilg'or asboblar"
+Description = "Aniq o'lchov asboblari. Vazifa mukofoti +100%."
+CostMoney = 400
+RequiredLevel = 2
+PrerequisiteIds = PackedStringArray("efficient_tools")
+Effect = 1
+EffectValue = 1.0

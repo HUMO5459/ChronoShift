@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://b8t3q7wn2xk9d"]
+
+[ext_resource type="Script" path="res://scripts/world/Target.cs" id="1_target"]
+[ext_resource type="AudioStream" uid="uid://i8surwalqfnq" path="res://assets/audio/impacts/explosion_small.wav" id="aud_0"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_target"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_target"]
+size = Vector3(1, 1, 1)
+
+[node name="Target" type="StaticBody3D"]
+script = ExtResource("1_target")
+_destroySound = ExtResource("aud_0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_target")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_target")

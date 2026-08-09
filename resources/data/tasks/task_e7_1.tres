@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=2 format=3 uid="uid://woetsk71"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e7_1"
+DisplayName = "Sun'iy yo'ldosh antennasi"
+Kind = "O'RNATISH"
+Description = "Sun'iy yo'ldosh bilan bog'lanish antennasini sozlang."
+DurationSeconds = 4.4
+RewardMoney = 134
+RewardXp = 41
+; --- production layer (generated) ---
+AdvanceDays = 1460.0

@@ -1,0 +1,42 @@
+[gd_scene load_steps=9 format=3 uid="uid://cnpcwalk4k7m2"]
+
+[ext_resource type="Script" path="res://scripts/world/Npc.cs" id="1_npc"]
+[ext_resource type="Script" path="res://scripts/world/NpcVisual.cs" id="2_npcvis"]
+[ext_resource type="PackedScene" uid="uid://doeb4575kt8xd" path="res://assets/models/character/rp_nathan_animated_003_walking.fbx" id="3_model"]
+[ext_resource type="Texture2D" path="res://assets/models/character/rp_nathan_animated_003_dif.jpg" id="4_albedo"]
+[ext_resource type="Texture2D" path="res://assets/models/character/rp_nathan_animated_003_norm.jpg" id="5_normal"]
+[ext_resource type="PackedScene" uid="uid://cimpactfx7m2q" path="res://scenes/fx/ImpactFx.tscn" id="6_deathfx"]
+[ext_resource type="AudioStream" uid="uid://fnes65nleyum" path="res://assets/audio/impacts/impact_ground_1.wav" id="7_deathsfx"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_npc"]
+radius = 0.35
+height = 1.7
+
+[node name="NpcWalker" type="CharacterBody3D"]
+script = ExtResource("1_npc")
+_deathFxScene = ExtResource("6_deathfx")
+_deathSound = ExtResource("7_deathsfx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("CapsuleShape3D_npc")
+
+[node name="Visual" type="Node3D" parent="."]
+script = ExtResource("2_npcvis")
+_albedo = ExtResource("4_albedo")
+_normal = ExtResource("5_normal")
+_rootMotionTrack = "rp_nathan_animated_003_walking/rp_nathan_animated_003_walking_CTRL/Skeleton3D:rp_nathan_animated_003_walking_root"
+_driveFromMotion = true
+
+[node name="Model" parent="Visual" instance=ExtResource("3_model")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="Plate" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0)
+pixel_size = 0.0042
+billboard = 1
+text = ""
+font_size = 48
+outline_size = 12
+visibility_range_end = 26.0
+visibility_range_end_margin = 4.0

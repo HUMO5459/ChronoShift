@@ -1,0 +1,109 @@
+[gd_scene load_steps=4 format=3 uid="uid://cintropan6k3x"]
+
+[ext_resource type="Script" path="res://scripts/ui/IntroPanel.cs" id="1_intro"]
+
+[sub_resource type="StyleBoxFlat" id="SB_card"]
+content_margin_left = 56.0
+content_margin_top = 46.0
+content_margin_right = 56.0
+content_margin_bottom = 42.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 1)
+border_width_left = 6
+border_color = Color(0.8627, 0.9137, 0.9686, 1)
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 30
+shadow_offset = Vector2(0, 16)
+
+[sub_resource type="StyleBoxFlat" id="SB_rule"]
+content_margin_bottom = 14.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 0)
+border_width_bottom = 3
+border_color = Color(0.8627, 0.9137, 0.9686, 1)
+
+[node name="IntroPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_intro")
+
+[node name="Scrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0157, 0.0235, 0.0392, 0.82)
+
+[node name="Center" type="CenterContainer" parent="Scrim"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Card" type="PanelContainer" parent="Scrim/Center"]
+custom_minimum_size = Vector2(760, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_card")
+
+[node name="Rows" type="VBoxContainer" parent="Scrim/Center/Card"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Header" type="PanelContainer" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_rule")
+
+[node name="Titles" type="VBoxContainer" parent="Scrim/Center/Card/Rows/Header"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Kicker" type="Label" parent="Scrim/Center/Card/Rows/Header/Titles"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 12
+text = "1900 · SHTAB BUYRUG'I № 1"
+
+[node name="Title" type="Label" parent="Scrim/Center/Card/Rows/Header/Titles"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 40
+text = "HARBIY MUHANDIS"
+
+[node name="Lead" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"Heading"
+theme_override_font_sizes/font_size = 19
+text = "Siz harbiy lagerga yetib keldingiz. Armiya chekinmoqda, ishlab chiqarish vayron qilingan."
+autowrap_mode = 3
+
+[node name="Body" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"Body"
+theme_override_font_sizes/font_size = 16
+text = "Qo'mondonlik sizni harbiy muhandis etib tayinlaydi. Buyruq qisqa: lagerni ko'zdan kechiring, material yig'ing, mastserskayani tiklang va ishlab chiqarishni yo'lga qo'ying. Birinchi uskuna chiqqach — ko'prikni tuzating, ta'minot kolonnasini o'tkazing, hujumni qaytaring va avanpostni egallang.
+
+Har bajarilgan ish kalendarni oldinga suradi: yillar o'tadi, texnika almashadi, front o'zgaradi. Bir davr yopilganda keyingisi ochiladi."
+autowrap_mode = 3
+
+[node name="Thesis" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.9294, 0.5451, 0.3765, 1)
+theme_override_font_sizes/font_size = 14
+text = "G'ALABA O'Q SONI BILAN EMAS — MUHANDISLIK YECHIMLARI BILAN QO'LGA KIRITILADI."
+autowrap_mode = 3
+
+[node name="Accept" type="Button" parent="Scrim/Center/Card/Rows"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintPrimary"
+text = "Vazifani qabul qilaman"
+alignment = 1

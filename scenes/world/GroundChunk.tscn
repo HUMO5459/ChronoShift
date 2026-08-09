@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cgr0chnk7x4q2d"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_chunk"]
+size = Vector3(60, 1, 60)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_chunk"]
+size = Vector3(60, 1, 60)
+
+[node name="GroundChunk" type="StaticBody3D"]
+collision_layer = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+mesh = SubResource("BoxMesh_chunk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_chunk")

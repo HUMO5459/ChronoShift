@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ChronoShift / Muhandislar Urushi — 1900-yildan 2050-yilgacha harbiy-muhandislik o'yini. Godot 4 + C#. macOS va Windows uchun yuklab oling.">
+<title>Muhandislar Urushi — ChronoShift</title>
+</head>
+<body>
+<!--CONTENT-->
+<style>
+/* ============================================================
+   ChronoShift — landing sheet
+   Palette and typefaces are the game's own (scripts/ui/UiPalette.cs,
+   assets/fonts). Light theme is the drafting counterpart of the
+   blueprint: a whiteprint — dark ink on paper.
+   ============================================================ */
+
+@font-face{font-family:"Oswald";src:url(__F_OSWALD__) format("woff2");font-weight:200 700;font-style:normal;font-display:swap}
+@font-face{font-family:"Archivo";src:url(__F_ARCHIVO__) format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"PlexMono";src:url(__F_PLEX__) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"PlexMono";src:url(__F_PLEXSB__) format("woff2");font-weight:600;font-style:normal;font-display:swap}
+
+:root{
+  /* whiteprint (light) */
+  --ground:#e9eff7;
+  --sheet:#f7fafd;
+  --panel:#dfe9f5;
+  --panel-2:#cfdff0;
+  --line:rgba(13,42,79,.20);
+  --line-soft:rgba(13,42,79,.09);
+  --ink:#0d2a4f;
+  --ink-2:#274f7d;
+  --ink-3:#5d81ac;
+  --accent:#9d6210;
+  --accent-soft:rgba(157,98,16,.12);
+  --on-accent:#f7fafd;
+  --shadow:0 18px 44px rgba(13,42,79,.14);
+
+  --f-display:"Oswald",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Archivo",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"PlexMono",ui-monospace,"SFMono-Regular",monospace;
+
+  --gap:clamp(2.6rem,5vw,5rem);
+  --pad:clamp(1.1rem,4vw,3.25rem);
+  --maxw:1180px;
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    /* blueprint (dark) — the drafting table */
+    --ground:#0b2444;
+    --sheet:#0d2a4f;
+    --panel:#123663;
+    --panel-2:#17457a;
+    --line:rgba(220,233,247,.20);
+    --line-soft:rgba(220,233,247,.085);
+    --ink:#dce9f7;
+    --ink-2:#b9d2ec;
+    --ink-3:#8fb4dc;
+    --accent:#e8a94e;
+    --accent-soft:rgba(232,169,78,.14);
+    --on-accent:#0d2a4f;
+    --shadow:0 20px 50px rgba(0,0,0,.42);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0b2444;
+  --sheet:#0d2a4f;
+  --panel:#123663;
+  --panel-2:#17457a;
+  --line:rgba(220,233,247,.20);
+  --line-soft:rgba(220,233,247,.085);
+  --ink:#dce9f7;
+  --ink-2:#b9d2ec;
+  --ink-3:#8fb4dc;
+  --accent:#e8a94e;
+  --accent-soft:rgba(232,169,78,.14);
+  --on-accent:#0d2a4f;
+  --shadow:0 20px 50px rgba(0,0,0,.42);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:clamp(15px,.55vw + 13.6px,17px);
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* drafting grid — 1 small square, 5 to a major division */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(var(--line-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-soft) 1px,transparent 1px),
+    linear-gradient(var(--line-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:130px 130px,130px 130px,26px 26px,26px 26px;
+  opacity:.85;
+}
+
+/* language switching: uz is the un-attributed default */
+:root:not([data-lang="en"]) .en{display:none !important}
+:root[data-lang="en"] .uz{display:none !important}
+
+/* ---------- shell ---------- */
+.sheet{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:color-mix(in srgb,var(--ground) 88%,transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-in{
+  max-width:var(--maxw);margin:0 auto;padding:.6rem var(--pad);
+  display:flex;align-items:center;gap:1rem;justify-content:space-between;
+}
+.mark{display:flex;align-items:baseline;gap:.55rem;min-width:0}
+.mark b{font-family:var(--f-display);font-weight:600;letter-spacing:.045em;font-size:1.02rem;text-transform:uppercase;white-space:nowrap}
+.mark span{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;white-space:nowrap}
+.topnav{display:flex;gap:1.15rem;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase}
+.topnav a{color:var(--ink-3);text-decoration:none;padding:.25rem 0;border-bottom:1px solid transparent}
+.topnav a:hover,.topnav a:focus-visible{color:var(--ink);border-bottom-color:var(--accent)}
+@media (max-width:860px){.topnav{display:none}}
+
+.lang{display:flex;border:1px solid var(--line);font-family:var(--f-mono);font-size:.68rem;letter-spacing:.12em}
+.lang button{
+  appearance:none;background:transparent;border:0;color:var(--ink-3);
+  padding:.34rem .62rem;cursor:pointer;font:inherit;letter-spacing:inherit;
+}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+.lang button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+/* ---------- section frame ---------- */
+section{padding:var(--gap) 0;border-top:1px solid var(--line);position:relative}
+section:first-of-type{border-top:0}
+.plate{
+  display:flex;align-items:baseline;gap:.85rem;flex-wrap:wrap;
+  font-family:var(--f-mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:1.6rem;
+}
+.plate .no{color:var(--accent);font-weight:600}
+.plate::after{content:"";flex:1;height:1px;background:var(--line);min-width:2rem}
+
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;font-weight:500;letter-spacing:.01em}
+h2{font-size:clamp(1.85rem,3.6vw,2.9rem);line-height:1.05;text-transform:uppercase;letter-spacing:.02em}
+h3{font-size:1.06rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+p{margin:0}
+.lede{font-size:clamp(1.02rem,1.2vw,1.2rem);color:var(--ink-2);max-width:62ch;line-height:1.6}
+h2+.lede,h2+.lede+.lede{margin-top:1.25rem}
+.body-col{max-width:66ch;color:var(--ink-2)}
+
+/* ---------- hero ---------- */
+.hero{padding-top:clamp(2.2rem,5vw,4.2rem)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:clamp(1.6rem,3vw,3rem);align-items:start}
+@media (max-width:920px){.hero-grid{grid-template-columns:1fr}}
+
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3)}
+h1{
+  font-size:clamp(2.9rem,9.4vw,6.4rem);
+  line-height:.9;text-transform:uppercase;font-weight:500;
+  letter-spacing:-.005em;margin:.75rem 0 0;
+}
+.h1-sub{font-family:var(--f-mono);font-size:clamp(.7rem,1.5vw,.86rem);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin:1.05rem 0 1.6rem}
+.hero p.lede{margin-bottom:1.9rem}
+
+.cta-row{display:flex;flex-wrap:wrap;gap:.8rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.7rem;
+  font-family:var(--f-display);font-size:1rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  padding:.78rem 1.5rem;text-decoration:none;border:1px solid var(--ink);
+  color:var(--ink);background:transparent;transition:transform .16s ease,background .16s ease,color .16s ease;
+}
+.btn .arw{font-family:var(--f-mono);font-size:.85rem}
+.btn:hover,.btn:focus-visible{transform:translateY(-2px)}
+.btn-solid{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.btn-solid:hover,.btn-solid:focus-visible{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* title block — the drawing sheet's identity table */
+.titleblock{border:1px solid var(--line);background:var(--panel);box-shadow:var(--shadow)}
+.titleblock .tb-head{
+  padding:.55rem .9rem;border-bottom:1px solid var(--line);
+  font-family:var(--f-mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);
+}
+.titleblock dl{margin:0;display:grid;grid-template-columns:minmax(6.5rem,auto) 1fr}
+.titleblock dt,.titleblock dd{
+  margin:0;padding:.5rem .9rem;border-bottom:1px solid var(--line-soft);
+  font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;
+}
+.titleblock dt{color:var(--ink-3);text-transform:uppercase;border-right:1px solid var(--line-soft)}
+.titleblock dd{color:var(--ink);font-weight:600}
+.titleblock dl>:nth-last-child(-n+2){border-bottom:0}
+
+.compass{display:block;margin:0 auto 1.1rem;width:min(190px,45vw);height:auto;color:var(--ink-3)}
+.compass .spin{transform-origin:100px 100px;animation:rot 90s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.compass .spin{animation:none}}
+
+/* ---------- plates (screenshots) ---------- */
+figure{margin:0}
+.plate-img{
+  border:1px solid var(--line);background:var(--panel);padding:.6rem;box-shadow:var(--shadow);
+}
+.plate-img img{display:block;width:100%;height:auto}
+figcaption{
+  font-family:var(--f-mono);font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink-3);padding:.6rem .15rem 0;display:flex;gap:.7rem;justify-content:space-between;flex-wrap:wrap;
+}
+.hero-plate{margin-top:clamp(2rem,4vw,3.4rem)}
+
+/* ---------- idea cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.1rem;margin-top:2rem}
+.card{border:1px solid var(--line);background:var(--panel);padding:1.35rem 1.3rem;display:flex;flex-direction:column;gap:.6rem}
+.card h3{color:var(--ink)}
+.card p{color:var(--ink-2);font-size:.95rem}
+.card .tag{font-family:var(--f-mono);font-size:.63rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+
+/* ---------- loop ---------- */
+.loop{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--line);margin-top:2rem}
+.step{padding:1.3rem 1.2rem;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:.5rem;background:var(--sheet)}
+.step:last-child{border-right:0}
+@media (max-width:760px){.step{border-right:0;border-bottom:1px solid var(--line)}.step:last-child{border-bottom:0}}
+.step .n{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.18em;color:var(--accent);font-weight:600}
+.step h3{font-size:.98rem}
+.step p{font-size:.9rem;color:var(--ink-2);line-height:1.5}
+.loop-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:clamp(1.5rem,3vw,2.6rem);align-items:center;margin-top:2.4rem}
+@media (max-width:920px){.loop-split{grid-template-columns:1fr}}
+
+/* ---------- campaign table ---------- */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);margin-top:2rem;background:var(--sheet)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.9rem}
+caption{text-align:left;padding:.9rem 1rem;font-family:var(--f-mono);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--line)}
+th,td{padding:.72rem 1rem;text-align:left;border-bottom:1px solid var(--line-soft)}
+thead th{
+  font-family:var(--f-mono);font-size:.63rem;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:400;border-bottom:1px solid var(--line);
+}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--accent-soft)}
+.yr{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:600;color:var(--accent);white-space:nowrap}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ink-2);white-space:nowrap}
+.mname{font-family:var(--f-display);font-size:1.02rem;letter-spacing:.02em}
+.chip{
+  display:inline-block;font-family:var(--f-mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
+  border:1px solid var(--line);padding:.16rem .5rem;color:var(--ink-3);white-space:nowrap;
+}
+.final td{background:var(--accent-soft)}
+.note{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--ink-3);margin-top:.9rem;line-height:1.7}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:2rem}
+.stat{background:var(--sheet);padding:1.15rem 1.1rem;display:flex;flex-direction:column;gap:.15rem}
+.stat b{font-family:var(--f-display);font-size:2.1rem;line-height:1;font-weight:500;font-variant-numeric:tabular-nums}
+.stat span{font-family:var(--f-mono);font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3)}
+
+.feature-list{list-style:none;padding:0;margin:2rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.55rem 1.6rem}
+.feature-list li{display:flex;gap:.7rem;align-items:baseline;color:var(--ink-2);font-size:.95rem;padding:.28rem 0;border-bottom:1px solid var(--line-soft)}
+.feature-list li::before{content:"—";font-family:var(--f-mono);color:var(--accent);flex:none}
+
+.gallery{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,.75fr);gap:1.2rem;margin-top:2.4rem;align-items:start}
+@media (max-width:820px){.gallery{grid-template-columns:1fr}}
+
+/* ---------- download ---------- */
+.dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:1.1rem;margin-top:2rem}
+.dl{border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column}
+.dl-head{padding:1.1rem 1.25rem .85rem;border-bottom:1px solid var(--line)}
+.dl-os{font-family:var(--f-display);font-size:1.35rem;text-transform:uppercase;letter-spacing:.03em;font-weight:500}
+.dl-kind{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-top:.2rem}
+.dl-meta{padding:.85rem 1.25rem;display:grid;grid-template-columns:auto 1fr;gap:.3rem .9rem;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em}
+.dl-meta dt{color:var(--ink-3);text-transform:uppercase}
+.dl-meta dd{margin:0;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.dl-body{padding:0 1.25rem 1.1rem;color:var(--ink-2);font-size:.88rem;line-height:1.55;flex:1}
+.dl-foot{padding:0 1.25rem 1.25rem}
+.dl-btn{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;width:100%;
+  font-family:var(--f-display);text-transform:uppercase;letter-spacing:.06em;font-size:.98rem;font-weight:500;
+  padding:.75rem 1.05rem;text-decoration:none;border:1px solid var(--ink);color:var(--ground);background:var(--ink);
+  transition:background .16s ease,color .16s ease,border-color .16s ease;
+}
+.dl-btn:hover,.dl-btn:focus-visible{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.dl-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.dl-btn .sz{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;opacity:.75}
+/* placeholder state — no release URL wired yet */
+.dl-btn.is-pending{background:transparent;color:var(--ink-3);border-style:dashed;border-color:var(--line);cursor:not-allowed}
+.dl-btn.is-pending:hover{background:transparent;color:var(--ink-3);border-color:var(--line)}
+.pending-note{
+  font-family:var(--f-mono);font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-top:.55rem;display:block;
+}
+.banner{
+  border:1px dashed var(--accent);background:var(--accent-soft);padding:1rem 1.15rem;margin-top:2rem;
+  font-family:var(--f-mono);font-size:.74rem;letter-spacing:.06em;line-height:1.7;color:var(--ink-2);
+}
+.banner b{color:var(--ink);font-weight:600}
+
+/* ---------- controls ---------- */
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.4rem 1.8rem;margin-top:2rem;list-style:none;padding:0}
+.keys li{display:flex;align-items:baseline;gap:.9rem;padding:.42rem 0;border-bottom:1px solid var(--line-soft)}
+kbd{
+  font-family:var(--f-mono);font-size:.72em;letter-spacing:.06em;
+  border:1px solid var(--line);padding:.1rem .38rem;color:var(--ink);background:var(--panel);
+  white-space:nowrap;
+}
+.keys kbd{font-size:.7rem;padding:.2rem .5rem;flex:none;min-width:5.6rem;text-align:center}
+.keys span{color:var(--ink-2);font-size:.93rem}
+
+/* ---------- technical ---------- */
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.1rem;margin-top:2rem}
+.tech-block{border:1px solid var(--line);padding:1.25rem 1.3rem;background:var(--sheet)}
+.tech-block h3{margin-bottom:.7rem}
+.tech-block p,.tech-block li{color:var(--ink-2);font-size:.9rem;line-height:1.6}
+.tech-block ul{margin:0;padding-left:1.1rem}
+code{font-family:var(--f-mono);font-size:.82em;background:var(--panel);padding:.1rem .34rem;border:1px solid var(--line-soft);word-break:break-all}
+
+/* ---------- floating title block ---------- */
+.sheetmark{
+  position:fixed;right:1.1rem;bottom:1.1rem;z-index:30;
+  border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);
+  backdrop-filter:blur(8px);padding:.5rem .8rem;box-shadow:var(--shadow);
+  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-3);display:flex;gap:.6rem;align-items:center;pointer-events:none;
+}
+.sheetmark b{color:var(--accent);font-weight:600}
+.sheetmark i{font-style:normal;color:var(--ink)}
+@media (max-width:860px){.sheetmark{display:none}}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:2.2rem 0 3.2rem;position:relative;z-index:1}
+.foot-in{
+  max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);
+  display:flex;justify-content:space-between;gap:1.2rem;flex-wrap:wrap;
+  font-family:var(--f-mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+}
+.foot-in a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+.foot-in a:hover,.foot-in a:focus-visible{color:var(--accent);border-bottom-color:var(--accent)}
+</style>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="mark">
+      <b class="uz">Muhandislar Urushi</b><b class="en">ChronoShift</b>
+      <span>v1.0.0</span>
+    </div>
+    <nav class="topnav" aria-label="Bo'limlar">
+      <a href="#goya"><span class="uz">G'oya</span><span class="en">Idea</span></a>
+      <a href="#sikl"><span class="uz">Sikl</span><span class="en">Loop</span></a>
+      <a href="#kampaniya"><span class="uz">Kampaniya</span><span class="en">Campaign</span></a>
+      <a href="#ichida"><span class="uz">Ichida</span><span class="en">Contents</span></a>
+      <a href="#yuklash"><span class="uz">Yuklash</span><span class="en">Download</span></a>
+    </nav>
+    <div class="lang" role="group" aria-label="Til / Language">
+      <button type="button" data-lang="uz" aria-pressed="true">UZ</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="sheet">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="top" data-sheet="000" data-name-uz="Bosh varaq" data-name-en="Cover sheet">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">
+          <span class="uz">Chizma № 001 · Vertikal srez · 1900—2050</span>
+          <span class="en">Sheet № 001 · Vertical slice · 1900—2050</span>
+        </p>
+        <h1><span class="uz">Muhandislar<br>Urushi</span><span class="en">War of<br>Engineers</span></h1>
+        <p class="h1-sub">
+          <span class="uz">Harbiy-muhandislik o'yini · Godot 4 + C#</span>
+          <span class="en">A military engineering game · Godot 4 + C#</span>
+        </p>
+        <p class="lede uz">Sizni oddiy askar emas, <b>harbiy muhandis-komandir</b> etib tayinlaydilar. Konda material yig'asiz, mastserskayada uskuna ishlab chiqarasiz, front chizig'ida generator, telegraf va istehkom qurasiz. Har yopilgan vazifa kalendarni oldinga suradi — 1900-yildan 2050-yilgacha, o'nta davr.</p>
+        <p class="lede en">You are not assigned as a soldier but as a <b>military engineer-commander</b>. You mine raw material, produce equipment in the workshop, and build generators, telegraph lines and fortifications at the front. Every task you close pushes the calendar forward — from 1900 to 2050, across ten eras.</p>
+        <div class="cta-row">
+          <a class="btn btn-solid" href="#yuklash"><span class="uz">Yuklab olish</span><span class="en">Download</span><span class="arw">↓</span></a>
+          <a class="btn" href="#sikl"><span class="uz">Nima o'ynaladi</span><span class="en">What you play</span><span class="arw">→</span></a>
+        </div>
+      </div>
+
+      <aside>
+        <svg class="compass" viewBox="0 0 200 200" role="img" aria-label="Kompas atirguli">
+          <g fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="100" cy="100" r="72" opacity=".55"/>
+            <g class="spin"><circle cx="100" cy="100" r="54" opacity=".8" stroke-dasharray="5 7"/></g>
+            <circle cx="100" cy="100" r="30" opacity=".35"/>
+            <path d="M100 6V194M6 100H194" opacity=".28"/>
+            <path d="M100 34 118 100 100 166 82 100Z" opacity=".7"/>
+          </g>
+          <text x="100" y="24" fill="currentColor" font-family="PlexMono,monospace" font-size="11" letter-spacing="2" text-anchor="middle">N</text>
+        </svg>
+        <div class="titleblock">
+          <div class="tb-head"><span class="uz">Texnik varaq</span><span class="en">Title block</span></div>
+          <dl>
+            <dt><span class="uz">Loyiha</span><span class="en">Project</span></dt><dd>ChronoShift</dd>
+            <dt><span class="uz">Bo'lim</span><span class="en">Division</span></dt><dd><span class="uz">Harbiy-muhandislik</span><span class="en">Military engineering</span></dd>
+            <dt><span class="uz">Dvigatel</span><span class="en">Engine</span></dt><dd>Godot 4.7.1 · C#</dd>
+            <dt>Format</dt><dd>1920 × 1080 · PC</dd>
+            <dt><span class="uz">Platforma</span><span class="en">Platform</span></dt><dd>macOS · Windows</dd>
+            <dt><span class="uz">Varaq</span><span class="en">Revision</span></dt><dd>MVP v1.0.0</dd>
+          </dl>
+        </div>
+      </aside>
+    </div>
+
+    <figure class="hero-plate">
+      <div class="plate-img"><img src="__IMG_MENU__" width="1500" height="844" alt="O'yinning bosh menyusi: ko'k chizma uslubidagi ekran, MUHANDISLAR URUSHI sarlavhasi va menyu tugmalari."></div>
+      <figcaption>
+        <span><span class="uz">Bosh menyu — o'yindan olingan kadr</span><span class="en">Main menu — captured in engine</span></span>
+        <span>1920 × 1080</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ===== 01 IDEA ===== -->
+  <section id="goya" data-sheet="01" data-name-uz="G'oya" data-name-en="The idea">
+    <p class="plate"><span class="no">01</span> <span class="uz">G'oya</span><span class="en">The idea</span></p>
+    <h2><span class="uz">Urush — kontekst,<br>maqsad emas</span><span class="en">War is the context,<br>not the goal</span></h2>
+    <div class="cards">
+      <article class="card">
+        <span class="tag"><span class="uz">Asos</span><span class="en">Premise</span></span>
+        <h3><span class="uz">Jangchi emas, muhandis</span><span class="en">An engineer, not a fighter</span></h3>
+        <p class="uz">Ikkinchi vazifa uskunasiz umuman boshlanmaydi — HUD "KERAK: O'rnatish komplekti" deb turadi. Avval kon, keyin mastserskaya, keyin vazifa. O'yinning yuragi shu yerda.</p>
+        <p class="en">The second task will not start without equipment — the HUD simply says "NEEDS: Installation kit". First the mine, then the workshop, then the task. That dependency is the heart of the game.</p>
+      </article>
+      <article class="card">
+        <span class="tag"><span class="uz">Signature mexanika</span><span class="en">Signature mechanic</span></span>
+        <h3><span class="uz">Vaqt mehnat bilan oqadi</span><span class="en">Labour moves the clock</span></h3>
+        <p class="uz">Kalendar o'z-o'zidan emas, bajarilgan ish hisobiga siljiydi. Vazifa yopilganda ekran o'rtasida yangi yil chaqnaydi va butun davr almashadi: boshqa map, boshqa texnika, boshqa vazifa.</p>
+        <p class="en">The calendar does not tick on its own; it advances on finished work. Close a task and the new year flashes across the screen, switching the whole era: new map, new hardware, new objectives.</p>
+      </article>
+      <article class="card">
+        <span class="tag"><span class="uz">Jang</span><span class="en">Combat</span></span>
+        <h3><span class="uz">Otishma bor, g'alaba emas</span><span class="en">Firefights, but no win by force</span></h3>
+        <p class="uz">Dushmanlar sizni ko'radi va otadi, tank to'pi ishlaydi, texnika buziladi. Lekin missiya jang bilan emas — muhandislik vazifalari yopilgani bilan tugaydi.</p>
+        <p class="en">Enemies spot you and shoot back, the tank cannon works, vehicles take damage. But a mission never ends in a firefight — it ends when the engineering tasks are closed.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== 02 LOOP ===== -->
+  <section id="sikl" data-sheet="02" data-name-uz="Asosiy sikl" data-name-en="Core loop">
+    <p class="plate"><span class="no">02</span> <span class="uz">Asosiy sikl</span><span class="en">Core loop</span></p>
+    <h2><span class="uz">Besh qadam,<br>har missiyada</span><span class="en">Five steps,<br>every mission</span></h2>
+    <div class="loop">
+      <div class="step">
+        <span class="n">01</span>
+        <h3><span class="uz">Razvedka</span><span class="en">Recon</span></h3>
+        <p class="uz">Map'ni aylanib chiqing: konlar, mastserskaya, vazifa nuqtalari va lager qayerda.</p>
+        <p class="en">Walk the map: where the mines, the workshop, the task points and the camp are.</p>
+      </div>
+      <div class="step">
+        <span class="n">02</span>
+        <h3><span class="uz">Resurs</span><span class="en">Resources</span></h3>
+        <p class="uz">Konga <kbd>E</kbd> — yog'och, temir, ko'mir, tosh. Chapdagi MATERIAL paneli o'sadi.</p>
+        <p class="en">Press <kbd>E</kbd> at a deposit — timber, iron, coal, stone. The MATERIAL panel on the left grows.</p>
+      </div>
+      <div class="step">
+        <span class="n">03</span>
+        <h3><span class="uz">Ishlab chiqarish</span><span class="en">Production</span></h3>
+        <p class="uz">Mastserskayada buyurtma bering. Detal emas — sanoat ishlab chiqarishi: progress tugaguncha kutasiz.</p>
+        <p class="en">Place an order at the workshop. Not part-by-part crafting — industrial output: you wait for the run to finish.</p>
+      </div>
+      <div class="step">
+        <span class="n">04</span>
+        <h3><span class="uz">Vazifa</span><span class="en">Task</span></h3>
+        <p class="uz">Uskuna sumkada bo'lsa, vazifa ochiladi va bajarilganda sarflanadi.</p>
+        <p class="en">With the kit in your satchel the task unlocks — and consumes the kit when it completes.</p>
+      </div>
+      <div class="step">
+        <span class="n">05</span>
+        <h3><span class="uz">Vaqt sakraydi</span><span class="en">Time jumps</span></h3>
+        <p class="uz">Uchala vazifa yopilgach bonus to'lanadi, kalendar siljiydi, keyingi davr ochiladi.</p>
+        <p class="en">When all three close, the bonus is paid, the calendar moves and the next era opens.</p>
+      </div>
+    </div>
+
+    <div class="loop-split">
+      <div class="body-col">
+        <h3 style="margin-bottom:.8rem"><span class="uz">Brifing — har missiyaning boshi</span><span class="en">The briefing — how a mission opens</span></h3>
+        <p class="uz">Har missiya brifing kartochkasi bilan boshlanadi: davr, tur, tavsif va uchta vazifa. Vazifa yonida talab turadi — <span style="color:var(--accent)">KERAK: O'rnatish komplekti ×1 (0/1)</span>. Shu qator o'yinchiga nima qilish kerakligini bir qarashda aytadi: hali ishlab chiqarish qilinmagan.</p>
+        <p class="en">Every mission opens with a briefing card: era, type, description and three tasks. Each task carries its requirement — <span style="color:var(--accent)">NEEDS: Installation kit ×1 (0/1)</span>. That single line tells the player what is missing: production has not been run yet.</p>
+      </div>
+      <figure>
+        <div class="plate-img"><img src="__IMG_BRIEF__" width="900" height="762" alt="Missiya brifing oynasi: 1900 — Imperiya chegarasi, uchta vazifa va ularning talablari."></div>
+        <figcaption><span><span class="uz">Brifing kartochkasi</span><span class="en">Briefing card</span></span><span>1900</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===== 03 CAMPAIGN ===== -->
+  <section id="kampaniya" data-sheet="03" data-name-uz="Kampaniya" data-name-en="Campaign">
+    <p class="plate"><span class="no">03</span> <span class="uz">Kampaniya</span><span class="en">Campaign</span></p>
+    <h2><span class="uz">O'n davr:<br>1900 → 2050</span><span class="en">Ten eras:<br>1900 → 2050</span></h2>
+    <p class="lede uz">Har davr — o'z map'i, o'z vazifalari va o'z texnikasi. Missiyalar taxtada ochiq turadi: bajarilgani belgilanadi, keyingisi ko'rsatiladi.</p>
+    <p class="lede en">Each era is its own map, its own tasks and its own hardware. Missions sit on the board: finished ones are stamped, the next one is flagged.</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption><span class="uz">Missiyalar ro'yxati — o'yin ma'lumot fayllaridan</span><span class="en">Mission list — read from the game's data files</span></caption>
+        <thead>
+          <tr>
+            <th><span class="uz">Yil</span><span class="en">Year</span></th>
+            <th><span class="uz">Missiya</span><span class="en">Mission</span></th>
+            <th><span class="uz">Tur</span><span class="en">Type</span></th>
+            <th><span class="uz">Bonus</span><span class="en">Bonus</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="yr">1900</td><td class="mname"><span class="uz">Imperiya chegarasi</span><span class="en">Imperial frontier</span></td><td><span class="chip"><span class="uz">Ta'mirlash</span><span class="en">Repair</span></span></td><td class="num">₳72 · 26 XP</td></tr>
+          <tr><td class="yr">1914</td><td class="mname"><span class="uz">Birinchi jahon urushi</span><span class="en">First World War</span></td><td><span class="chip"><span class="uz">Istehkom</span><span class="en">Fortify</span></span></td><td class="num">₳94 · 34 XP</td></tr>
+          <tr><td class="yr">1939</td><td class="mname"><span class="uz">Ikkinchi jahon urushi</span><span class="en">Second World War</span></td><td><span class="chip"><span class="uz">Qurilish</span><span class="en">Construct</span></span></td><td class="num">₳116 · 42 XP</td></tr>
+          <tr><td class="yr">1943</td><td class="mname"><span class="uz">Sharqiy front (qish)</span><span class="en">Eastern front (winter)</span></td><td><span class="chip"><span class="uz">Qurilish</span><span class="en">Construct</span></span></td><td class="num">₳138 · 50 XP</td></tr>
+          <tr><td class="yr">1965</td><td class="mname"><span class="uz">Sovuq urush</span><span class="en">Cold War</span></td><td><span class="chip"><span class="uz">O'rnatish</span><span class="en">Install</span></span></td><td class="num">₳160 · 58 XP</td></tr>
+          <tr><td class="yr">1980</td><td class="mname"><span class="uz">Cho'l operatsiyasi</span><span class="en">Desert operation</span></td><td><span class="chip"><span class="uz">O'rnatish</span><span class="en">Install</span></span></td><td class="num">₳182 · 66 XP</td></tr>
+          <tr><td class="yr">1999</td><td class="mname"><span class="uz">Zamonaviy front</span><span class="en">Modern front</span></td><td><span class="chip"><span class="uz">O'rnatish</span><span class="en">Install</span></span></td><td class="num">₳204 · 74 XP</td></tr>
+          <tr><td class="yr">2015</td><td class="mname"><span class="uz">Kiber-front</span><span class="en">Cyber front</span></td><td><span class="chip"><span class="uz">O'rnatish</span><span class="en">Install</span></span></td><td class="num">₳226 · 82 XP</td></tr>
+          <tr><td class="yr">2030</td><td class="mname"><span class="uz">Yaqin kelajak</span><span class="en">Near future</span></td><td><span class="chip"><span class="uz">O'rnatish</span><span class="en">Install</span></span></td><td class="num">₳248 · 90 XP</td></tr>
+          <tr class="final"><td class="yr">2050</td><td class="mname"><span class="uz">Kelajak bazasi — final</span><span class="en">Future base — finale</span></td><td><span class="chip"><span class="uz">Qurilish</span><span class="en">Construct</span></span></td><td class="num">₳270 · 98 XP</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note uz">Bitta missiya ≈ 2–3 daqiqa · o'ntasi ≈ 20–30 daqiqa · qisqa demo uchun 3 ta missiya ≈ 12 daqiqa.<br>2050 tugagach kampaniya yopilish ekrani chiqadi.</p>
+    <p class="note en">One mission ≈ 2–3 min · all ten ≈ 20–30 min · a short demo run of three missions ≈ 12 min.<br>Finishing 2050 brings up the campaign closing screen.</p>
+  </section>
+
+  <!-- ===== 04 CONTENTS ===== -->
+  <section id="ichida" data-sheet="04" data-name-uz="Ichida nima bor" data-name-en="Contents">
+    <p class="plate"><span class="no">04</span> <span class="uz">Ichida nima bor</span><span class="en">What is inside</span></p>
+    <h2><span class="uz">Vertikal srez,<br>to'liq o'ynaladigan</span><span class="en">A vertical slice<br>you can finish</span></h2>
+
+    <div class="stats">
+      <div class="stat"><b>10</b><span><span class="uz">Missiya va map</span><span class="en">Missions & maps</span></span></div>
+      <div class="stat"><b>30</b><span><span class="uz">Muhandislik vazifasi</span><span class="en">Engineering tasks</span></span></div>
+      <div class="stat"><b>10</b><span><span class="uz">Material turi</span><span class="en">Item types</span></span></div>
+      <div class="stat"><b>17</b><span><span class="uz">Konstruktor moduli</span><span class="en">Designer modules</span></span></div>
+      <div class="stat"><b>5</b><span><span class="uz">Qurol</span><span class="en">Weapons</span></span></div>
+      <div class="stat"><b>6</b><span><span class="uz">Texnika</span><span class="en">Vehicles</span></span></div>
+    </div>
+
+    <ul class="feature-list">
+      <li><span class="uz">Uchinchi shaxs kamerasi, <kbd>V</kbd> bilan birinchi shaxsga o'tish</span><span class="en">Third-person camera, <kbd>V</kbd> switches to first person</span></li>
+      <li><span class="uz">Inventar <kbd>I</kbd>, xarakteristikalar <kbd>C</kbd>, vazifalar <kbd>J</kbd></span><span class="en">Inventory <kbd>I</kbd>, stats <kbd>C</kbd>, task log <kbd>J</kbd></span></li>
+      <li><span class="uz">Texnologiya daraxti <kbd>T</kbd> — pul va daraja sarflab ochiladi</span><span class="en">Tech tree <kbd>T</kbd> — unlocked with money and level</span></li>
+      <li><span class="uz">Modul konstruktori <kbd>B</kbd>: texnika va qurol chizmasini yig'ish</span><span class="en">Module designer <kbd>B</kbd>: assemble vehicle and weapon blueprints</span></li>
+      <li><span class="uz">Haydaladigan Humvee, T-90 (to'p otadi) va samolyot</span><span class="en">Drivable Humvee, T-90 (the cannon fires) and aircraft</span></li>
+      <li><span class="uz">Chidam tizimi — <kbd>Shift</kbd> bilan yugurish chekli</span><span class="en">Stamina — sprinting on <kbd>Shift</kbd> is limited</span></li>
+      <li><span class="uz">NPC lager: askar, aloqachi, aholi; rol plitalari</span><span class="en">Camp NPCs: soldiers, signallers, civilians with role plates</span></li>
+      <li><span class="uz">Saqlash: missiya o'rtasida chiqib, o'sha joydan davom etasiz</span><span class="en">Saving: quit mid-mission and resume in the same place</span></li>
+    </ul>
+
+    <div class="gallery">
+      <figure>
+        <div class="plate-img"><img src="__IMG_HUB__" width="1500" height="844" alt="O'yin ichidagi kadr: HUD, lager, NPC'lar va missiya brifing oynasi."></div>
+        <figcaption><span><span class="uz">Lager va brifing — o'yin ichidan</span><span class="en">Camp and briefing — in game</span></span><span>1900</span></figcaption>
+      </figure>
+      <figure>
+        <div class="plate-img"><img src="__IMG_HUD__" width="600" height="880" alt="HUD paneli: axcha, sog'liq, chidam, daraja va material hisobi."></div>
+        <figcaption><span><span class="uz">HUD — pul, sog'liq, chidam, material</span><span class="en">HUD — money, health, stamina, materials</span></span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===== 05 DOWNLOAD ===== -->
+  <section id="yuklash" data-sheet="05" data-name-uz="Yuklab olish" data-name-en="Download">
+    <p class="plate"><span class="no">05</span> <span class="uz">Yuklab olish</span><span class="en">Download</span></p>
+    <h2><span class="uz">v1.0.0 — macOS<br>va Windows</span><span class="en">v1.0.0 — macOS<br>and Windows</span></h2>
+    <p class="lede uz">Bepul, o'rnatishga tayyor. O'yin to'liq oflayn ishlaydi, internet talab qilinmaydi.</p>
+    <p class="lede en">Free and ready to install. The game runs fully offline — no connection required.</p>
+
+    <div class="dl-grid">
+      <!-- TODO: replace href="#" with the real release URL for each file -->
+      <article class="dl">
+        <div class="dl-head">
+          <div class="dl-os">macOS</div>
+          <div class="dl-kind"><span class="uz">Disk obrazi · .dmg</span><span class="en">Disk image · .dmg</span></div>
+        </div>
+        <dl class="dl-meta">
+          <dt><span class="uz">Hajm</span><span class="en">Size</span></dt><dd>371 MB</dd>
+          <dt><span class="uz">Tizim</span><span class="en">System</span></dt><dd>macOS · Apple Silicon + Intel</dd>
+        </dl>
+        <div class="dl-body">
+          <p class="uz">Universal build. Birinchi ochishda ikki marta bosmang — <b>o'ng tugma → Open</b>, so'ng yana <b>Open</b>. Ilova Apple'da notarizatsiya qilinmagan, shuning uchun macOS bir marta so'raydi.</p>
+          <p class="en">Universal build. On first launch do not double-click — <b>right-click → Open</b>, then <b>Open</b> again. The app is not notarised by Apple, so macOS asks once.</p>
+        </div>
+        <div class="dl-foot">
+          <a class="dl-btn is-pending" href="#" aria-disabled="true">
+            <span><span class="uz">Havola tayyorlanmoqda</span><span class="en">Link coming soon</span></span>
+            <span class="sz">371 MB</span>
+          </a>
+          <span class="pending-note"><span class="uz">Fayl hali yuklanmagan</span><span class="en">File not published yet</span></span>
+        </div>
+      </article>
+
+      <article class="dl">
+        <div class="dl-head">
+          <div class="dl-os">Windows</div>
+          <div class="dl-kind"><span class="uz">O'rnatuvchi · .msi — tavsiya etiladi</span><span class="en">Installer · .msi — recommended</span></div>
+        </div>
+        <dl class="dl-meta">
+          <dt><span class="uz">Hajm</span><span class="en">Size</span></dt><dd>312 MB</dd>
+          <dt><span class="uz">Tizim</span><span class="en">System</span></dt><dd>Windows 10 / 11 · x64</dd>
+        </dl>
+        <div class="dl-body">
+          <p class="uz"><code>C:\Program Files\ChronoShift\</code> ga o'rnatiladi, Start menyusida yorliq paydo bo'ladi, Settings → Apps orqali o'chiriladi. SmartScreen ogohlantirsa: <b>More info → Run anyway</b>.</p>
+          <p class="en">Installs to <code>C:\Program Files\ChronoShift\</code>, adds a Start-menu shortcut and uninstalls from Settings → Apps. If SmartScreen warns: <b>More info → Run anyway</b>.</p>
+        </div>
+        <div class="dl-foot">
+          <a class="dl-btn is-pending" href="#" aria-disabled="true">
+            <span><span class="uz">Havola tayyorlanmoqda</span><span class="en">Link coming soon</span></span>
+            <span class="sz">312 MB</span>
+          </a>
+          <span class="pending-note"><span class="uz">Fayl hali yuklanmagan</span><span class="en">File not published yet</span></span>
+        </div>
+      </article>
+
+      <article class="dl">
+        <div class="dl-head">
+          <div class="dl-os">Windows</div>
+          <div class="dl-kind"><span class="uz">Portativ · .zip</span><span class="en">Portable · .zip</span></div>
+        </div>
+        <dl class="dl-meta">
+          <dt><span class="uz">Hajm</span><span class="en">Size</span></dt><dd>306 MB</dd>
+          <dt><span class="uz">Tizim</span><span class="en">System</span></dt><dd>Windows 10 / 11 · x64</dd>
+        </dl>
+        <div class="dl-body">
+          <p class="uz">O'rnatishsiz ishlaydi. Arxivdagi uchala narsa <b>bir papkada qolishi shart</b>: <code>.exe</code>, <code>.pck</code> va <code>data_…</code> papkasi. Faqat <code>.exe</code> ni ko'chirsangiz o'yin ochilmaydi.</p>
+          <p class="en">Runs without installing. All three items must <b>stay in one folder</b>: the <code>.exe</code>, the <code>.pck</code> and the <code>data_…</code> directory. Copying only the <code>.exe</code> will not launch the game.</p>
+        </div>
+        <div class="dl-foot">
+          <a class="dl-btn is-pending" href="#" aria-disabled="true">
+            <span><span class="uz">Havola tayyorlanmoqda</span><span class="en">Link coming soon</span></span>
+            <span class="sz">306 MB</span>
+          </a>
+          <span class="pending-note"><span class="uz">Fayl hali yuklanmagan</span><span class="en">File not published yet</span></span>
+        </div>
+      </article>
+    </div>
+
+    <p class="banner uz"><b>Eslatma:</b> Windows build va MSI o'rnatuvchi macOS'dan cross-eksport qilingan va Windows mashinasida sinalmagan. macOS versiyasi ishga tushirilib tekshirilgan (Apple M5, OpenGL 4.1 Metal). Ikkala platformada ham ilova imzolanmagan — birinchi ochishda tizim ogohlantirishi chiqadi.</p>
+    <p class="banner en"><b>Note:</b> the Windows build and the MSI installer were cross-exported from macOS and have not been run on a Windows machine. The macOS version was launched and verified (Apple M5, OpenGL 4.1 Metal). Neither build is code-signed, so both systems warn on first launch.</p>
+  </section>
+
+  <!-- ===== 06 CONTROLS ===== -->
+  <section id="boshqaruv" data-sheet="06" data-name-uz="Boshqaruv" data-name-en="Controls">
+    <p class="plate"><span class="no">06</span> <span class="uz">Boshqaruv</span><span class="en">Controls</span></p>
+    <h2><span class="uz">Klaviatura<br>va sichqoncha</span><span class="en">Keyboard<br>and mouse</span></h2>
+    <ul class="keys">
+      <li><kbd>W A S D</kbd><span><span class="uz">Yurish</span><span class="en">Move</span></span></li>
+      <li><kbd>Shift</kbd><span><span class="uz">Yugurish — chidam sarflanadi</span><span class="en">Sprint — costs stamina</span></span></li>
+      <li><kbd>Space</kbd><span><span class="uz">Sakrash</span><span class="en">Jump</span></span></li>
+      <li><kbd>E</kbd><span><span class="uz">Ishlash · material yig'ish · qurol olish</span><span class="en">Work · gather · pick up a weapon</span></span></li>
+      <li><kbd>I</kbd><span><span class="uz">Sumka</span><span class="en">Satchel</span></span></li>
+      <li><kbd>J</kbd><span><span class="uz">Vazifalar oynasi</span><span class="en">Task log</span></span></li>
+      <li><kbd>C</kbd><span><span class="uz">Xarakteristikalar</span><span class="en">Stats</span></span></li>
+      <li><kbd>B</kbd><span><span class="uz">Modul konstruktori</span><span class="en">Module designer</span></span></li>
+      <li><kbd>T</kbd><span><span class="uz">Texnologiya daraxti</span><span class="en">Tech tree</span></span></li>
+      <li><kbd>V</kbd><span><span class="uz">Birinchi / uchinchi shaxs</span><span class="en">First / third person</span></span></li>
+      <li><kbd>1 … 5</kbd><span><span class="uz">Qurol tanlash</span><span class="en">Select weapon</span></span></li>
+      <li><kbd>LMB</kbd><span><span class="uz">Otish</span><span class="en">Fire</span></span></li>
+      <li><kbd>RMB</kbd><span><span class="uz">Nishonga olish — snayperda optika</span><span class="en">Aim — scope on the sniper rifle</span></span></li>
+      <li><kbd>F</kbd><span><span class="uz">Texnikadan chiqish</span><span class="en">Exit vehicle</span></span></li>
+      <li><kbd>Esc</kbd><span><span class="uz">Pauza</span><span class="en">Pause</span></span></li>
+    </ul>
+    <p class="note uz">To'liq ro'yxat o'yin ichida: Pauza → Boshqaruv.</p>
+    <p class="note en">The full list lives in game: Pause → Controls.</p>
+  </section>
+
+  <!-- ===== 07 TECHNICAL ===== -->
+  <section id="texnik" data-sheet="07" data-name-uz="Texnik izoh" data-name-en="Technical notes">
+    <p class="plate"><span class="no">07</span> <span class="uz">Texnik izoh</span><span class="en">Technical notes</span></p>
+    <div class="tech-grid">
+      <div class="tech-block">
+        <h3><span class="uz">Tizim talablari</span><span class="en">Requirements</span></h3>
+        <p class="uz">Renderer ataylab <code>gl_compatibility</code> rejimida — zaif videokartalarda ham ishlaydi. Sinalgan: Apple M5, OpenGL 4.1 Metal. Diskda ~1 GB joy kerak.</p>
+        <p class="en">The renderer deliberately runs in <code>gl_compatibility</code> mode so weak GPUs are still fine. Verified on Apple M5, OpenGL 4.1 Metal. Needs about 1 GB of disk space.</p>
+      </div>
+      <div class="tech-block">
+        <h3><span class="uz">Saqlash fayli</span><span class="en">Save file</span></h3>
+        <ul>
+          <li>macOS — <code>~/Library/Application Support/Godot/app_userdata/ChronoShift/savegame.json</code></li>
+          <li>Windows — <code>%APPDATA%\Godot\app_userdata\ChronoShift\savegame.json</code></li>
+        </ul>
+        <p class="uz" style="margin-top:.6rem">Toza boshlash uchun shu faylni o'chiring.</p>
+        <p class="en" style="margin-top:.6rem">Delete that file to start clean.</p>
+      </div>
+      <div class="tech-block">
+        <h3><span class="uz">Nimada qurilgan</span><span class="en">Built with</span></h3>
+        <p class="uz">Godot 4.7.1 (.NET) va C#. Butun kontent — missiya, qurol, texnika, retsept, modul — kodda emas, <code>.tres</code> ma'lumot fayllarida: yangi davr qo'shish uchun kod refaktori shart emas.</p>
+        <p class="en">Godot 4.7.1 (.NET) and C#. All content — missions, weapons, vehicles, recipes, modules — lives in <code>.tres</code> data files rather than code, so a new era does not require a refactor.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="sheetmark" aria-hidden="true">
+  <span class="uz">Varaq</span><span class="en">Sheet</span> <b id="sm-no">000</b> <i id="sm-name">—</i>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <span>ChronoShift · MVP v1.0.0 · <span class="uz">Vertikal srez</span><span class="en">Vertical slice</span></span>
+    <span><a href="https://github.com/HUMO5459/ChronoShift">github.com/HUMO5459/ChronoShift</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+
+  // language
+  var buttons=Array.prototype.slice.call(document.querySelectorAll('.lang button'));
+  function setLang(code){
+    if(code==='en'){root.setAttribute('data-lang','en');}else{root.removeAttribute('data-lang');}
+    buttons.forEach(function(b){b.setAttribute('aria-pressed', String(b.dataset.lang===code));});
+    try{localStorage.setItem('woe-lang',code);}catch(e){}
+  }
+  buttons.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.lang);});});
+  try{var saved=localStorage.getItem('woe-lang'); if(saved){setLang(saved);}}catch(e){}
+
+  // title block follows the sheet you are reading
+  var no=document.getElementById('sm-no'), name=document.getElementById('sm-name');
+  var sections=Array.prototype.slice.call(document.querySelectorAll('section[data-sheet]'));
+  function label(sec){
+    return root.getAttribute('data-lang')==='en' ? sec.dataset.nameEn : sec.dataset.nameUz;
+  }
+  var current=sections[0];
+  function paint(){ if(!current)return; no.textContent=current.dataset.sheet; name.textContent=label(current); }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ current=e.target; paint(); } });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(s){io.observe(s);});
+  }
+  buttons.forEach(function(b){b.addEventListener('click',paint);});
+  paint();
+
+  // placeholder download buttons must not navigate anywhere
+  document.querySelectorAll('.dl-btn.is-pending').forEach(function(a){
+    a.addEventListener('click',function(ev){ev.preventDefault();});
+  });
+})();
+</script>
+<!--/CONTENT-->
+</body>
+</html>

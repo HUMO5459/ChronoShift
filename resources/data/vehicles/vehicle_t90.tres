@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="VehicleData" load_steps=3 format=3 uid="uid://dveht90grn9"]
+
+[ext_resource type="Script" path="res://scripts/data/VehicleData.cs" id="1_s"]
+[ext_resource type="PackedScene" uid="uid://dtank7n3x9k2q" path="res://scenes/world/Tank.tscn" id="2_v"]
+
+[resource]
+script = ExtResource("1_s")
+VehicleId = "t90_green"
+DisplayName = "T-90 (Yashil)"
+Kind = "ASOSIY TANK"
+Description = "Aylanadigan minora va kuchli to'p. Sekin, lekin zirhli."
+VehicleScene = ExtResource("2_v")
+MaxHealth = 520.0
+MoveSpeed = 5.0
+TurnSpeed = 1.2
+Armor = 0.35
+ProductionCost = 3200
+ArmamentName = "125 mm to'p"
+ArmamentDamage = 120.0
+ArmamentRange = 400.0
+ArmamentReloadSeconds = 3.0

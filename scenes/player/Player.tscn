@@ -1,0 +1,114 @@
+[gd_scene load_steps=35 format=3 uid="uid://bplayr6v4k8n2"]
+
+[ext_resource type="Script" path="res://scripts/player/PlayerController.cs" id="1_pc"]
+[ext_resource type="Script" path="res://scripts/player/PlayerCamera.cs" id="2_cam"]
+[ext_resource type="Script" path="res://scripts/player/PlayerInteraction.cs" id="3_interact"]
+[ext_resource type="Script" path="res://scripts/player/WeaponController.cs" id="4_weapon"]
+[ext_resource type="Script" path="res://scripts/player/PlayerHealth.cs" id="4_health"]
+[ext_resource type="Script" path="res://scripts/player/CharacterRig.cs" id="5_charvis"]
+[ext_resource type="PackedScene" uid="uid://doeb4575kt8xd" path="res://assets/models/character/rp_nathan_animated_003_walking.fbx" id="6_model"]
+[ext_resource type="Texture2D" path="res://assets/models/character/rp_nathan_animated_003_dif.jpg" id="7_albedo"]
+[ext_resource type="Texture2D" path="res://assets/models/character/rp_nathan_animated_003_norm.jpg" id="8_normal"]
+[ext_resource type="Resource" uid="uid://croster9k2x4" path="res://resources/data/characters/character_roster.tres" id="13_roster"]
+[ext_resource type="Resource" uid="uid://d6wrevn3k8m1" path="res://resources/data/weapons/weapon_revolver.tres" id="9_weapon"]
+[ext_resource type="Resource" uid="uid://cwpistol01a2" path="res://resources/data/weapons/weapon_pistol.tres" id="14_pistol"]
+[ext_resource type="Resource" uid="uid://cwglock01b3c" path="res://resources/data/weapons/weapon_glock.tres" id="15_glock"]
+[ext_resource type="Resource" uid="uid://cwak4701d4e" path="res://resources/data/weapons/weapon_ak47.tres" id="16_ak47"]
+[ext_resource type="Resource" uid="uid://cwawp01f5a6" path="res://resources/data/weapons/weapon_awp.tres" id="17_awp"]
+[ext_resource type="PackedScene" uid="uid://cmuzzlefx4k9x" path="res://scenes/fx/MuzzleFx.tscn" id="10_muzzlefx"]
+[ext_resource type="PackedScene" uid="uid://cimpactfx7m2q" path="res://scenes/fx/ImpactFx.tscn" id="11_impactfx"]
+[ext_resource type="PackedScene" uid="uid://ctracer8n3k4" path="res://scenes/fx/Tracer.tscn" id="12_tracerfx"]
+[ext_resource type="AudioStream" uid="uid://b5q8liwdkpq6d" path="res://assets/audio/impacts/impact_metal_1.wav" id="aud_0"]
+[ext_resource type="AudioStream" uid="uid://c053oqxys31a2" path="res://assets/audio/impacts/impact_metal_2.wav" id="aud_1"]
+[ext_resource type="AudioStream" uid="uid://bt3vd33m25naa" path="res://assets/audio/impacts/impact_metal_3.wav" id="aud_2"]
+[ext_resource type="AudioStream" uid="uid://d0ktb5f6vkpst" path="res://assets/audio/impacts/impact_wood_1.wav" id="aud_3"]
+[ext_resource type="AudioStream" uid="uid://l086778b0ljc" path="res://assets/audio/impacts/impact_wood_2.wav" id="aud_4"]
+[ext_resource type="AudioStream" uid="uid://fnes65nleyum" path="res://assets/audio/impacts/impact_ground_1.wav" id="aud_5"]
+[ext_resource type="AudioStream" uid="uid://cb31m81i5402l" path="res://assets/audio/impacts/impact_ground_2.wav" id="aud_6"]
+[ext_resource type="AudioStream" uid="uid://da56ufxiid767" path="res://assets/audio/weapons/shell_1.mp3" id="aud_7"]
+[ext_resource type="AudioStream" uid="uid://vqyfmw6i0qsd" path="res://assets/audio/weapons/shell_2.mp3" id="aud_8"]
+[ext_resource type="AudioStream" uid="uid://kcxqvbrnulpw" path="res://assets/audio/weapons/shell_3.mp3" id="aud_9"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
+albedo_color = Color(0.25, 0.5, 0.75, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+material = SubResource("StandardMaterial3D_body")
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nose"]
+albedo_color = Color(0.9, 0.85, 0.3, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nose"]
+material = SubResource("StandardMaterial3D_nose")
+size = Vector3(0.2, 0.2, 0.4)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_interact"]
+radius = 2.5
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+script = ExtResource("1_pc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_body")
+
+[node name="Nose" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.5)
+visible = false
+mesh = SubResource("BoxMesh_nose")
+
+[node name="Character" type="Node3D" parent="Visual"]
+script = ExtResource("5_charvis")
+_roster = ExtResource("13_roster")
+_controllerPath = NodePath("../..")
+
+[node name="Model" parent="Visual/Character" instance=ExtResource("6_model")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="CameraRig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+script = ExtResource("2_cam")
+_firstPersonOffset = Vector3(0.0, 0.1, -0.05)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraRig"]
+spring_length = 4.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/SpringArm3D"]
+current = true
+fov = 75.0
+
+[node name="InteractionArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 1
+monitoring = true
+monitorable = false
+script = ExtResource("3_interact")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_interact")
+
+[node name="WeaponController" type="Node3D" parent="."]
+script = ExtResource("4_weapon")
+_loadout = [ExtResource("14_pistol"), ExtResource("9_weapon")]
+_muzzleFxScene = ExtResource("10_muzzlefx")
+_impactFxScene = ExtResource("11_impactfx")
+_tracerScene = ExtResource("12_tracerfx")
+_impactSounds = Array[AudioStream]([ExtResource("aud_0"), ExtResource("aud_1"), ExtResource("aud_2"), ExtResource("aud_3"), ExtResource("aud_4"), ExtResource("aud_5"), ExtResource("aud_6")])
+_shellSounds = Array[AudioStream]([ExtResource("aud_7"), ExtResource("aud_8"), ExtResource("aud_9")])
+
+[node name="PlayerHealth" type="Node" parent="."]
+script = ExtResource("4_health")

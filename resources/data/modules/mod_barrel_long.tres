@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ModuleData" load_steps=3 format=3 uid="uid://woemod13"]
+
+[ext_resource type="Script" path="res://scripts/data/ModuleData.cs" id="1_s"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="3_i0"]
+
+[resource]
+script = ExtResource("1_s")
+ModuleId = "barrel_long"
+DisplayName = "Uzun stvol"
+Description = "Aniqlik va masofa."
+Kind = 1
+Slot = 5
+DamageBonus = 9.0
+RangeBonus = 120.0
+CostMoney = 260
+Inputs = [ExtResource("3_i0")]
+InputAmounts = PackedInt32Array(5)

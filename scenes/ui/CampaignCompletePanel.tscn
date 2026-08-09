@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=3 uid="uid://ccampdone7x4k"]
+
+[ext_resource type="Script" path="res://scripts/ui/CampaignCompletePanel.cs" id="1_campdone"]
+
+[sub_resource type="StyleBoxFlat" id="SB_card"]
+content_margin_left = 56.0
+content_margin_top = 50.0
+content_margin_right = 56.0
+content_margin_bottom = 46.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 1)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 30
+shadow_offset = Vector2(0, 14)
+
+[node name="CampaignCompletePanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_campdone")
+
+[node name="Scrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0157, 0.0235, 0.0392, 0.82)
+
+[node name="Center" type="CenterContainer" parent="Scrim"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="Scrim/Center"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_card")
+
+[node name="Rows" type="VBoxContainer" parent="Scrim/Center/Card"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Kicker" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 13
+text = "KAMPANIYA"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 50
+text = "TUGADI"
+horizontal_alignment = 1
+
+[node name="Years" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"TimeScale"
+theme_override_font_sizes/font_size = 34
+text = "1900 — 2050"
+horizontal_alignment = 1
+
+[node name="Stats" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+theme_override_font_sizes/font_size = 15
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Thesis" type="Label" parent="Scrim/Center/Card/Rows"]
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+theme_type_variation = &"Body"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+theme_override_font_sizes/font_size = 17
+text = "Bir yarim asr front chizig'i orqasida o'tdi. Kampaniyani o'q soni emas, ishlab chiqarish, ta'minot va muhandislik yechimlari hal qildi. Siz tarixni shu bilan o'zgartirdingiz."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Close" type="Button" parent="Scrim/Center/Card/Rows"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintPrimary"
+text = "BAZAGA QAYTISH"
+alignment = 1

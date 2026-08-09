@@ -1,0 +1,17 @@
+# Hand-authored: source rip had no MTL. Atlas texture matches the 8430f8ee material;
+# the other groups (tracks/detail) had no shipped textures - flat military tones.
+newmtl 8430f8ee_dds
+Kd 1.0 1.0 1.0
+map_Kd 8430f8ee.jpg
+
+newmtl 95d3de2c_dds
+Kd 0.16 0.17 0.13
+
+newmtl 0588ffb4_dds
+Kd 0.22 0.24 0.18
+
+newmtl Material__3919
+Kd 0.13 0.14 0.11
+
+newmtl Material__3920
+Kd 0.18 0.19 0.15

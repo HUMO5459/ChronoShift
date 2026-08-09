@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://cvillage8n3k2x"]
+
+[ext_resource type="PackedScene" uid="uid://chouse4k7m2xq" path="res://scenes/world/House.tscn" id="1_house"]
+
+[node name="Village" type="Node3D"]
+
+[node name="House1" parent="." instance=ExtResource("1_house")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="House2" parent="." instance=ExtResource("1_house")]
+transform = Transform3D(0.9, 0, 0, 0, 1, 0, 0, 0, 0.9, 13, 0, 4)
+
+[node name="House3" parent="." instance=ExtResource("1_house")]
+transform = Transform3D(0, 0, 1.1, 0, 1, 0, -1.1, 0, 0, 26, 0, -2)
+
+[node name="House4" parent="." instance=ExtResource("1_house")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 4, 0, 20)
+
+[node name="House5" parent="." instance=ExtResource("1_house")]
+transform = Transform3D(1.15, 0, 0, 0, 1.1, 0, 0, 0, 1.15, 19, 0, 24)
+
+[node name="House6" parent="." instance=ExtResource("1_house")]
+transform = Transform3D(0.7071, 0, 0.7071, 0, 1, 0, -0.7071, 0, 0.7071, 33, 0, 15)

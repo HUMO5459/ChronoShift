@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3 uid="uid://d6wrevn3k8m1"]
+
+[ext_resource type="Script" path="res://scripts/data/WeaponData.cs" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://d7revk2m4x1q" path="res://scenes/props/WeaponRevolver.tscn" id="2_model"]
+[ext_resource type="AudioStream" uid="uid://fnjwdtf336po" path="res://assets/audio/weapons/fire_rifle.wav" id="aud_0"]
+
+[resource]
+script = ExtResource("1_script")
+WeaponId = "revolver_1900"
+DisplayName = "Xizmat Revolveri"
+Category = 0
+Damage = 34.0
+Range = 100.0
+FireRate = 2.5
+Automatic = false
+MagazineSize = 6
+ReloadSeconds = 2.0
+PelletsPerShot = 1
+SpreadDegrees = 0.4
+AimFov = 0.0
+ModelScene = ExtResource("2_model")
+GripPosition = Vector3(-0.127, -0.041, 0.078)
+GripRotationDegrees = Vector3(22.4, -40.4, 33.1)
+GripScale = 1.0
+FireSound = ExtResource("aud_0")
+ProductionCost = 220

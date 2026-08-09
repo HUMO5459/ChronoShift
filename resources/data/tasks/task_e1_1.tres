@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=2 format=3 uid="uid://woetsk11"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e1_1"
+DisplayName = "Generatorni ta'mirlash"
+Kind = "TA'MIRLASH"
+Description = "Chegara postining generatori ishdan chiqdi — qayta ishga tushiring."
+DurationSeconds = 3.2
+RewardMoney = 50
+RewardXp = 17
+; --- production layer (generated) ---
+AdvanceDays = 1277.5

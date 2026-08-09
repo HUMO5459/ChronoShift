@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=2 format=3 uid="uid://woetsk91"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e9_1"
+DisplayName = "Quyosh paneli fermasi"
+Kind = "O'RNATISH"
+Description = "Baza energiyasi uchun quyosh paneli fermasini quring."
+DurationSeconds = 4.8
+RewardMoney = 162
+RewardXp = 49
+; --- production layer (generated) ---
+AdvanceDays = 1825.0

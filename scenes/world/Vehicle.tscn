@@ -1,0 +1,91 @@
+[gd_scene load_steps=12 format=3 uid="uid://bq7v3n8xk2m4r"]
+
+[ext_resource type="Script" path="res://scripts/world/Vehicle.cs" id="1_vehicle"]
+[ext_resource type="ArrayMesh" path="res://assets/models/vehicles/humvee/humvee_body.obj" id="2_body"]
+[ext_resource type="Script" path="res://scripts/player/PlayerCamera.cs" id="3_camera"]
+[ext_resource type="ArrayMesh" path="res://assets/models/vehicles/humvee/humvee_wheel_fr.obj" id="4_wheel_fl"]
+[ext_resource type="ArrayMesh" path="res://assets/models/vehicles/humvee/humvee_wheel_fl.obj" id="5_wheel_fr"]
+[ext_resource type="ArrayMesh" path="res://assets/models/vehicles/humvee/humvee_wheel_rr.obj" id="6_wheel_rl"]
+[ext_resource type="ArrayMesh" path="res://assets/models/vehicles/humvee/humvee_wheel_rl.obj" id="7_wheel_rr"]
+[ext_resource type="PackedScene" uid="uid://cimpactfx7m2q" path="res://scenes/fx/ImpactFx.tscn" id="8_destroyfx"]
+[ext_resource type="AudioStream" uid="uid://cds4sgd3ydkmd" path="res://assets/audio/impacts/explosion_big.wav" id="9_destroysfx"]
+[ext_resource type="AudioStream" uid="uid://b5q8liwdkpq6d" path="res://assets/audio/impacts/impact_metal_1.wav" id="10_hitsfx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vehicle"]
+size = Vector3(2.56, 1.73, 4.58)
+
+[sub_resource type="SphereMesh" id="SphereMesh_lamp"]
+radius = 0.09
+height = 0.18
+
+[node name="Vehicle" type="CharacterBody3D"]
+script = ExtResource("1_vehicle")
+_rollingWheels = [NodePath("WheelFrontLeft/Spin"), NodePath("WheelFrontRight/Spin"), NodePath("WheelRearLeft/Spin"), NodePath("WheelRearRight/Spin")]
+_steeringWheels = [NodePath("WheelFrontLeft"), NodePath("WheelFrontRight")]
+_wheelRadius = 0.445
+_liveryMeshes = [NodePath("Body")]
+_maxHealth = 260.0
+_destroyFxScene = ExtResource("8_destroyfx")
+_destroySound = ExtResource("9_destroysfx")
+_hitSound = ExtResource("10_hitsfx")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.0139, 0, 0, 0, 0.0139, 0, 0, 0, -0.0139, 0, 0.017, 0)
+mesh = ExtResource("2_body")
+
+[node name="WheelFrontLeft" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.926, 0.445, -1.71)
+
+[node name="Spin" type="Node3D" parent="WheelFrontLeft"]
+
+[node name="Mesh" type="MeshInstance3D" parent="WheelFrontLeft/Spin"]
+transform = Transform3D(-0.0139, 0, 0, 0, 0.0139, 0, 0, 0, -0.0139, 0, 0, 0)
+mesh = ExtResource("4_wheel_fl")
+
+[node name="WheelFrontRight" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.894, 0.445, -1.71)
+
+[node name="Spin" type="Node3D" parent="WheelFrontRight"]
+
+[node name="Mesh" type="MeshInstance3D" parent="WheelFrontRight/Spin"]
+transform = Transform3D(-0.0139, 0, 0, 0, 0.0139, 0, 0, 0, -0.0139, 0, 0, 0)
+mesh = ExtResource("5_wheel_fr")
+
+[node name="WheelRearLeft" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.926, 0.445, 1.535)
+
+[node name="Spin" type="Node3D" parent="WheelRearLeft"]
+
+[node name="Mesh" type="MeshInstance3D" parent="WheelRearLeft/Spin"]
+transform = Transform3D(-0.0139, 0, 0, 0, 0.0139, 0, 0, 0, -0.0139, 0, 0, 0)
+mesh = ExtResource("6_wheel_rl")
+
+[node name="WheelRearRight" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.894, 0.445, 1.535)
+
+[node name="Spin" type="Node3D" parent="WheelRearRight"]
+
+[node name="Mesh" type="MeshInstance3D" parent="WheelRearRight/Spin"]
+transform = Transform3D(-0.0139, 0, 0, 0, 0.0139, 0, 0, 0, -0.0139, 0, 0, 0)
+mesh = ExtResource("7_wheel_rr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.865, 0)
+shape = SubResource("BoxShape3D_vehicle")
+
+[node name="StatusLamp" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, 0)
+mesh = SubResource("SphereMesh_lamp")
+
+[node name="CameraRig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
+script = ExtResource("3_camera")
+_shoulderOffset = Vector3(0, 0, 0)
+_firstPersonOffset = Vector3(-0.45, -0.1, -0.95)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.9393727, 0.3428978, 0, -0.3428978, 0.9393727, 0, 0, 0)
+spring_length = 7.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/SpringArm3D"]
+fov = 75.0

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcsna4g1m7ywz"]
+
+[ext_resource type="ArrayMesh" uid="uid://diyfkenfkssd7" path="res://assets/models/aircraft/airplane/11804_Airplane_v2_l2.obj" id="1_cessna"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cessna"]
+size = Vector3(8.3, 2.56, 10.9)
+
+[node name="AircraftCessna" type="StaticBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.01, 0, 0, 0, 0, 0.01, 0, -0.01, 0, -1.49, 0, 0)
+mesh = ExtResource("1_cessna")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28, 0)
+shape = SubResource("BoxShape3D_cessna")

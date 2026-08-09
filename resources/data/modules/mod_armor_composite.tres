@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ModuleData" load_steps=4 format=3 uid="uid://woemod06"]
+
+[ext_resource type="Script" path="res://scripts/data/ModuleData.cs" id="1_s"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="3_i0"]
+[ext_resource type="Resource" uid="uid://woeitm04" path="res://resources/data/items/item_res_stone.tres" id="3_i1"]
+
+[resource]
+script = ExtResource("1_s")
+ModuleId = "armor_composite"
+DisplayName = "Kompozit zirh"
+Description = "Ogir va qimmat, lekin eng yaxshi himoya."
+Kind = 0
+Slot = 2
+ArmorBonus = 0.15
+HealthBonus = 140.0
+SpeedBonus = -1.0
+CostMoney = 1400
+Inputs = [ExtResource("3_i0"), ExtResource("3_i1")]
+InputAmounts = PackedInt32Array(16, 10)

@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://dflightki61x2"]
+
+[ext_resource type="Script" path="res://scripts/world/Aircraft.cs" id="1_air"]
+[ext_resource type="ArrayMesh" uid="uid://bglj4fc0jikbo" path="res://assets/models/aircraft/ki61/14082_WWII_Plane_Japan_Kawasaki_Ki-61_v1_L2.obj" id="2_mesh"]
+[ext_resource type="Script" path="res://scripts/player/PlayerCamera.cs" id="3_cam"]
+
+[sub_resource type="BoxShape3D" id="Box_air"]
+size = Vector3(3.5, 1.6, 5)
+
+[node name="FlightKi61" type="CharacterBody3D"]
+script = ExtResource("1_air")
+_mode = 0
+_meshPath = NodePath("MeshRoot")
+
+[node name="MeshRoot" type="Node3D" parent="."]
+
+[node name="BodyOrient" type="Node3D" parent="MeshRoot"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 0)
+
+[node name="Body" type="MeshInstance3D" parent="MeshRoot/BodyOrient"]
+transform = Transform3D(5.5, 0, 0, 0, 0, 5.5, 0, -5.5, 0, 0, 0, 0)
+mesh = ExtResource("2_mesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("Box_air")
+
+[node name="CameraRig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+script = ExtResource("3_cam")
+_shoulderOffset = Vector3(0, 0, 0)
+_firstPersonOffset = Vector3(0.000, -0.450, -1.600)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, 0, 0, 0)
+spring_length = 9.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/SpringArm3D"]
+fov = 75.0

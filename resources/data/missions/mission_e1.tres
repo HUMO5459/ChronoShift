@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="MissionData" load_steps=4 format=3 uid="uid://woemisc1"]
+
+[ext_resource type="Script" path="res://scripts/data/MissionData.cs" id="1"]
+[ext_resource type="PackedScene" uid="uid://dgenericmap01" path="res://scenes/maps/GenericMissionMap.tscn" id="2"]
+[ext_resource type="Resource" uid="uid://woemapc1" path="res://resources/data/maps/mapdata_e1.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+MissionId = "m_e1"
+DisplayName = "1900 — Imperiya chegarasi"
+Description = "Imperiya chegarasidagi ilg'or post hali jihozlanmagan. Generator, telegraf va istehkomni tayyorlab, garnizonni jangga shay holatga keltiring."
+Kind = "TA'MIRLASH"
+MapScene = ExtResource("2")
+Map = ExtResource("3")
+BonusMoney = 72
+BonusXp = 26
+; --- production layer (generated) ---
+EraYear = 1900

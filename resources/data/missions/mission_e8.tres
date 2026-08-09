@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="MissionData" load_steps=4 format=3 uid="uid://woemisc8"]
+
+[ext_resource type="Script" path="res://scripts/data/MissionData.cs" id="1"]
+[ext_resource type="PackedScene" uid="uid://dgenericmap01" path="res://scenes/maps/GenericMissionMap.tscn" id="2"]
+[ext_resource type="Resource" uid="uid://woemapc8" path="res://resources/data/maps/mapdata_e8.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+MissionId = "m_e8"
+DisplayName = "2015 — Kiber-front"
+Description = "Kiber-front raqamli hujum ostida. Server markazini o'rnating, sensor to'rini yoying va avtomat postni qayta ishga tushiring."
+Kind = "O'RNATISH"
+MapScene = ExtResource("2")
+Map = ExtResource("3")
+BonusMoney = 226
+BonusXp = 82
+; --- production layer (generated) ---
+EraYear = 2015

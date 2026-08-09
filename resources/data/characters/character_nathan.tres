@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=5 format=3 uid="uid://cnathanchar7x2"]
+
+[ext_resource type="Script" path="res://scripts/data/CharacterData.cs" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/models/character/rp_nathan_animated_003_dif.jpg" id="2_albedo"]
+[ext_resource type="Texture2D" path="res://assets/models/character/rp_nathan_animated_003_norm.jpg" id="3_normal"]
+[ext_resource type="PackedScene" uid="uid://doeb4575kt8xd" path="res://assets/models/character/rp_nathan_animated_003_walking.fbx" id="4_model"]
+
+[resource]
+script = ExtResource("1_script")
+CharacterId = "nathan"
+DisplayName = "Nathan"
+WalkClip = "Take 001"
+RootMotionTrack = "rp_nathan_animated_003_walking/rp_nathan_animated_003_walking_CTRL/Skeleton3D:rp_nathan_animated_003_walking_root"
+Albedo = ExtResource("2_albedo")
+Normal = ExtResource("3_normal")
+PreviewModel = ExtResource("4_model")

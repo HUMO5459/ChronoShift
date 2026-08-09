@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="RecipeData" load_steps=6 format=3 uid="uid://woercp01"]
+
+[ext_resource type="Script" path="res://scripts/data/RecipeData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="2"]
+[ext_resource type="Resource" uid="uid://woeitm01" path="res://resources/data/items/item_res_wood.tres" id="3"]
+[ext_resource type="Resource" uid="uid://woeitm03" path="res://resources/data/items/item_res_coal.tres" id="4"]
+[ext_resource type="Resource" uid="uid://woeitm09" path="res://resources/data/items/item_eq_infantry.tres" id="5"]
+
+[resource]
+script = ExtResource("1")
+RecipeId = "rec_infantry"
+DisplayName = "Standart piyoda jihozi"
+Description = "Zavodning asosiy buyurtmasi. Ishchilar bir smenada bo'linmani to'liq jihozlaydi."
+Inputs = [ExtResource("2"), ExtResource("3"), ExtResource("4")]
+InputAmounts = PackedInt32Array(20, 10, 5)
+Output = ExtResource("5")
+OutputAmount = 1
+CraftSeconds = 4.0

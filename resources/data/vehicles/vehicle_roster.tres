@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="VehicleRosterData" load_steps=7 format=3 uid="uid://dvehroster8k"]
+
+[ext_resource type="Script" path="res://scripts/data/VehicleRosterData.cs" id="1_s"]
+[ext_resource type="Resource" uid="uid://dvehnone7x1" path="res://resources/data/vehicles/vehicle_none.tres" id="2_none"]
+[ext_resource type="Resource" uid="uid://dvehhumvee4k" path="res://resources/data/vehicles/vehicle_humvee.tres" id="3_hum"]
+[ext_resource type="Resource" uid="uid://dveht90grn9" path="res://resources/data/vehicles/vehicle_t90.tres" id="4_t90"]
+[ext_resource type="Resource" uid="uid://dveht90des2" path="res://resources/data/vehicles/vehicle_t90_desert.tres" id="5_des"]
+[ext_resource type="Resource" uid="uid://dveht90win5" path="res://resources/data/vehicles/vehicle_t90_winter.tres" id="6_win"]
+
+[resource]
+script = ExtResource("1_s")
+Vehicles = [ExtResource("2_none"), ExtResource("3_hum"), ExtResource("4_t90"), ExtResource("5_des"), ExtResource("6_win")]

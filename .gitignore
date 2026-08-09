@@ -1,0 +1,33 @@
+.godot/
+bin/
+obj/
+*.user
+/android/
+export/
+
+# Packaged Unreal Engine reference demo (879MB binary, not project source)
+Z_AircraftSystem_demo/
+
+# Handoff / packaged copies of the game (not the source of truth)
+*.zip
+chronoshift-game/
+
+# Visual Studio
+.vs/
+
+# Source model packages (c4d/maya) — only the exported .fbx + textures are committed (assets/models/)
+11-rp_nathan_animated_003_walking_c4d/
+52-rp_nathan_animated_003_walking_maya/
+
+# Raw 3D model drop folder — curated copies live in assets/models/
+3DModels/
+
+# macOS papka metama'lumotlari — har commitda shovqin qiladi
+.DS_Store
+build/
+
+# Unity Asset Store paketi — manba arxiv, o'yin uni ishlatmaydi (ovozlar assets/audio ga ajratilgan)
+*.unitypackage
+
+# generated: body-only copy of the landing page (see web/README.md)
+web/src/artifact.html

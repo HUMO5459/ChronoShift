@@ -1,0 +1,148 @@
+[gd_scene load_steps=4 format=3 uid="uid://cstatspanel4x7"]
+
+[ext_resource type="Script" path="res://scripts/ui/StatsPanel.cs" id="1_stats"]
+[ext_resource type="Resource" uid="uid://dvehroster8k" path="res://resources/data/vehicles/vehicle_roster.tres" id="2_roster"]
+
+[sub_resource type="StyleBoxFlat" id="SB_card"]
+content_margin_left = 46.0
+content_margin_top = 40.0
+content_margin_right = 46.0
+content_margin_bottom = 40.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 1)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 26
+shadow_offset = Vector2(0, 12)
+
+[node name="StatsPanel" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_stats")
+_roster = ExtResource("2_roster")
+
+[node name="Scrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0157, 0.0235, 0.0392, 0.72)
+
+[node name="Center" type="CenterContainer" parent="Scrim"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="Scrim/Center"]
+custom_minimum_size = Vector2(880, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_card")
+
+[node name="Rows" type="VBoxContainer" parent="Scrim/Center/Card"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Kicker" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 13
+text = "XARAKTERISTIKALAR"
+horizontal_alignment = 1
+
+[node name="Columns" type="HBoxContainer" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 36
+
+[node name="Vehicle" type="VBoxContainer" parent="Scrim/Center/Card/Rows/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Caption" type="Label" parent="Scrim/Center/Card/Rows/Columns/Vehicle"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(1, 1, 1, 0.42)
+theme_override_font_sizes/font_size = 12
+text = "TEXNIKA"
+
+[node name="Name" type="Label" parent="Scrim/Center/Card/Rows/Columns/Vehicle"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 26
+text = "Texnika"
+autowrap_mode = 3
+
+[node name="Kind" type="Label" parent="Scrim/Center/Card/Rows/Columns/Vehicle"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 12
+text = "TEXNIKA"
+
+[node name="Gap" type="ColorRect" parent="Scrim/Center/Card/Rows/Columns/Vehicle"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(1, 1, 1, 0.14)
+
+[node name="List" type="VBoxContainer" parent="Scrim/Center/Card/Rows/Columns/Vehicle"]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="Split" type="ColorRect" parent="Scrim/Center/Card/Rows/Columns"]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+color = Color(1, 1, 1, 0.12)
+
+[node name="Weapon" type="VBoxContainer" parent="Scrim/Center/Card/Rows/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Caption" type="Label" parent="Scrim/Center/Card/Rows/Columns/Weapon"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(1, 1, 1, 0.42)
+theme_override_font_sizes/font_size = 12
+text = "QUROL"
+
+[node name="Name" type="Label" parent="Scrim/Center/Card/Rows/Columns/Weapon"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 26
+text = "Qurol"
+autowrap_mode = 3
+
+[node name="Kind" type="Label" parent="Scrim/Center/Card/Rows/Columns/Weapon"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 12
+text = "—"
+
+[node name="Gap" type="ColorRect" parent="Scrim/Center/Card/Rows/Columns/Weapon"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(1, 1, 1, 0.14)
+
+[node name="List" type="VBoxContainer" parent="Scrim/Center/Card/Rows/Columns/Weapon"]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="Close" type="Button" parent="Scrim/Center/Card/Rows"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_type_variation = &"BlueprintPrimary"
+text = "YOPISH"
+alignment = 1

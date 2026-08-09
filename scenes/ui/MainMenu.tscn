@@ -1,0 +1,464 @@
+[gd_scene load_steps=28 format=3 uid="uid://cmnmenu7w5q8h"]
+
+[ext_resource type="Script" path="res://scripts/ui/MainMenu.cs" id="1_mainm"]
+[ext_resource type="PackedScene" uid="uid://cctrlpnl8m2k7q" path="res://scenes/ui/ControlsPanel.tscn" id="2_ctrl"]
+[ext_resource type="PackedScene" uid="uid://dmisnpnl4x7m2k" path="res://scenes/ui/MissionsPanel.tscn" id="3_miss"]
+[ext_resource type="Resource" uid="uid://woemisc1" path="res://resources/data/missions/mission_e1.tres" id="30_m1"]
+[ext_resource type="Resource" uid="uid://woemisc2" path="res://resources/data/missions/mission_e2.tres" id="31_m2"]
+[ext_resource type="Resource" uid="uid://woemisc3" path="res://resources/data/missions/mission_e3.tres" id="32_m3"]
+[ext_resource type="Resource" uid="uid://woemisc4" path="res://resources/data/missions/mission_e4.tres" id="33_m4"]
+[ext_resource type="Resource" uid="uid://woemisc5" path="res://resources/data/missions/mission_e5.tres" id="34_m5"]
+[ext_resource type="Resource" uid="uid://woemisc6" path="res://resources/data/missions/mission_e6.tres" id="35_m6"]
+[ext_resource type="Resource" uid="uid://woemisc7" path="res://resources/data/missions/mission_e7.tres" id="36_m7"]
+[ext_resource type="Resource" uid="uid://woemisc8" path="res://resources/data/missions/mission_e8.tres" id="37_m8"]
+[ext_resource type="Resource" uid="uid://woemisc9" path="res://resources/data/missions/mission_e9.tres" id="38_m9"]
+[ext_resource type="Resource" uid="uid://woemisc10" path="res://resources/data/missions/mission_e10.tres" id="39_m10"]
+[ext_resource type="Script" path="res://scripts/ui/BlueprintBackground.cs" id="5_sheet"]
+[ext_resource type="PackedScene" uid="uid://csavespanel4k2" path="res://scenes/ui/SavesPanel.tscn" id="6_saves"]
+[ext_resource type="PackedScene" uid="uid://cheroselpanel8x3" path="res://scenes/ui/HeroSelectPanel.tscn" id="14_hero"]
+[ext_resource type="PackedScene" uid="uid://cvehselpanel7x2" path="res://scenes/ui/VehicleSelectPanel.tscn" id="15_veh"]
+[ext_resource type="Script" path="res://scripts/ui/UiSoundHook.cs" id="ui_hook"]
+[ext_resource type="AudioStream" uid="uid://hihu7frcqsi7" path="res://assets/audio/ui/click.wav" id="ui_click"]
+
+[sub_resource type="Gradient" id="Grad_sheet"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.0902, 0.2706, 0.4784, 1, 0.0706, 0.2118, 0.3882, 1, 0.051, 0.1647, 0.3098, 1)
+
+[sub_resource type="GradientTexture2D" id="Tex_sheet"]
+gradient = SubResource("Grad_sheet")
+width = 256
+height = 256
+fill_from = Vector2(0.12, 0)
+fill_to = Vector2(0.78, 1)
+
+[sub_resource type="Gradient" id="Grad_vignette"]
+offsets = PackedFloat32Array(0.3, 1)
+colors = PackedColorArray(0.0235, 0.0706, 0.1412, 0, 0.0235, 0.0706, 0.1412, 0.55)
+
+[sub_resource type="GradientTexture2D" id="Tex_vignette"]
+gradient = SubResource("Grad_vignette")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.38, 0.42)
+fill_to = Vector2(1.05, 0.42)
+
+[sub_resource type="StyleBoxFlat" id="SB_logoCard"]
+content_margin_left = 13.0
+content_margin_top = 13.0
+content_margin_right = 13.0
+content_margin_bottom = 9.0
+bg_color = Color(0.9647, 0.9569, 0.9333, 1)
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 14
+shadow_offset = Vector2(0, 12)
+
+[sub_resource type="StyleBoxFlat" id="SB_draftTable"]
+bg_color = Color(0.0392, 0.1176, 0.2196, 0.55)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8627, 0.9137, 0.9686, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="SB_tableRow"]
+content_margin_left = 12.0
+content_margin_top = 9.0
+content_margin_right = 12.0
+content_margin_bottom = 9.0
+bg_color = Color(0.8627, 0.9137, 0.9686, 0)
+border_width_right = 1
+border_color = Color(0.8627, 0.9137, 0.9686, 0.25)
+
+[sub_resource type="StyleBoxFlat" id="SB_tableRule"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.8627, 0.9137, 0.9686, 0)
+border_width_bottom = 1
+border_color = Color(0.8627, 0.9137, 0.9686, 0.25)
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mainm")
+
+[node name="Sheet" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("Tex_sheet")
+expand_mode = 1
+
+[node name="Vignette" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("Tex_vignette")
+expand_mode = 1
+
+[node name="Drafting" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_sheet")
+
+[node name="Left" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 150.0
+offset_top = -450.0
+offset_right = 830.0
+offset_bottom = 450.0
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="LogoCard" type="PanelContainer" parent="Left"]
+custom_minimum_size = Vector2(186, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+rotation = -0.0279
+pivot_offset = Vector2(93, 90)
+theme_override_styles/panel = SubResource("SB_logoCard")
+
+[node name="LogoBox" type="VBoxContainer" parent="Left/LogoCard"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Logo" type="TextureRect" parent="Left/LogoCard/LogoBox"]
+custom_minimum_size = Vector2(160, 118)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Left/LogoCard/LogoBox"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.3608, 0.3922, 0.4392, 1)
+theme_override_font_sizes/font_size = 10
+text = "RASMIY LOGOTIP"
+horizontal_alignment = 1
+
+[node name="TitleBlock" type="VBoxContainer" parent="Left"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Drawing" type="Label" parent="Left/TitleBlock"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+text = "CHIZMA № 001 — 1900-YIL"
+
+[node name="Title" type="Label" parent="Left/TitleBlock"]
+layout_mode = 2
+theme_type_variation = &"TitleXL"
+theme_override_constants/line_spacing = -12
+theme_override_font_sizes/font_size = 78
+text = "MUHANDISLAR URUSHI"
+autowrap_mode = 3
+
+[node name="Subtitle" type="Label" parent="Left/TitleBlock"]
+layout_mode = 2
+theme_type_variation = &"Body"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 17
+text = "CHRONOSHIFT — MVP VERTICAL SLICE"
+
+[node name="Menu" type="VBoxContainer" parent="Left"]
+custom_minimum_size = Vector2(410, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 8
+
+[node name="NewGame" type="Button" parent="Left/Menu"]
+custom_minimum_size = Vector2(410, 60)
+layout_mode = 2
+theme_type_variation = &"BlueprintPrimary"
+text = "YANGI O'YIN"
+alignment = 0
+
+[node name="Hint" type="Label" parent="Left/Menu/NewGame"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -44.0
+offset_top = -11.0
+offset_right = -26.0
+offset_bottom = 12.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"MonoValue"
+theme_override_colors/font_color = Color(0.0706, 0.2118, 0.3882, 1)
+theme_override_font_sizes/font_size = 18
+text = "→"
+horizontal_alignment = 2
+
+[node name="Load" type="Button" parent="Left/Menu"]
+custom_minimum_size = Vector2(410, 60)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+text = "YUKLASH"
+alignment = 0
+
+[node name="Hint" type="Label" parent="Left/Menu/Load"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -9.0
+offset_right = -26.0
+offset_bottom = 9.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 0.75)
+theme_override_font_sizes/font_size = 13
+text = "BO'SH"
+horizontal_alignment = 2
+
+[node name="Missions" type="Button" parent="Left/Menu"]
+custom_minimum_size = Vector2(410, 50)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+theme_override_font_sizes/font_size = 19
+text = "VAZIFALAR"
+alignment = 0
+
+[node name="Hero" type="Button" parent="Left/Menu"]
+custom_minimum_size = Vector2(410, 50)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+theme_override_font_sizes/font_size = 19
+text = "GEROY"
+alignment = 0
+
+[node name="Controls" type="Button" parent="Left/Menu"]
+custom_minimum_size = Vector2(410, 50)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+theme_override_font_sizes/font_size = 19
+text = "BOSHQARUV"
+alignment = 0
+
+[node name="Vehicle" type="Button" parent="Left/Menu"]
+custom_minimum_size = Vector2(410, 50)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+theme_override_font_sizes/font_size = 19
+text = "TEXNIKA"
+alignment = 0
+
+[node name="AircraftDemo" type="Button" parent="Left/Menu"]
+custom_minimum_size = Vector2(410, 50)
+layout_mode = 2
+theme_type_variation = &"BlueprintGhost"
+theme_override_font_sizes/font_size = 19
+text = "AVIA DEMO"
+alignment = 0
+
+[node name="Quit" type="Button" parent="Left/Menu"]
+custom_minimum_size = Vector2(410, 50)
+layout_mode = 2
+theme_type_variation = &"BlueprintGhost"
+theme_override_font_sizes/font_size = 19
+text = "CHIQISH"
+alignment = 0
+
+[node name="Hint" type="Label" parent="Left/Menu/Quit"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -9.0
+offset_right = -26.0
+offset_bottom = 9.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 0.45)
+theme_override_font_sizes/font_size = 13
+text = "GODOT"
+horizontal_alignment = 2
+
+[node name="DraftTable" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(440, 0)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -486.0
+offset_top = -190.0
+offset_right = -46.0
+offset_bottom = -46.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_draftTable")
+
+[node name="Rows" type="VBoxContainer" parent="DraftTable"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Row1" type="PanelContainer" parent="DraftTable/Rows"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_tableRule")
+
+[node name="Cells" type="HBoxContainer" parent="DraftTable/Rows/Row1"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Key" type="PanelContainer" parent="DraftTable/Rows/Row1/Cells"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_tableRow")
+
+[node name="Label" type="Label" parent="DraftTable/Rows/Row1/Cells/Key"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.5608, 0.7059, 0.8627, 1)
+text = "LOYIHA"
+
+[node name="Value" type="Label" parent="DraftTable/Rows/Row1/Cells"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"Mono"
+text = "  CHRONOSHIFT"
+
+[node name="Row2" type="PanelContainer" parent="DraftTable/Rows"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_tableRule")
+
+[node name="Cells" type="HBoxContainer" parent="DraftTable/Rows/Row2"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Key" type="PanelContainer" parent="DraftTable/Rows/Row2/Cells"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_tableRow")
+
+[node name="Label" type="Label" parent="DraftTable/Rows/Row2/Cells/Key"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.5608, 0.7059, 0.8627, 1)
+text = "BO'LIM"
+
+[node name="Value" type="Label" parent="DraftTable/Rows/Row2/Cells"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"Mono"
+text = "  HARBIY-MUHANDISLIK"
+
+[node name="Row3" type="PanelContainer" parent="DraftTable/Rows"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_tableRule")
+
+[node name="Cells" type="HBoxContainer" parent="DraftTable/Rows/Row3"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Key" type="PanelContainer" parent="DraftTable/Rows/Row3/Cells"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_tableRow")
+
+[node name="Label" type="Label" parent="DraftTable/Rows/Row3/Cells/Key"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.5608, 0.7059, 0.8627, 1)
+text = "FORMAT"
+
+[node name="Value" type="Label" parent="DraftTable/Rows/Row3/Cells"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"Mono"
+text = "  1920 × 1080 · PC"
+
+[node name="Row4" type="HBoxContainer" parent="DraftTable/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Key" type="PanelContainer" parent="DraftTable/Rows/Row4"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_tableRow")
+
+[node name="Label" type="Label" parent="DraftTable/Rows/Row4/Key"]
+layout_mode = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.5608, 0.7059, 0.8627, 1)
+text = "VARAQ"
+
+[node name="Value" type="Label" parent="DraftTable/Rows/Row4"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"Mono"
+text = "  MVP v0.1 · 1900-MART"
+
+[node name="Version" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 46.0
+offset_top = -66.0
+offset_right = 900.0
+offset_bottom = -46.0
+grow_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"Mono"
+theme_override_colors/font_color = Color(0.7765, 0.8549, 0.9412, 0.55)
+text = "v0.1 — DIZAYN PROTOTIPI · GODOT 4 + C# ETALONI"
+
+[node name="ControlsPanel" parent="." instance=ExtResource("2_ctrl")]
+layout_mode = 1
+
+[node name="MissionsPanel" parent="." instance=ExtResource("3_miss")]
+_missions = [ExtResource("30_m1"), ExtResource("31_m2"), ExtResource("32_m3"), ExtResource("33_m4"), ExtResource("34_m5"), ExtResource("35_m6"), ExtResource("36_m7"), ExtResource("37_m8"), ExtResource("38_m9"), ExtResource("39_m10")]
+layout_mode = 1
+
+[node name="SavesPanel" parent="." instance=ExtResource("6_saves")]
+
+[node name="HeroSelectPanel" parent="." instance=ExtResource("14_hero")]
+
+[node name="VehicleSelectPanel" parent="." instance=ExtResource("15_veh")]
+layout_mode = 1
+
+[node name="UiSoundHook" type="Node" parent="."]
+script = ExtResource("ui_hook")
+_click = ExtResource("ui_click")

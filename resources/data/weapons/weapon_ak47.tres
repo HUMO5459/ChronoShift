@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3 uid="uid://cwak4701d4e"]
+
+[ext_resource type="Script" path="res://scripts/data/WeaponData.cs" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://b9ak47m2x5q3" path="res://scenes/props/WeaponAk47.tscn" id="2_model"]
+[ext_resource type="AudioStream" uid="uid://fnjwdtf336po" path="res://assets/audio/weapons/fire_rifle.wav" id="aud_0"]
+
+[resource]
+script = ExtResource("1_script")
+WeaponId = "ak_47"
+DisplayName = "AK-47"
+Category = 1
+Damage = 32.0
+Range = 220.0
+FireRate = 9.5
+Automatic = true
+MagazineSize = 30
+ReloadSeconds = 2.3
+PelletsPerShot = 1
+SpreadDegrees = 1.6
+AimFov = 55.0
+ModelScene = ExtResource("2_model")
+GripPosition = Vector3(-0.066, -0.146, 0.132)
+GripRotationDegrees = Vector3(30.4, -144.4, -26.2)
+GripScale = 1.0
+FireSound = ExtResource("aud_0")
+ProductionCost = 480

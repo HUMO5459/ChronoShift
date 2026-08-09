@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://cheroselrow6k2"]
+
+[ext_resource type="Script" path="res://scripts/ui/HeroSelectRow.cs" id="1_row"]
+
+[sub_resource type="StyleBoxFlat" id="SB_row"]
+content_margin_left = 0.0
+content_margin_top = 20.0
+content_margin_right = 0.0
+content_margin_bottom = 20.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 0)
+border_width_bottom = 1
+border_color = Color(0.8627, 0.9137, 0.9686, 0.25)
+
+[node name="HeroSelectRow" type="PanelContainer"]
+theme_override_styles/panel = SubResource("SB_row")
+script = ExtResource("1_row")
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Text" type="VBoxContainer" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 3
+
+[node name="Name" type="Label" parent="Row/Text"]
+layout_mode = 2
+theme_type_variation = &"Heading"
+text = "GEROY"
+
+[node name="Clips" type="Label" parent="Row/Text"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_font_sizes/font_size = 12
+text = "—"
+
+[node name="Current" type="Label" parent="Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 13
+text = "TANLANGAN"
+
+[node name="Select" type="Button" parent="Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"BlueprintPrimary"
+text = "TANLASH"

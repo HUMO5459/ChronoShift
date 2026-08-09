@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://dpropblades7x"]
+
+[ext_resource type="Script" path="res://scripts/world/Rotor.cs" id="1_rotor"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_blade"]
+transparency = 1
+albedo_color = Color(0.1, 0.1, 0.11, 0.45)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="Box_blade"]
+material = SubResource("Mat_blade")
+size = Vector3(0.12, 1.7, 0.03)
+
+[node name="PropBlades" type="Node3D"]
+script = ExtResource("1_rotor")
+_axis = Vector3(0, 0, 1)
+_speed = 14.0
+_hideWhenParked = true
+
+[node name="Blade1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+mesh = SubResource("Box_blade")
+
+[node name="Blade2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.5, -0.866, 0, 0.866, -0.5, 0, 0, 0, 1, -0.736, -0.425, 0)
+mesh = SubResource("Box_blade")
+
+[node name="Blade3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.5, 0.866, 0, -0.866, -0.5, 0, 0, 0, 1, 0.736, -0.425, 0)
+mesh = SubResource("Box_blade")
+
+[node name="Hub" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
+mesh = SubResource("Box_blade")

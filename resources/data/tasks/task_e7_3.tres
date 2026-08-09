@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=3 format=3 uid="uid://woetsk73"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm07" path="res://resources/data/items/item_eq_bridge.tres" id="gen_eq"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e7_3"
+DisplayName = "Elektr tarmog'i"
+Kind = "QURILISH"
+Description = "Bazaning elektr taqsimlash tarmog'ini o'rnating."
+DurationSeconds = 4.4
+RewardMoney = 146
+RewardXp = 47
+; --- production layer (generated) ---
+RequiredItem = ExtResource("gen_eq")
+RequiredAmount = 1
+ConsumesRequirement = true
+AdvanceDays = 1460.0

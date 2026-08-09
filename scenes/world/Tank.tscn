@@ -1,0 +1,75 @@
+[gd_scene load_steps=13 format=3 uid="uid://dtank7n3x9k2q"]
+
+[ext_resource type="Script" path="res://scripts/world/Vehicle.cs" id="1_vehicle"]
+[ext_resource type="ArrayMesh" path="res://assets/models/vehicles/t90/t90_hull.obj" id="2_hull"]
+[ext_resource type="ArrayMesh" path="res://assets/models/vehicles/t90/t90_turret.obj" id="3_turret"]
+[ext_resource type="Script" path="res://scripts/player/PlayerCamera.cs" id="4_camera"]
+[ext_resource type="Script" path="res://scripts/world/TankCannon.cs" id="5_cannon"]
+[ext_resource type="PackedScene" uid="uid://cmuzzlefx4k9x" path="res://scenes/fx/MuzzleFx.tscn" id="6_muzzle"]
+[ext_resource type="PackedScene" uid="uid://cimpactfx7m2q" path="res://scenes/fx/ImpactFx.tscn" id="7_impact"]
+[ext_resource type="PackedScene" uid="uid://ctracer8n3k4" path="res://scenes/fx/Tracer.tscn" id="8_tracer"]
+[ext_resource type="AudioStream" uid="uid://cds4sgd3ydkmd" path="res://assets/audio/impacts/explosion_big.wav" id="9_destroysfx"]
+[ext_resource type="AudioStream" uid="uid://b5q8liwdkpq6d" path="res://assets/audio/impacts/impact_metal_1.wav" id="10_hitsfx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tank"]
+size = Vector3(3.9, 2.4, 7.4)
+
+[sub_resource type="SphereMesh" id="SphereMesh_lamp"]
+radius = 0.12
+height = 0.24
+
+[node name="Tank" type="CharacterBody3D"]
+script = ExtResource("1_vehicle")
+_moveSpeed = 5.0
+_turnSpeed = 1.2
+_turretPath = NodePath("TurretPivot")
+_turretTurnSpeed = 0.9
+_exitOffset = Vector3(3.4, 1.0, 0)
+_liveryMeshes = [NodePath("Body"), NodePath("TurretPivot/Turret")]
+_maxHealth = 520.0
+_destroyFxScene = ExtResource("7_impact")
+_destroySound = ExtResource("9_destroysfx")
+_hitSound = ExtResource("10_hitsfx")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0)
+mesh = ExtResource("2_hull")
+
+[node name="TurretPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.115)
+
+[node name="Turret" type="MeshInstance3D" parent="TurretPivot"]
+transform = Transform3D(-1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0)
+mesh = ExtResource("3_turret")
+
+[node name="Cannon" type="Node3D" parent="TurretPivot"]
+script = ExtResource("5_cannon")
+_vehiclePath = NodePath("../..")
+_muzzlePath = NodePath("Muzzle")
+_muzzleFxScene = ExtResource("6_muzzle")
+_impactFxScene = ExtResource("7_impact")
+_tracerScene = ExtResource("8_tracer")
+
+[node name="Muzzle" type="Node3D" parent="TurretPivot/Cannon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17, 1.72, -6.02)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("BoxShape3D_tank")
+
+[node name="StatusLamp" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 2.0, 1.6)
+mesh = SubResource("SphereMesh_lamp")
+
+[node name="CameraRig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, 0)
+script = ExtResource("4_camera")
+_shoulderOffset = Vector3(0, 0, 0)
+_firstPersonOffset = Vector3(0.0, -0.35, -0.85)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.9393727, 0.3428978, 0, -0.3428978, 0.9393727, 0, 0, 0)
+spring_length = 13.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/SpringArm3D"]
+fov = 75.0

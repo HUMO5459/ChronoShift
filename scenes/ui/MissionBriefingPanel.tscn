@@ -1,0 +1,116 @@
+[gd_scene load_steps=3 format=3 uid="uid://cbriefing7k2x9"]
+
+[ext_resource type="Script" path="res://scripts/ui/MissionBriefingPanel.cs" id="1_briefing"]
+
+[sub_resource type="StyleBoxFlat" id="SB_card"]
+content_margin_left = 46.0
+content_margin_top = 40.0
+content_margin_right = 46.0
+content_margin_bottom = 40.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 1)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 26
+shadow_offset = Vector2(0, 12)
+
+[node name="MissionBriefingPanel" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_briefing")
+
+[node name="Scrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0157, 0.0235, 0.0392, 0.72)
+
+[node name="Center" type="CenterContainer" parent="Scrim"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="Scrim/Center"]
+custom_minimum_size = Vector2(720, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_card")
+
+[node name="Rows" type="VBoxContainer" parent="Scrim/Center/Card"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Kicker" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 13
+text = "YANGI VAZIFA"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 38
+text = "Missiya"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Meta" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 14
+text = "1900"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"Body"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+theme_override_font_sizes/font_size = 16
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Divider" type="ColorRect" parent="Scrim/Center/Card/Rows"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(1, 1, 1, 0.14)
+
+[node name="ObjectivesCaption" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_font_sizes/font_size = 12
+text = "VAZIFALAR"
+
+[node name="Objectives" type="VBoxContainer" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Reward" type="Label" parent="Scrim/Center/Card/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 15
+text = "MISSIYA BONUSI:  +₳ 0   ·   +0 XP"
+horizontal_alignment = 1
+
+[node name="Accept" type="Button" parent="Scrim/Center/Card/Rows"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintPrimary"
+text = "VAZIFANI BOSHLASH"
+alignment = 1

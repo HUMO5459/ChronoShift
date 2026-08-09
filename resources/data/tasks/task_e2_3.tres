@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=3 format=3 uid="uid://woetsk23"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm07" path="res://resources/data/items/item_eq_bridge.tres" id="gen_eq"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e2_3"
+DisplayName = "Zambarak platformasi"
+Kind = "QURILISH"
+Description = "Og'ir zambarak uchun barqaror platforma quring."
+DurationSeconds = 3.4
+RewardMoney = 76
+RewardXp = 27
+; --- production layer (generated) ---
+RequiredItem = ExtResource("gen_eq")
+RequiredAmount = 1
+ConsumesRequirement = true
+AdvanceDays = 2281.2

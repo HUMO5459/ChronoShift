@@ -1,0 +1,75 @@
+[gd_scene load_steps=29 format=3 uid="uid://dmainw3q8z1vh"]
+
+[ext_resource type="PackedScene" uid="uid://ctarena7x2k9p" path="res://scenes/world/TestArena.tscn" id="1_arena"]
+[ext_resource type="PackedScene" uid="uid://bplayr6v4k8n2" path="res://scenes/player/Player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://dhud4q8m2k7vw" path="res://scenes/ui/HUD.tscn" id="3_hud"]
+[ext_resource type="PackedScene" uid="uid://ctch7r5w8m2vq" path="res://scenes/ui/TechTree.tscn" id="4_tech"]
+[ext_resource type="PackedScene" uid="uid://bpausemn7x2k9q" path="res://scenes/ui/PauseMenu.tscn" id="5_pause"]
+[ext_resource type="Script" path="res://scripts/world/MapLoader.cs" id="6_loader"]
+[ext_resource type="Resource" uid="uid://dvehroster8k" path="res://resources/data/vehicles/vehicle_roster.tres" id="12_vehroster"]
+[ext_resource type="PackedScene" uid="uid://cmboardpanel7k2" path="res://scenes/ui/MissionBoardPanel.tscn" id="7_board"]
+[ext_resource type="Resource" uid="uid://woemisc1" path="res://resources/data/missions/mission_e1.tres" id="8_m1"]
+[ext_resource type="Resource" uid="uid://woemisc2" path="res://resources/data/missions/mission_e2.tres" id="9_m2"]
+[ext_resource type="Resource" uid="uid://woemisc3" path="res://resources/data/missions/mission_e3.tres" id="10_m3"]
+[ext_resource type="Resource" uid="uid://woemisc4" path="res://resources/data/missions/mission_e4.tres" id="21_m4"]
+[ext_resource type="Resource" uid="uid://woemisc5" path="res://resources/data/missions/mission_e5.tres" id="22_m5"]
+[ext_resource type="Resource" uid="uid://woemisc6" path="res://resources/data/missions/mission_e6.tres" id="23_m6"]
+[ext_resource type="Resource" uid="uid://woemisc7" path="res://resources/data/missions/mission_e7.tres" id="24_m7"]
+[ext_resource type="Resource" uid="uid://woemisc8" path="res://resources/data/missions/mission_e8.tres" id="25_m8"]
+[ext_resource type="Resource" uid="uid://woemisc9" path="res://resources/data/missions/mission_e9.tres" id="26_m9"]
+[ext_resource type="Resource" uid="uid://woemisc10" path="res://resources/data/missions/mission_e10.tres" id="27_m10"]
+[ext_resource type="PackedScene" uid="uid://cmiscomplete9x2" path="res://scenes/ui/MissionCompletePanel.tscn" id="11_complete"]
+[ext_resource type="PackedScene" uid="uid://cwshoppanel3x9" path="res://scenes/ui/WorkshopPanel.tscn" id="13_shop"]
+[ext_resource type="PackedScene" uid="uid://cinvpanel9m4t" path="res://scenes/ui/InventoryPanel.tscn" id="14_inv"]
+[ext_resource type="PackedScene" uid="uid://ccampdone7x4k" path="res://scenes/ui/CampaignCompletePanel.tscn" id="15_campdone"]
+[ext_resource type="PackedScene" uid="uid://cintropan6k3x" path="res://scenes/ui/IntroPanel.tscn" id="16_intro"]
+[ext_resource type="PackedScene" path="res://scenes/ui/MissionBriefingPanel.tscn" id="17_briefing"]
+[ext_resource type="PackedScene" path="res://scenes/ui/StatsPanel.tscn" id="18_stats"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DesignPanel.tscn" id="19_design"]
+[ext_resource type="Script" path="res://scripts/ui/UiSoundHook.cs" id="ui_hook"]
+[ext_resource type="AudioStream" uid="uid://hihu7frcqsi7" path="res://assets/audio/ui/click.wav" id="ui_click"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("6_loader")
+_hubScene = ExtResource("1_arena")
+_vehicleRoster = ExtResource("12_vehroster")
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Hub" parent="World" instance=ExtResource("1_arena")]
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="TechTree" parent="." instance=ExtResource("4_tech")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("5_pause")]
+
+[node name="BoardLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 2
+
+[node name="MissionBoardPanel" parent="BoardLayer" instance=ExtResource("7_board")]
+_missions = [ExtResource("8_m1"), ExtResource("9_m2"), ExtResource("10_m3"), ExtResource("21_m4"), ExtResource("22_m5"), ExtResource("23_m6"), ExtResource("24_m7"), ExtResource("25_m8"), ExtResource("26_m9"), ExtResource("27_m10")]
+
+[node name="MissionCompletePanel" parent="BoardLayer" instance=ExtResource("11_complete")]
+
+[node name="WorkshopPanel" parent="BoardLayer" instance=ExtResource("13_shop")]
+
+[node name="InventoryPanel" parent="BoardLayer" instance=ExtResource("14_inv")]
+
+[node name="CampaignCompletePanel" parent="BoardLayer" instance=ExtResource("15_campdone")]
+
+[node name="IntroPanel" parent="BoardLayer" instance=ExtResource("16_intro")]
+
+[node name="MissionBriefingPanel" parent="BoardLayer" instance=ExtResource("17_briefing")]
+
+[node name="StatsPanel" parent="BoardLayer" instance=ExtResource("18_stats")]
+
+[node name="DesignPanel" parent="BoardLayer" instance=ExtResource("19_design")]
+
+[node name="UiSoundHook" type="Node" parent="."]
+script = ExtResource("ui_hook")
+_click = ExtResource("ui_click")

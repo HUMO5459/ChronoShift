@@ -1,0 +1,162 @@
+[gd_scene load_steps=7 format=3 uid="uid://ctch7r5w8m2vq"]
+
+[ext_resource type="Script" path="res://scripts/ui/TechTreeUI.cs" id="1_tech"]
+[ext_resource type="PackedScene" uid="uid://btechcard5m9x" path="res://scenes/ui/TechNodeCard.tscn" id="2_card"]
+[ext_resource type="Script" path="res://scripts/ui/TechEdges.cs" id="3_edges"]
+
+[sub_resource type="StyleBoxFlat" id="SB_header"]
+content_margin_left = 46.0
+content_margin_top = 22.0
+content_margin_right = 46.0
+content_margin_bottom = 22.0
+bg_color = Color(0.051, 0.1647, 0.3098, 0.7)
+border_width_bottom = 3
+border_color = Color(0.8627, 0.9137, 0.9686, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_chip"]
+content_margin_left = 16.0
+content_margin_top = 9.0
+content_margin_right = 16.0
+content_margin_bottom = 9.0
+bg_color = Color(0.051, 0.1647, 0.3098, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8627, 0.9137, 0.9686, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_era"]
+content_margin_left = 12.0
+content_margin_top = 0.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0.9137, 0.8745, 0.7765, 0)
+border_width_bottom = 2
+border_color = Color(0.6235, 0.7647, 0.9098, 1)
+
+[node name="TechTree" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_tech")
+_cardScene = ExtResource("2_card")
+
+[node name="Paper" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.051, 0.1647, 0.3098, 1)
+
+[node name="Header" type="PanelContainer" parent="Paper"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("SB_header")
+
+[node name="Row" type="HBoxContainer" parent="Paper/Header"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Titles" type="VBoxContainer" parent="Paper/Header/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="Paper/Header/Row/Titles"]
+layout_mode = 2
+theme_type_variation = &"TitleXL"
+theme_override_font_sizes/font_size = 40
+text = "TEXNOLOGIYA DARAXTI"
+
+[node name="Sub" type="Label" parent="Paper/Header/Row/Titles"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+text = "HARBIY-MUHANDISLIK EVOLYUTSIYASI · MVP ERA"
+
+[node name="Money" type="Label" parent="Paper/Header/Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"MonoValue"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+theme_override_styles/normal = SubResource("SB_chip")
+text = "₳ 0"
+
+[node name="Level" type="Label" parent="Paper/Header/Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"MonoValue"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+theme_override_styles/normal = SubResource("SB_chip")
+text = "DARAJA 1"
+
+[node name="Year" type="Label" parent="Paper/Header/Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"MonoValue"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+theme_override_styles/normal = SubResource("SB_chip")
+text = "YIL 1900"
+
+[node name="Close" type="Button" parent="Paper/Header/Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"BlueprintOutline"
+text = "YOPISH [T]"
+
+[node name="Body" type="Control" parent="Paper"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 118.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Era" type="Label" parent="Paper/Body"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 52.0
+offset_top = 12.0
+offset_right = 630.0
+offset_bottom = 40.0
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("SB_era")
+text = "1900–1918 · MVP ERA"
+horizontal_alignment = 1
+
+[node name="Edges" type="Control" parent="Paper/Body"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_edges")
+
+[node name="Cards" type="Control" parent="Paper/Body"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Footer" type="Label" parent="Paper/Body"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 52.0
+offset_top = -34.0
+offset_right = 1200.0
+offset_bottom = -14.0
+grow_vertical = 0
+theme_type_variation = &"MonoLabel"
+theme_override_font_sizes/font_size = 12
+text = "KEYINGI ERALAR (1939+) — BACKLOG: MVP'DAN KEYIN"

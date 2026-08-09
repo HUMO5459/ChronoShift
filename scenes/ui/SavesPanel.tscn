@@ -1,0 +1,108 @@
+[gd_scene load_steps=5 format=3 uid="uid://csavespanel4k2"]
+
+[ext_resource type="Script" path="res://scripts/ui/SavesPanel.cs" id="1_saves"]
+[ext_resource type="PackedScene" uid="uid://bsaveslotrow1x9" path="res://scenes/ui/SaveSlotRow.tscn" id="2_slotrow"]
+
+[sub_resource type="StyleBoxFlat" id="SB_book"]
+content_margin_left = 42.0
+content_margin_top = 34.0
+content_margin_right = 42.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 1)
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 30
+shadow_offset = Vector2(0, 18)
+
+[sub_resource type="StyleBoxFlat" id="SB_headerRule"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 18.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 0)
+border_width_bottom = 3
+border_color = Color(0.8627, 0.9137, 0.9686, 1)
+
+[node name="SavesPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_saves")
+
+[node name="Scrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0314, 0.0392, 0.0549, 0.62)
+
+[node name="Book" type="PanelContainer" parent="Scrim"]
+custom_minimum_size = Vector2(840, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_type_variation = &"BlueprintPanel"
+theme_override_styles/panel = SubResource("SB_book")
+
+[node name="Rows" type="VBoxContainer" parent="Scrim/Book"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="Scrim/Book/Rows"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_headerRule")
+
+[node name="HeaderRow" type="HBoxContainer" parent="Scrim/Book/Rows/Header"]
+layout_mode = 2
+
+[node name="Titles" type="VBoxContainer" parent="Scrim/Book/Rows/Header/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="Scrim/Book/Rows/Header/HeaderRow/Titles"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 40
+text = "SAQLASH DAFTARI"
+
+[node name="Mode" type="Label" parent="Scrim/Book/Rows/Header/HeaderRow/Titles"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+text = "YUKLASH REJIMI"
+
+[node name="Close" type="Button" parent="Scrim/Book/Rows/Header/HeaderRow"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_type_variation = &"BlueprintOutline"
+text = "YOPISH [ESC]"
+
+[node name="Slot1" parent="Scrim/Book/Rows" instance=ExtResource("2_slotrow")]
+layout_mode = 2
+
+[node name="Slot2" parent="Scrim/Book/Rows" instance=ExtResource("2_slotrow")]
+layout_mode = 2
+_slotName = "SLOT 2"
+_placeholderSlot = true
+
+[node name="Slot3" parent="Scrim/Book/Rows" instance=ExtResource("2_slotrow")]
+layout_mode = 2
+_slotName = "SLOT 3"
+_placeholderSlot = true
+
+[node name="Footer" type="Label" parent="Scrim/Book/Rows"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_font_sizes/font_size = 12
+text = "FORMAT: JSON · user://savegame.json — SLOT 2/3 KEYINGI FAZADA"

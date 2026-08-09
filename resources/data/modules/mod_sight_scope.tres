@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ModuleData" load_steps=3 format=3 uid="uid://woemod17"]
+
+[ext_resource type="Script" path="res://scripts/data/ModuleData.cs" id="1_s"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="3_i0"]
+
+[resource]
+script = ExtResource("1_s")
+ModuleId = "sight_scope"
+DisplayName = "Optik pritsel"
+Description = "Optika bilan nishonga olish."
+Kind = 1
+Slot = 7
+DamageBonus = 3.0
+RangeBonus = 90.0
+CostMoney = 340
+Inputs = [ExtResource("3_i0")]
+InputAmounts = PackedInt32Array(3)

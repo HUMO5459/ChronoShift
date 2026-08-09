@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=3 format=3 uid="uid://woetsk22"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm06" path="res://resources/data/items/item_eq_install.tres" id="gen_eq"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e2_2"
+DisplayName = "Tikanli sim to'sig'i"
+Kind = "O'RNATISH"
+Description = "Piyoda hujumini to'xtatish uchun tikanli sim torting."
+DurationSeconds = 3.4
+RewardMoney = 70
+RewardXp = 24
+; --- production layer (generated) ---
+RequiredItem = ExtResource("gen_eq")
+RequiredAmount = 1
+ConsumesRequirement = true
+AdvanceDays = 2281.2

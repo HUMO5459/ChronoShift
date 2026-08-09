@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="MissionData" load_steps=4 format=3 uid="uid://woemisc4"]
+
+[ext_resource type="Script" path="res://scripts/data/MissionData.cs" id="1"]
+[ext_resource type="PackedScene" uid="uid://dgenericmap01" path="res://scenes/maps/GenericMissionMap.tscn" id="2"]
+[ext_resource type="Resource" uid="uid://woemapc4" path="res://resources/data/maps/mapdata_e4.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+MissionId = "m_e4"
+DisplayName = "1943 — Sharqiy front (qish)"
+Description = "Qish fronti shafqatsiz. Tank yo'lagini ochib, muzlagan yoqilg'i omborini tiklang va shtab uchun yer osti bunkerini quring."
+Kind = "QURILISH"
+MapScene = ExtResource("2")
+Map = ExtResource("3")
+BonusMoney = 138
+BonusXp = 50
+; --- production layer (generated) ---
+EraYear = 1943

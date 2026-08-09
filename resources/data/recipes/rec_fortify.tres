@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RecipeData" load_steps=5 format=3 uid="uid://woercp05"]
+
+[ext_resource type="Script" path="res://scripts/data/RecipeData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm04" path="res://resources/data/items/item_res_stone.tres" id="2"]
+[ext_resource type="Resource" uid="uid://woeitm01" path="res://resources/data/items/item_res_wood.tres" id="3"]
+[ext_resource type="Resource" uid="uid://woeitm08" path="res://resources/data/items/item_eq_fortify.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+RecipeId = "rec_fortify"
+DisplayName = "Istehkom to'plami"
+Description = "Pozitsiyani mudofaaga tayyorlaydigan qopqoq va tayanchlar."
+Inputs = [ExtResource("2"), ExtResource("3")]
+InputAmounts = PackedInt32Array(12, 8)
+Output = ExtResource("4")
+OutputAmount = 1
+CraftSeconds = 3.5

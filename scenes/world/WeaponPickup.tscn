@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cwpickup4m7k2"]
+
+[ext_resource type="Script" path="res://scripts/world/WeaponPickup.cs" id="1_pickup"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pickup"]
+size = Vector3(0.7, 0.6, 0.7)
+
+[node name="WeaponPickup" type="StaticBody3D"]
+script = ExtResource("1_pickup")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("BoxShape3D_pickup")
+
+[node name="Model" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)

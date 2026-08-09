@@ -1,0 +1,59 @@
+[gd_scene load_steps=3 format=3 uid="uid://bsaveslotrow1x9"]
+
+[ext_resource type="Script" path="res://scripts/ui/SaveSlotRow.cs" id="1_slot"]
+
+[sub_resource type="StyleBoxFlat" id="SB_slotRow"]
+content_margin_left = 0.0
+content_margin_top = 22.0
+content_margin_right = 0.0
+content_margin_bottom = 22.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 0)
+border_width_bottom = 1
+border_color = Color(0.8627, 0.9137, 0.9686, 0.25)
+
+[node name="SaveSlotRow" type="PanelContainer"]
+theme_override_styles/panel = SubResource("SB_slotRow")
+script = ExtResource("1_slot")
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="SlotLabel" type="Label" parent="Row"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 27
+text = "SLOT 1"
+vertical_alignment = 1
+
+[node name="Info" type="VBoxContainer" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 3
+
+[node name="Main" type="Label" parent="Row/Info"]
+layout_mode = 2
+theme_type_variation = &"MonoValue"
+theme_override_colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+theme_override_font_sizes/font_size = 16
+text = "— BO'SH —"
+
+[node name="Sub" type="Label" parent="Row/Info"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_font_sizes/font_size = 13
+text = ""
+
+[node name="Save" type="Button" parent="Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"BlueprintPrimary"
+text = "SAQLASH"
+
+[node name="Load" type="Button" parent="Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"BlueprintOutline"
+text = "YUKLASH"

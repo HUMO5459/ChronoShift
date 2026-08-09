@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3 uid="uid://cwawp01f5a6"]
+
+[ext_resource type="Script" path="res://scripts/data/WeaponData.cs" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://d2awpq6k4n8w" path="res://scenes/props/WeaponAwp.tscn" id="2_model"]
+[ext_resource type="AudioStream" uid="uid://deqblvmnldafr" path="res://assets/audio/weapons/fire_heavy.wav" id="aud_0"]
+
+[resource]
+script = ExtResource("1_script")
+WeaponId = "awp_sniper"
+DisplayName = "AWP Snayper"
+Category = 2
+Damage = 120.0
+Range = 500.0
+FireRate = 0.9
+Automatic = false
+MagazineSize = 5
+ReloadSeconds = 3.2
+PelletsPerShot = 1
+SpreadDegrees = 0.0
+UsesScope = true
+AimFov = 22.0
+ModelScene = ExtResource("2_model")
+GripPosition = Vector3(0.026, -0.096, 0.022)
+GripRotationDegrees = Vector3(22.4, -40.4, 33.1)
+GripScale = 1.0
+FireSound = ExtResource("aud_0")
+ProductionCost = 950

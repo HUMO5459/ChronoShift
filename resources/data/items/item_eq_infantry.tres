@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://woeitm09"]
+
+[ext_resource type="Script" path="res://scripts/data/ItemData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+ItemId = "eq_infantry"
+DisplayName = "Standart piyoda jihozi"
+Description = "Bo'linmaning bir kunlik to'liq jihozi. Zavod bir buyurtmada chiqaradi."
+Category = 1
+ShortLabel = ""
+Tint = Color(0.7, 0.66, 0.5, 1)
+SortOrder = 8

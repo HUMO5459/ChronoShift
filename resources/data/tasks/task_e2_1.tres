@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=2 format=3 uid="uid://woetsk21"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e2_1"
+DisplayName = "Xandaqni mustahkamlash"
+Kind = "ISTEHKOM"
+Description = "Old chiziq xandog'ini o'q va portlashdan mustahkamlang."
+DurationSeconds = 3.4
+RewardMoney = 64
+RewardXp = 21
+; --- production layer (generated) ---
+AdvanceDays = 2281.2

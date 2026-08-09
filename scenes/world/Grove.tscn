@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8k3rv1q7ztn2"]
+
+[ext_resource type="ArrayMesh" uid="uid://b7yfdbp4hvsdy" path="res://assets/models/environment/trees9/trees9.obj" id="1_trees9"]
+
+[node name="Grove" type="Node3D"]
+
+[node name="Trees" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.73, 0)
+cast_shadow = 0
+visibility_range_end = 55.0
+visibility_range_end_margin = 12.0
+mesh = ExtResource("1_trees9")

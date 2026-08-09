@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=2 format=3 uid="uid://woetsk61"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e6_1"
+DisplayName = "Suv quvurini o'tkazish"
+Kind = "O'RNATISH"
+Description = "Bazaga suv yetkazish uchun quvur liniyasini torting."
+DurationSeconds = 4.2
+RewardMoney = 120
+RewardXp = 37
+; --- production layer (generated) ---
+AdvanceDays = 1733.8

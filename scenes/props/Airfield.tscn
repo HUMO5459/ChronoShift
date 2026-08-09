@@ -1,0 +1,34 @@
+[gd_scene load_steps=8 format=3 uid="uid://dairf1eld7q0w"]
+
+[ext_resource type="PackedScene" uid="uid://ck61a8f2n0xqp" path="res://scenes/props/AircraftKi61.tscn" id="1_ki61"]
+[ext_resource type="PackedScene" uid="uid://dcsna4g1m7ywz" path="res://scenes/props/AircraftCessna.tscn" id="2_cessna"]
+[ext_resource type="PackedScene" uid="uid://cbell2j5k8nqd" path="res://scenes/props/HelicopterBell.tscn" id="3_bell"]
+[ext_resource type="PackedScene" uid="uid://bshwk6h3p9tvr" path="res://scenes/props/HelicopterSeahawk.tscn" id="4_seahawk"]
+[ext_resource type="Script" path="res://scripts/world/DistanceCull.cs" id="9_cull"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pad"]
+albedo_color = Color(0.4, 0.4, 0.4, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pad"]
+material = SubResource("StandardMaterial3D_pad")
+size = Vector3(60, 0.05, 24)
+
+[node name="Airfield" type="Node3D"]
+script = ExtResource("9_cull")
+_range = 120.0
+
+[node name="LandingPad" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 0.03, 0)
+mesh = SubResource("BoxMesh_pad")
+
+[node name="AircraftKi61" parent="." instance=ExtResource("1_ki61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="AircraftCessna" parent="." instance=ExtResource("2_cessna")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 0)
+
+[node name="HelicopterBell" parent="." instance=ExtResource("3_bell")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 2)
+
+[node name="HelicopterSeahawk" parent="." instance=ExtResource("4_seahawk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46, 0, 4)

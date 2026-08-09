@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=3 format=3 uid="uid://woetsk33"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm09" path="res://resources/data/items/item_eq_infantry.tres" id="gen_eq"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e3_3"
+DisplayName = "Minalarni zararsizlantirish"
+Kind = "XAVFSIZLIK"
+Description = "Yo'l bo'ylab ko'milgan minalarni topib zararsizlantiring."
+DurationSeconds = 3.6
+RewardMoney = 90
+RewardXp = 31
+; --- production layer (generated) ---
+RequiredItem = ExtResource("gen_eq")
+RequiredAmount = 1
+ConsumesRequirement = true
+AdvanceDays = 365.0

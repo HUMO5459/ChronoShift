@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TechNodeData" load_steps=2 format=3 uid="uid://c8t3fh1n7q4wa"]
+
+[ext_resource type="Script" path="res://scripts/data/TechNodeData.cs" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+TechId = "efficient_tools"
+DisplayName = "Samarali asboblar"
+Description = "Yaxshilangan dala asboblari. Vazifa mukofoti +50%."
+CostMoney = 150
+RequiredLevel = 0
+PrerequisiteIds = PackedStringArray()
+Effect = 1
+EffectValue = 0.5

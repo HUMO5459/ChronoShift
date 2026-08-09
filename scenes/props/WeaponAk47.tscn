@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://b9ak47m2x5q3"]
+
+[ext_resource type="ArrayMesh" uid="uid://crn7h5u51f1sf" path="res://assets/models/weapons/ak47/ak47.obj" id="1_mesh"]
+[ext_resource type="Texture2D" uid="uid://1vhkshfpijsb" path="res://assets/models/weapons/ak47/ak47.jpg" id="2_tex"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ak47"]
+albedo_texture = ExtResource("2_tex")
+
+[node name="WeaponAk47" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.00225, 0, 0, 0, 0.00225, 0, 0, 0, 0.00225, 0, 0, 0)
+mesh = ExtResource("1_mesh")
+material_override = SubResource("StandardMaterial3D_ak47")

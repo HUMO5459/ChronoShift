@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=3 format=3 uid="uid://woetsk32"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm06" path="res://resources/data/items/item_eq_install.tres" id="gen_eq"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e3_2"
+DisplayName = "Dala radiosi"
+Kind = "O'RNATISH"
+Description = "Bo'linmalar o'rtasida radio aloqa stansiyasini o'rnating."
+DurationSeconds = 3.6
+RewardMoney = 84
+RewardXp = 28
+; --- production layer (generated) ---
+RequiredItem = ExtResource("gen_eq")
+RequiredAmount = 1
+ConsumesRequirement = true
+AdvanceDays = 365.0

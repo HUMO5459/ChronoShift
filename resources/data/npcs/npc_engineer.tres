@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="NpcData" load_steps=2 format=3 uid="uid://woenpc02"]
+
+[ext_resource type="Script" path="res://scripts/data/NpcData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+NpcId = "npc_engineer"
+DisplayName = "Muhandis"
+RoleLabel = "MUHANDIS"
+Behavior = 0
+Tint = Color(0.68, 0.8, 0.92, 1)
+MoveSpeed = 1.7
+PatrolRadius = 7.0
+PauseSeconds = 2.5
+ScanDegrees = 50.0
+MissionLine = "Chizma to'g'ri chiqdi — davom etamiz."
+UsesWalkModel = false

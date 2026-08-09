@@ -1,0 +1,22 @@
+[gd_scene load_steps=10 format=3 uid="uid://dgenericmap01"]
+
+[ext_resource type="Script" path="res://scripts/world/GenericMissionMap.cs" id="1_s"]
+[ext_resource type="PackedScene" uid="uid://cwrk5t8n2p4qe" path="res://scenes/world/Workstation.tscn" id="2_ws"]
+[ext_resource type="PackedScene" uid="uid://dcrate01mission" path="res://scenes/world/DestructibleCrate.tscn" id="3_crate"]
+[ext_resource type="PackedScene" uid="uid://c8k3rv1q7ztn2" path="res://scenes/world/Grove.tscn" id="4_grove"]
+[ext_resource type="PackedScene" uid="uid://denemy01target" path="res://scenes/world/Enemy.tscn" id="5_enemy"]
+[ext_resource type="PackedScene" uid="uid://cresnode8k2m1" path="res://scenes/world/ResourceNode.tscn" id="6_res"]
+[ext_resource type="PackedScene" uid="uid://cworkshop5n7p" path="res://scenes/world/Workshop.tscn" id="7_shop"]
+[ext_resource type="PackedScene" uid="uid://cn7k4wqr2xph8" path="res://scenes/world/Npc.tscn" id="8_npc"]
+[ext_resource type="PackedScene" uid="uid://cnpcwalk4k7m2" path="res://scenes/world/NpcWalker.tscn" id="9_npcwalk"]
+
+[node name="GenericMissionMap" type="Node3D"]
+script = ExtResource("1_s")
+_workstationScene = ExtResource("2_ws")
+_crateScene = ExtResource("3_crate")
+_groveScene = ExtResource("4_grove")
+_enemyScene = ExtResource("5_enemy")
+_resourceNodeScene = ExtResource("6_res")
+_workshopScene = ExtResource("7_shop")
+_npcScene = ExtResource("8_npc")
+_npcWalkerScene = ExtResource("9_npcwalk")

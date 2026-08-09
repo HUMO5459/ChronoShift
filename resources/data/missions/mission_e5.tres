@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="MissionData" load_steps=4 format=3 uid="uid://woemisc5"]
+
+[ext_resource type="Script" path="res://scripts/data/MissionData.cs" id="1"]
+[ext_resource type="PackedScene" uid="uid://dgenericmap01" path="res://scenes/maps/GenericMissionMap.tscn" id="2"]
+[ext_resource type="Resource" uid="uid://woemapc5" path="res://resources/data/maps/mapdata_e5.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+MissionId = "m_e5"
+DisplayName = "1965 — Sovuq urush"
+Description = "Sovuq urush avji. Radar antennasini o'rnating, uchish yo'lagini quyib, yashirin aloqa kabelini ulang."
+Kind = "O'RNATISH"
+MapScene = ExtResource("2")
+Map = ExtResource("3")
+BonusMoney = 160
+BonusXp = 58
+; --- production layer (generated) ---
+EraYear = 1965

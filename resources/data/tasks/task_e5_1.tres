@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=2 format=3 uid="uid://woetsk51"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e5_1"
+DisplayName = "Radar o'rnatish"
+Kind = "O'RNATISH"
+Description = "Havo hujumini kuzatish uchun radar antennasini o'rnating."
+DurationSeconds = 4.0
+RewardMoney = 106
+RewardXp = 33
+; --- production layer (generated) ---
+AdvanceDays = 1368.8

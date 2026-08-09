@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3 uid="uid://cwglock01b3c"]
+
+[ext_resource type="Script" path="res://scripts/data/WeaponData.cs" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://c5glok8m3x7p" path="res://scenes/props/WeaponGlock.tscn" id="2_model"]
+[ext_resource type="AudioStream" uid="uid://bx1480x7a8yfy" path="res://assets/audio/weapons/fire_pistol.wav" id="aud_0"]
+
+[resource]
+script = ExtResource("1_script")
+WeaponId = "glock_18"
+DisplayName = "Glock 18"
+Category = 0
+Damage = 20.0
+Range = 120.0
+FireRate = 6.5
+Automatic = false
+MagazineSize = 17
+ReloadSeconds = 1.5
+PelletsPerShot = 1
+SpreadDegrees = 0.9
+AimFov = 0.0
+ModelScene = ExtResource("2_model")
+GripPosition = Vector3(-0.102, -0.027, 0.05)
+GripRotationDegrees = Vector3(22.4, -40.4, 33.1)
+GripScale = 1.0
+FireSound = ExtResource("aud_0")
+ProductionCost = 150

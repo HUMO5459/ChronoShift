@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=2 format=3 uid="uid://woetsk31"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e3_1"
+DisplayName = "Ponton ko'prik"
+Kind = "QURILISH"
+Description = "Daryodan o'tish uchun suzuvchi ponton ko'prik yig'ing."
+DurationSeconds = 3.6
+RewardMoney = 78
+RewardXp = 25
+; --- production layer (generated) ---
+AdvanceDays = 365.0

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RecipeData" load_steps=5 format=3 uid="uid://woercp06"]
+
+[ext_resource type="Script" path="res://scripts/data/RecipeData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="2"]
+[ext_resource type="Resource" uid="uid://woeitm03" path="res://resources/data/items/item_res_coal.tres" id="3"]
+[ext_resource type="Resource" uid="uid://woeitm10" path="res://resources/data/items/item_tool_engineer.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+RecipeId = "rec_tools"
+DisplayName = "Muhandis asboblari"
+Description = "Shaxsiy asbob to'plami. Bir marta yasaladi, keyin doim yoningizda."
+Inputs = [ExtResource("2"), ExtResource("3")]
+InputAmounts = PackedInt32Array(12, 6)
+Output = ExtResource("4")
+OutputAmount = 1
+CraftSeconds = 3.0

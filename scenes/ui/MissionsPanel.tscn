@@ -1,0 +1,117 @@
+[gd_scene load_steps=5 format=3 uid="uid://dmisnpnl4x7m2k"]
+
+[ext_resource type="Script" path="res://scripts/ui/MissionsPanel.cs" id="1_miss"]
+[ext_resource type="PackedScene" uid="uid://cmissionrow8k4" path="res://scenes/ui/MissionRow.tscn" id="2_row"]
+
+[sub_resource type="StyleBoxFlat" id="SB_board"]
+content_margin_left = 42.0
+content_margin_top = 36.0
+content_margin_right = 42.0
+content_margin_bottom = 22.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 1)
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 30
+shadow_offset = Vector2(0, 18)
+
+[sub_resource type="StyleBoxFlat" id="SB_headerRule"]
+content_margin_bottom = 18.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 0)
+border_width_bottom = 3
+border_color = Color(0.8627, 0.9137, 0.9686, 1)
+
+[node name="MissionsPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_miss")
+_missionRowScene = ExtResource("2_row")
+
+[node name="Scrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0314, 0.0392, 0.0549, 0.62)
+
+[node name="Center" type="CenterContainer" parent="Scrim"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Board" type="PanelContainer" parent="Scrim/Center"]
+custom_minimum_size = Vector2(1180, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_board")
+
+[node name="Rows" type="VBoxContainer" parent="Scrim/Center/Board"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="Scrim/Center/Board/Rows"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_headerRule")
+
+[node name="HeaderRow" type="HBoxContainer" parent="Scrim/Center/Board/Rows/Header"]
+layout_mode = 2
+
+[node name="Titles" type="VBoxContainer" parent="Scrim/Center/Board/Rows/Header/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="Scrim/Center/Board/Rows/Header/HeaderRow/Titles"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 40
+text = "VAZIFALAR JURNALI"
+
+[node name="Sub" type="Label" parent="Scrim/Center/Board/Rows/Header/HeaderRow/Titles"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+text = "DALA MUHANDISI · 1900-YIL"
+
+[node name="Close" type="Button" parent="Scrim/Center/Board/Rows/Header/HeaderRow"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_type_variation = &"BlueprintOutline"
+text = "YOPISH"
+
+[node name="Scroll" type="ScrollContainer" parent="Scrim/Center/Board/Rows"]
+custom_minimum_size = Vector2(0, 620)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Missions" type="VBoxContainer" parent="Scrim/Center/Board/Rows/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Footer" type="HBoxContainer" parent="Scrim/Center/Board/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Count" type="Label" parent="Scrim/Center/Board/Rows/Footer"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 13
+text = "BAJARILDI: 0/3"
+
+[node name="Rule" type="Label" parent="Scrim/Center/Board/Rows/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+theme_override_font_sizes/font_size = 13
+text = "VAQT TEZLIGI ×1"
+horizontal_alignment = 2

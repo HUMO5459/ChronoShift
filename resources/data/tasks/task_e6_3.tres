@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EngineeringTaskData" load_steps=3 format=3 uid="uid://woetsk63"]
+
+[ext_resource type="Script" path="res://scripts/data/EngineeringTaskData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm08" path="res://resources/data/items/item_eq_fortify.tres" id="gen_eq"]
+
+[resource]
+script = ExtResource("1")
+TaskId = "t_e6_3"
+DisplayName = "Zirhli to'siq"
+Kind = "ISTEHKOM"
+Description = "Bazani hujumdan himoya qiluvchi zirhli to'siq o'rnating."
+DurationSeconds = 4.2
+RewardMoney = 132
+RewardXp = 43
+; --- production layer (generated) ---
+RequiredItem = ExtResource("gen_eq")
+RequiredAmount = 1
+ConsumesRequirement = true
+AdvanceDays = 1733.8

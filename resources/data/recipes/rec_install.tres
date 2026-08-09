@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RecipeData" load_steps=5 format=3 uid="uid://woercp03"]
+
+[ext_resource type="Script" path="res://scripts/data/RecipeData.cs" id="1"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="2"]
+[ext_resource type="Resource" uid="uid://woeitm03" path="res://resources/data/items/item_res_coal.tres" id="3"]
+[ext_resource type="Resource" uid="uid://woeitm06" path="res://resources/data/items/item_eq_install.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+RecipeId = "rec_install"
+DisplayName = "O'rnatish komplekti"
+Description = "Yangi qurilmani joyiga o'rnatish uchun kabel va mahkamlagichlar."
+Inputs = [ExtResource("2"), ExtResource("3")]
+InputAmounts = PackedInt32Array(10, 4)
+Output = ExtResource("4")
+OutputAmount = 1
+CraftSeconds = 3.0

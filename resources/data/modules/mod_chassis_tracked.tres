@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ModuleData" load_steps=5 format=3 uid="uid://woemod02"]
+
+[ext_resource type="Script" path="res://scripts/data/ModuleData.cs" id="1_s"]
+[ext_resource type="Resource" uid="uid://dveht90grn9" path="res://resources/data/vehicles/vehicle_t90.tres" id="2_b"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="3_i0"]
+[ext_resource type="Resource" uid="uid://woeitm01" path="res://resources/data/items/item_res_coal.tres" id="3_i1"]
+
+[resource]
+script = ExtResource("1_s")
+ModuleId = "chassis_tracked"
+DisplayName = "Zanjirli shassi"
+Description = "Ogir zanjirli baza. Sekin, lekin zirhli va qurollanadi."
+Kind = 0
+Slot = 0
+BaseVehicle = ExtResource("2_b")
+CostMoney = 2200
+Inputs = [ExtResource("3_i0"), ExtResource("3_i1")]
+InputAmounts = PackedInt32Array(18, 8)

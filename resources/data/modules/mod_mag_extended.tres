@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ModuleData" load_steps=3 format=3 uid="uid://woemod15"]
+
+[ext_resource type="Script" path="res://scripts/data/ModuleData.cs" id="1_s"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="3_i0"]
+
+[resource]
+script = ExtResource("1_s")
+ModuleId = "mag_extended"
+DisplayName = "Kengaytirilgan magazin"
+Description = "Kop oq, sekinroq oqlash."
+Kind = 1
+Slot = 6
+MagazineBonus = 15
+ReloadDelta = 0.5
+CostMoney = 200
+Inputs = [ExtResource("3_i0")]
+InputAmounts = PackedInt32Array(4)

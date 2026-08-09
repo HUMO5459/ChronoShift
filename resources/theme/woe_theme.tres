@@ -1,0 +1,396 @@
+[gd_resource type="Theme" load_steps=42 format=3 uid="uid://bwoethemeq1x4"]
+
+[ext_resource type="FontFile" uid="uid://cgfew5kah8wx" path="res://assets/fonts/Oswald-Variable.ttf" id="1_oswald"]
+[ext_resource type="FontFile" uid="uid://c5md4fbicq6ic" path="res://assets/fonts/Archivo-Variable.ttf" id="2_archivo"]
+[ext_resource type="FontFile" uid="uid://cr8l2cb1dxf4u" path="res://assets/fonts/Inter-Variable.ttf" id="3_inter"]
+[ext_resource type="FontFile" uid="uid://dm4uhh2ehiw0m" path="res://assets/fonts/IBMPlexMono-Regular.ttf" id="4_mono400"]
+[ext_resource type="FontFile" uid="uid://sha8fjeoo3t2" path="res://assets/fonts/IBMPlexMono-Medium.ttf" id="5_mono500"]
+[ext_resource type="FontFile" uid="uid://c0m4ddog5jpip" path="res://assets/fonts/IBMPlexMono-SemiBold.ttf" id="6_mono600"]
+[ext_resource type="FontFile" uid="uid://7r5s2yiytfsp" path="res://assets/fonts/IBMPlexMono-Bold.ttf" id="7_mono700"]
+
+[sub_resource type="FontVariation" id="FV_oswald700"]
+base_font = ExtResource("1_oswald")
+variation_opentype = {
+"wght": 700
+}
+
+[sub_resource type="FontVariation" id="FV_oswald600"]
+base_font = ExtResource("1_oswald")
+variation_opentype = {
+"wght": 600
+}
+
+[sub_resource type="FontVariation" id="FV_archivo400"]
+base_font = ExtResource("2_archivo")
+variation_opentype = {
+"wght": 400
+}
+
+[sub_resource type="FontVariation" id="FV_archivo500"]
+base_font = ExtResource("2_archivo")
+variation_opentype = {
+"wght": 500
+}
+
+[sub_resource type="FontVariation" id="FV_inter400"]
+base_font = ExtResource("3_inter")
+variation_opentype = {
+"wght": 400
+}
+
+[sub_resource type="FontVariation" id="FV_inter500"]
+base_font = ExtResource("3_inter")
+variation_opentype = {
+"wght": 500
+}
+
+[sub_resource type="FontVariation" id="FV_inter600"]
+base_font = ExtResource("3_inter")
+variation_opentype = {
+"wght": 600
+}
+
+[sub_resource type="FontVariation" id="FV_interCaption"]
+base_font = ExtResource("3_inter")
+variation_opentype = {
+"wght": 600
+}
+spacing_glyph = 2
+
+[sub_resource type="FontVariation" id="FV_mono500"]
+base_font = ExtResource("5_mono500")
+spacing_glyph = 1
+
+[sub_resource type="FontVariation" id="FV_mono600"]
+base_font = ExtResource("6_mono600")
+spacing_glyph = 1
+
+[sub_resource type="FontVariation" id="FV_mono600wide"]
+base_font = ExtResource("6_mono600")
+spacing_glyph = 3
+
+[sub_resource type="FontVariation" id="FV_mono700"]
+base_font = ExtResource("7_mono700")
+spacing_glyph = 1
+
+[sub_resource type="StyleBoxFlat" id="SB_hudPanel"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6235, 0.7647, 0.9098, 0.3)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="SB_bpPrimary"]
+content_margin_left = 26.0
+content_margin_top = 18.0
+content_margin_right = 26.0
+content_margin_bottom = 18.0
+bg_color = Color(0.8627, 0.9137, 0.9686, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_bpPrimaryHover"]
+content_margin_left = 26.0
+content_margin_top = 18.0
+content_margin_right = 26.0
+content_margin_bottom = 18.0
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_bpOutline"]
+content_margin_left = 26.0
+content_margin_top = 18.0
+content_margin_right = 26.0
+content_margin_bottom = 18.0
+bg_color = Color(0.8627, 0.9137, 0.9686, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8627, 0.9137, 0.9686, 0.55)
+
+[sub_resource type="StyleBoxFlat" id="SB_bpOutlineHover"]
+content_margin_left = 26.0
+content_margin_top = 18.0
+content_margin_right = 26.0
+content_margin_bottom = 18.0
+bg_color = Color(0.8627, 0.9137, 0.9686, 0.12)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8627, 0.9137, 0.9686, 0.55)
+
+[sub_resource type="StyleBoxFlat" id="SB_bpGhost"]
+content_margin_left = 26.0
+content_margin_top = 18.0
+content_margin_right = 26.0
+content_margin_bottom = 18.0
+bg_color = Color(0.8627, 0.9137, 0.9686, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8627, 0.9137, 0.9686, 0.28)
+
+[sub_resource type="StyleBoxFlat" id="SB_bpGhostHover"]
+content_margin_left = 26.0
+content_margin_top = 18.0
+content_margin_right = 26.0
+content_margin_bottom = 18.0
+bg_color = Color(0.8627, 0.9137, 0.9686, 0.08)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8627, 0.9137, 0.9686, 0.28)
+
+[sub_resource type="StyleBoxFlat" id="SB_paperBtn"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.1804, 0.1725, 0.1255, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.1804, 0.1725, 0.1255, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_paperBtnHover"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.1804, 0.1725, 0.1255, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.1804, 0.1725, 0.1255, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_paperSolid"]
+content_margin_left = 22.0
+content_margin_top = 11.0
+content_margin_right = 22.0
+content_margin_bottom = 11.0
+bg_color = Color(0.1804, 0.1725, 0.1255, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_paperSolidHover"]
+content_margin_left = 22.0
+content_margin_top = 11.0
+content_margin_right = 22.0
+content_margin_bottom = 11.0
+bg_color = Color(0.2902, 0.2745, 0.2118, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_stampBtn"]
+content_margin_left = 12.0
+content_margin_top = 9.0
+content_margin_right = 12.0
+content_margin_bottom = 9.0
+bg_color = Color(0.1843, 0.3725, 0.5882, 1)
+
+[sub_resource type="StyleBoxFlat" id="SB_stampBtnHover"]
+content_margin_left = 12.0
+content_margin_top = 9.0
+content_margin_right = 12.0
+content_margin_bottom = 9.0
+bg_color = Color(0.2275, 0.4549, 0.7098, 1)
+
+[sub_resource type="StyleBoxEmpty" id="SB_empty"]
+
+[sub_resource type="StyleBoxFlat" id="SB_bpPanel"]
+content_margin_left = 42.0
+content_margin_top = 36.0
+content_margin_right = 42.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8627, 0.9137, 0.9686, 0.35)
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 30
+shadow_offset = Vector2(0, 16)
+
+[resource]
+default_font = SubResource("FV_archivo400")
+default_font_size = 16
+
+Body/base_type = &"Label"
+Body/colors/font_color = Color(0.9137, 0.9137, 0.9294, 1)
+Body/fonts/font = SubResource("FV_archivo400")
+Body/font_sizes/font_size = 16
+
+BodyPaper/base_type = &"Label"
+BodyPaper/colors/font_color = Color(0.3412, 0.3216, 0.2392, 1)
+BodyPaper/fonts/font = SubResource("FV_archivo400")
+BodyPaper/font_sizes/font_size = 13
+
+TitleXL/base_type = &"Label"
+TitleXL/colors/font_color = Color(0.949, 0.9647, 0.9843, 1)
+TitleXL/fonts/font = SubResource("FV_oswald700")
+TitleXL/font_sizes/font_size = 96
+
+TitleL/base_type = &"Label"
+TitleL/colors/font_color = Color(0.9137, 0.9137, 0.9294, 1)
+TitleL/fonts/font = SubResource("FV_oswald700")
+TitleL/font_sizes/font_size = 48
+
+TitlePaper/base_type = &"Label"
+TitlePaper/colors/font_color = Color(0.1804, 0.1725, 0.1255, 1)
+TitlePaper/fonts/font = SubResource("FV_oswald700")
+TitlePaper/font_sizes/font_size = 40
+
+TitlePaperS/base_type = &"Label"
+TitlePaperS/colors/font_color = Color(0.1804, 0.1725, 0.1255, 1)
+TitlePaperS/fonts/font = SubResource("FV_oswald700")
+TitlePaperS/font_sizes/font_size = 36
+
+Heading/base_type = &"Label"
+Heading/colors/font_color = Color(0.9137, 0.9137, 0.9294, 1)
+Heading/fonts/font = SubResource("FV_oswald600")
+Heading/font_sizes/font_size = 22
+
+HeadingPaper/base_type = &"Label"
+HeadingPaper/colors/font_color = Color(0.1804, 0.1725, 0.1255, 1)
+HeadingPaper/fonts/font = SubResource("FV_oswald600")
+HeadingPaper/font_sizes/font_size = 23
+
+Mono/base_type = &"Label"
+Mono/colors/font_color = Color(0.7765, 0.8549, 0.9412, 1)
+Mono/fonts/font = SubResource("FV_mono500")
+Mono/font_sizes/font_size = 12
+
+MonoPaper/base_type = &"Label"
+MonoPaper/colors/font_color = Color(0.4196, 0.3961, 0.3176, 1)
+MonoPaper/fonts/font = SubResource("FV_mono500")
+MonoPaper/font_sizes/font_size = 12
+
+MonoLabel/base_type = &"Label"
+MonoLabel/colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+MonoLabel/fonts/font = SubResource("FV_mono600wide")
+MonoLabel/font_sizes/font_size = 15
+
+MonoValue/base_type = &"Label"
+MonoValue/colors/font_color = Color(0.9137, 0.9137, 0.9294, 1)
+MonoValue/fonts/font = SubResource("FV_mono600")
+MonoValue/font_sizes/font_size = 19
+
+HudNumber/base_type = &"Label"
+HudNumber/colors/font_color = Color(0.949, 0.9647, 0.9843, 1)
+HudNumber/fonts/font = SubResource("FV_mono600")
+HudNumber/font_sizes/font_size = 26
+
+HudCaption/base_type = &"Label"
+HudCaption/colors/font_color = Color(0.9137, 0.9137, 0.9294, 0.55)
+HudCaption/fonts/font = SubResource("FV_interCaption")
+HudCaption/font_sizes/font_size = 11
+
+HudBody/base_type = &"Label"
+HudBody/colors/font_color = Color(0.9137, 0.9137, 0.9294, 1)
+HudBody/fonts/font = SubResource("FV_inter500")
+HudBody/font_sizes/font_size = 17
+
+TimeScale/base_type = &"Label"
+TimeScale/colors/font_color = Color(0.7255, 0.8235, 0.9255, 1)
+TimeScale/fonts/font = SubResource("FV_mono700")
+TimeScale/font_sizes/font_size = 23
+
+BlueprintPrimary/base_type = &"Button"
+BlueprintPrimary/colors/font_color = Color(0.0706, 0.2118, 0.3882, 1)
+BlueprintPrimary/colors/font_hover_color = Color(0.0706, 0.2118, 0.3882, 1)
+BlueprintPrimary/colors/font_pressed_color = Color(0.0706, 0.2118, 0.3882, 1)
+BlueprintPrimary/colors/font_focus_color = Color(0.0706, 0.2118, 0.3882, 1)
+BlueprintPrimary/colors/font_disabled_color = Color(0.0706, 0.2118, 0.3882, 0.72)
+BlueprintPrimary/fonts/font = SubResource("FV_oswald600")
+BlueprintPrimary/font_sizes/font_size = 22
+BlueprintPrimary/styles/normal = SubResource("SB_bpPrimary")
+BlueprintPrimary/styles/hover = SubResource("SB_bpPrimaryHover")
+BlueprintPrimary/styles/pressed = SubResource("SB_bpPrimaryHover")
+BlueprintPrimary/styles/focus = SubResource("SB_empty")
+BlueprintPrimary/styles/disabled = SubResource("SB_bpPrimary")
+
+BlueprintOutline/base_type = &"Button"
+BlueprintOutline/colors/font_color = Color(0.8627, 0.9137, 0.9686, 1)
+BlueprintOutline/colors/font_hover_color = Color(0.8627, 0.9137, 0.9686, 1)
+BlueprintOutline/colors/font_pressed_color = Color(0.8627, 0.9137, 0.9686, 1)
+BlueprintOutline/colors/font_focus_color = Color(0.8627, 0.9137, 0.9686, 1)
+BlueprintOutline/colors/font_disabled_color = Color(0.8627, 0.9137, 0.9686, 0.35)
+BlueprintOutline/fonts/font = SubResource("FV_oswald600")
+BlueprintOutline/font_sizes/font_size = 22
+BlueprintOutline/styles/normal = SubResource("SB_bpOutline")
+BlueprintOutline/styles/hover = SubResource("SB_bpOutlineHover")
+BlueprintOutline/styles/pressed = SubResource("SB_bpOutlineHover")
+BlueprintOutline/styles/focus = SubResource("SB_empty")
+BlueprintOutline/styles/disabled = SubResource("SB_bpOutline")
+
+BlueprintGhost/base_type = &"Button"
+BlueprintGhost/colors/font_color = Color(0.8627, 0.9137, 0.9686, 0.6)
+BlueprintGhost/colors/font_hover_color = Color(0.8627, 0.9137, 0.9686, 0.85)
+BlueprintGhost/colors/font_pressed_color = Color(0.8627, 0.9137, 0.9686, 0.85)
+BlueprintGhost/colors/font_focus_color = Color(0.8627, 0.9137, 0.9686, 0.6)
+BlueprintGhost/colors/font_disabled_color = Color(0.8627, 0.9137, 0.9686, 0.3)
+BlueprintGhost/fonts/font = SubResource("FV_oswald600")
+BlueprintGhost/font_sizes/font_size = 22
+BlueprintGhost/styles/normal = SubResource("SB_bpGhost")
+BlueprintGhost/styles/hover = SubResource("SB_bpGhostHover")
+BlueprintGhost/styles/pressed = SubResource("SB_bpGhostHover")
+BlueprintGhost/styles/focus = SubResource("SB_empty")
+BlueprintGhost/styles/disabled = SubResource("SB_bpGhost")
+
+PaperButton/base_type = &"Button"
+PaperButton/colors/font_color = Color(0.1804, 0.1725, 0.1255, 1)
+PaperButton/colors/font_hover_color = Color(0.9373, 0.9059, 0.8235, 1)
+PaperButton/colors/font_pressed_color = Color(0.9373, 0.9059, 0.8235, 1)
+PaperButton/colors/font_focus_color = Color(0.1804, 0.1725, 0.1255, 1)
+PaperButton/fonts/font = SubResource("FV_mono600wide")
+PaperButton/font_sizes/font_size = 13
+PaperButton/styles/normal = SubResource("SB_paperBtn")
+PaperButton/styles/hover = SubResource("SB_paperBtnHover")
+PaperButton/styles/pressed = SubResource("SB_paperBtnHover")
+PaperButton/styles/focus = SubResource("SB_empty")
+PaperButton/styles/disabled = SubResource("SB_paperBtn")
+
+PaperSolid/base_type = &"Button"
+PaperSolid/colors/font_color = Color(0.9373, 0.9059, 0.8235, 1)
+PaperSolid/colors/font_hover_color = Color(0.9373, 0.9059, 0.8235, 1)
+PaperSolid/colors/font_pressed_color = Color(0.9373, 0.9059, 0.8235, 1)
+PaperSolid/colors/font_focus_color = Color(0.9373, 0.9059, 0.8235, 1)
+PaperSolid/fonts/font = SubResource("FV_mono600wide")
+PaperSolid/font_sizes/font_size = 13
+PaperSolid/styles/normal = SubResource("SB_paperSolid")
+PaperSolid/styles/hover = SubResource("SB_paperSolidHover")
+PaperSolid/styles/pressed = SubResource("SB_paperSolidHover")
+PaperSolid/styles/focus = SubResource("SB_empty")
+PaperSolid/styles/disabled = SubResource("SB_paperSolid")
+
+StampButton/base_type = &"Button"
+StampButton/colors/font_color = Color(0.9569, 0.9725, 0.9882, 1)
+StampButton/colors/font_hover_color = Color(0.9569, 0.9725, 0.9882, 1)
+StampButton/colors/font_pressed_color = Color(0.9569, 0.9725, 0.9882, 1)
+StampButton/colors/font_focus_color = Color(0.9569, 0.9725, 0.9882, 1)
+StampButton/fonts/font = SubResource("FV_mono600wide")
+StampButton/font_sizes/font_size = 13
+StampButton/styles/normal = SubResource("SB_stampBtn")
+StampButton/styles/hover = SubResource("SB_stampBtnHover")
+StampButton/styles/pressed = SubResource("SB_stampBtnHover")
+StampButton/styles/focus = SubResource("SB_empty")
+StampButton/styles/disabled = SubResource("SB_stampBtn")
+
+
+
+HudPanel/base_type = &"PanelContainer"
+HudPanel/styles/panel = SubResource("SB_hudPanel")
+
+
+
+BlueprintPanel/base_type = &"PanelContainer"
+BlueprintPanel/styles/panel = SubResource("SB_bpPanel")

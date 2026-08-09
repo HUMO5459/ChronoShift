@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://ck61a8f2n0xqp"]
+
+[ext_resource type="ArrayMesh" uid="uid://bglj4fc0jikbo" path="res://assets/models/aircraft/ki61/14082_WWII_Plane_Japan_Kawasaki_Ki-61_v1_L2.obj" id="1_ki61"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ki61"]
+size = Vector3(8.7, 3.4, 12.1)
+
+[node name="AircraftKi61" type="StaticBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(5.5, 0, 0, 0, 0, 5.5, 0, -5.5, 0, -0.29, 1.59, 0)
+mesh = ExtResource("1_ki61")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+shape = SubResource("BoxShape3D_ki61")

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ModuleData" load_steps=4 format=3 uid="uid://woemod03"]
+
+[ext_resource type="Script" path="res://scripts/data/ModuleData.cs" id="1_s"]
+[ext_resource type="Resource" uid="uid://woeitm02" path="res://resources/data/items/item_res_iron.tres" id="3_i0"]
+[ext_resource type="Resource" uid="uid://woeitm01" path="res://resources/data/items/item_res_coal.tres" id="3_i1"]
+
+[resource]
+script = ExtResource("1_s")
+ModuleId = "engine_steam"
+DisplayName = "Bug dvigateli"
+Description = "Ishonchli, lekin ogir va sekin."
+Kind = 0
+Slot = 1
+SpeedBonus = 0.5
+HealthBonus = 30.0
+CostMoney = 250
+Inputs = [ExtResource("3_i0"), ExtResource("3_i1")]
+InputAmounts = PackedInt32Array(4, 6)

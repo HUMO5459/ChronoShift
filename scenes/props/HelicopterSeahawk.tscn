@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bshwk6h3p9tvr"]
+
+[ext_resource type="ArrayMesh" uid="uid://d0wnvkalpr3w1" path="res://assets/models/aircraft/seahawk/Seahawk.obj" id="1_seahawk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_seahawk"]
+size = Vector3(3.5, 5.2, 19.7)
+
+[node name="HelicopterSeahawk" type="StaticBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.0827, 0, 0, 0, 0.0827, 0, 0, 0, 0.0827, 0, 0.155, 0)
+mesh = ExtResource("1_seahawk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+shape = SubResource("BoxShape3D_seahawk")

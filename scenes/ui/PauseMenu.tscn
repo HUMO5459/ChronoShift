@@ -1,0 +1,166 @@
+[gd_scene load_steps=5 format=3 uid="uid://bpausemn7x2k9q"]
+
+[ext_resource type="Script" path="res://scripts/ui/PauseMenu.cs" id="1_pause"]
+[ext_resource type="PackedScene" uid="uid://cctrlpnl8m2k7q" path="res://scenes/ui/ControlsPanel.tscn" id="2_ctrl"]
+[ext_resource type="PackedScene" uid="uid://csavespanel4k2" path="res://scenes/ui/SavesPanel.tscn" id="3_saves"]
+
+[sub_resource type="StyleBoxFlat" id="SB_card"]
+content_margin_left = 46.0
+content_margin_top = 42.0
+content_margin_right = 46.0
+content_margin_bottom = 42.0
+bg_color = Color(0.0706, 0.2118, 0.3882, 1)
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 24
+shadow_offset = Vector2(0, 12)
+
+[node name="PauseMenu" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_pause")
+
+[node name="MenuPanel" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0157, 0.0235, 0.0392, 0.74)
+
+[node name="Center" type="CenterContainer" parent="MenuPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="MenuPanel/Center"]
+custom_minimum_size = Vector2(470, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SB_card")
+
+[node name="VBox" type="VBoxContainer" parent="MenuPanel/Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Kicker" type="Label" parent="MenuPanel/Center/Panel/VBox"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 12
+text = "PAUZA"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="MenuPanel/Center/Panel/VBox"]
+layout_mode = 2
+theme_type_variation = &"TitleL"
+theme_override_font_sizes/font_size = 40
+text = "MUHANDISLAR URUSHI"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Resume" type="Button" parent="MenuPanel/Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintPrimary"
+text = "DAVOM ETISH"
+alignment = 0
+
+[node name="Hint" type="Label" parent="MenuPanel/Center/Panel/VBox/Resume"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -9.0
+offset_right = -22.0
+offset_bottom = 9.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 12
+text = "ESC"
+horizontal_alignment = 2
+
+[node name="Save" type="Button" parent="MenuPanel/Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+text = "SAQLASH"
+alignment = 0
+
+[node name="Load" type="Button" parent="MenuPanel/Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+text = "YUKLASH"
+alignment = 0
+
+[node name="Controls" type="Button" parent="MenuPanel/Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+text = "BOSHQARUV"
+alignment = 0
+
+[node name="Abort" type="Button" parent="MenuPanel/Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+theme_override_colors/font_color = Color(0.9294, 0.5451, 0.3765, 1)
+theme_override_colors/font_hover_color = Color(0.9294, 0.5451, 0.3765, 1)
+theme_override_colors/font_pressed_color = Color(0.9294, 0.5451, 0.3765, 1)
+text = "MISSIYANI TASHLASH"
+alignment = 0
+
+[node name="Hint" type="Label" parent="MenuPanel/Center/Panel/VBox/Abort"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = -9.0
+offset_right = -22.0
+offset_bottom = 9.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.9294, 0.5451, 0.3765, 1)
+theme_override_font_sizes/font_size = 12
+text = "BONUSSIZ"
+horizontal_alignment = 2
+
+[node name="MainMenu" type="Button" parent="MenuPanel/Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+text = "BOSH MENYU"
+alignment = 0
+
+[node name="Quit" type="Button" parent="MenuPanel/Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+text = "CHIQISH"
+alignment = 0
+
+[node name="Stats" type="Label" parent="MenuPanel/Center/Panel/VBox"]
+layout_mode = 2
+theme_type_variation = &"MonoLabel"
+theme_override_colors/font_color = Color(0.6235, 0.7647, 0.9098, 1)
+theme_override_font_sizes/font_size = 12
+text = "₳ 0     DARAJA 1     1900-YANVAR     ×1"
+horizontal_alignment = 1
+
+[node name="ControlsPanel" parent="." instance=ExtResource("2_ctrl")]
+
+[node name="SavesPanel" parent="." instance=ExtResource("3_saves")]

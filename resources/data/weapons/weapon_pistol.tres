@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3 uid="uid://cwpistol01a2"]
+
+[ext_resource type="Script" path="res://scripts/data/WeaponData.cs" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://b3pistq7k2n5" path="res://scenes/props/WeaponPistol.tscn" id="2_model"]
+[ext_resource type="AudioStream" uid="uid://bx1480x7a8yfy" path="res://assets/audio/weapons/fire_pistol.wav" id="aud_0"]
+
+[resource]
+script = ExtResource("1_script")
+WeaponId = "pistol_m1911"
+DisplayName = "Pistolet M1911"
+Category = 0
+Damage = 24.0
+Range = 120.0
+FireRate = 4.0
+Automatic = false
+MagazineSize = 8
+ReloadSeconds = 1.6
+PelletsPerShot = 1
+SpreadDegrees = 0.6
+AimFov = 0.0
+ModelScene = ExtResource("2_model")
+GripPosition = Vector3(-0.138, -0.068, 0.004)
+GripRotationDegrees = Vector3(22.4, -40.4, 33.1)
+GripScale = 1.0
+FireSound = ExtResource("aud_0")
+ProductionCost = 120
