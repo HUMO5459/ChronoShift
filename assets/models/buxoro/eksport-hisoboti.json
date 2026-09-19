@@ -1,0 +1,33 @@
+{
+  "_izoh": "node tools/godot-eksport.js tomonidan yaratilgan. Godot 4.7.1 uchun: draco/meshopt/quantization YO'Q, webp tekstura BOR.",
+  "modellar": [
+    {
+      "nom": "shogird",
+      "manba": "jangchi-b.glb",
+      "hajm": 782328,
+      "tris": 5908,
+      "skelet": true,
+      "balandlik": 0.9785152422264218,
+      "masshtab": 1.656,
+      "klipGodot": [
+        "NlaTrack",
+        "NlaTrack_001",
+        "NlaTrack_002",
+        "NlaTrack_003",
+        "NlaTrack_004",
+        "NlaTrack_005",
+        "NlaTrack_006",
+        "NlaTrack_007"
+      ],
+      "klipOyin": {
+        "NlaTrack": "idle_waiting",
+        "NlaTrack_005": "carry_walk",
+        "NlaTrack_004": "carry_run"
+      },
+      "godotOk": true,
+      "kengaytmalar": [
+        "EXT_texture_webp"
+      ]
+    }
+  ]
+}

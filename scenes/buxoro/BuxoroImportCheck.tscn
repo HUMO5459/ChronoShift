@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bximpcheck1"]
+
+[ext_resource type="Script" path="res://scripts/buxoro/tools/BuxoroImportCheck.cs" id="1_check"]
+
+[node name="BuxoroImportCheck" type="Node"]
+script = ExtResource("1_check")

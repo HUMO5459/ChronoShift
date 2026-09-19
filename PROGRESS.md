@@ -13,8 +13,122 @@
 
 ## Joriy holat
 
-- **Faza:** **Playtest feedback — Blok A (Jang va NPC) kod tayyor, playtest kutilmoqda.** Foydalanuvchi 2026-08-03 da to'liq QA ro'yxati berdi; u 5 blokka bo'lindi (A–E), A bajarildi.
-- **Oxirgi yangilanish:** 2026-08-03 (Sessiya 16)
+- **Faza:** **BUXORO 1238 PORTI — reja tayyor, kod yozish boshlanmagan.** Yonma-yon: eski playtest feedback bloklari (A–E) hamon playtest kutmoqda.
+- **Oxirgi yangilanish:** 2026-09-15 (Sessiya 17)
+
+### 🆕 Buxoro 1238 porti (2026-09-15)
+
+Foydalanuvchi `~/PROJECTS/Torobiy` dagi Three.js o'yinini (Buxoro 1238, seriyaning 001-epizodi)
+Godot C# ga **to'liq 1:1 ko'chirishni** buyurdi. So'zma-so'z: "ThreeJS da qanday qilingan bo'lsa
+Godot bilan ham xuddi shunday qilinishi kerak, to'liq ko'chirib o'tkazish kerak".
+
+> ⚠️ **CLAUDE.md 1-qoidasi (MVP scope discipline) shu port uchun BEKOR QILINGAN** — foydalanuvchi
+> aniq buyurdi. Hech narsa qisqartirilmaydi, "CUT" yo'q, ChronoShift sinfi faqat AYNAN bir xil
+> xatti-harakat va bir xil raqamlarni bersa ishlatiladi.
+
+- **Reja:** [`docs/BUXORO_PORT_PLAN.md`](docs/BUXORO_PORT_PLAN.md) — 14 agentli workflow natijasi
+  (8 kodbaza oquvchisi, 3 mustaqil arxitektura, 1 hakam, 2 raqib tanqidchi). 88 tizim xaritalandi,
+  47 mapping, 18 qadam, **20–26 hafta**. G'olib arxitektura: `design:mirror` (91 ball) —
+  simulyatsiya uchun JS modullarini 1:1 aks ettirish, prezentatsiya uchun Godot-native.
+- **✅ 5 ta bloker TUZATILDI (2026-09-15).** Har biri alohida agent tomonidan manba kodga
+  solishtirib qayta tekshirildi (86 ta manba o'qishi). Natija: **beshala bloker ham haqiqiy,
+  lekin BESHALASIDA tanqidchining o'z yechimi xato yoki to'liq emas chiqdi** — bittasining
+  tashxisi butunlay noto'g'ri, to'rttasi chala. Tuzatishlar `BUXORO_PORT_PLAN.md` ning
+  yuqorisidagi "Blocker corrections" bo'limida va u hujjatning qolgan qismidan USTUN.
+  Qo'shimcha 49 ta topilma ham yozildi.
+  - **1 (spawn):** tanqidchi manbada NaN bor degan, aslida manbada himoya BOR
+    (`Math.max(1, soni-1)`), rejaning ko'chirmasi uni tushirib qoldirgan. Tanqidchining
+    taklif qilgan C# yechimi esa butun sonli bo'lish tuzog'ini kiritardi: 1-to'lqindagi
+    6 piyodadan 5 tasi bitta nuqtaga yig'ilardi. To'g'ri yechim suratni float ga keltirish.
+  - **2 (Input Map):** tasdiqlandi. Lekin tanqidchi strelkalarni ChronoShift'ning umumiy
+    `move_*` action'lariga qo'shishni taklif qilgan, bu ChronoShift'ning o'z o'yinini
+    buzardi. To'g'ri yechim: 15 ta alohida `buxoro_*` action.
+  - **3 (ovoz):** tasdiqlandi. Tanqidchining `pitchSpread: 0.0f` yechimi yetarli emas —
+    3D masofa susayishi qoladi. Kerak: to'liq REFUSAL 5. Yo'l-yo'lakay aniqlandi:
+    loyihada AudioBusLayout umuman yo'q va `project.godot` da `[audio]` bo'limi yo'q.
+  - **4 (markup):** tasdiqlandi. Tanqidchi "qalin matn" degan, aslida CSS `display: block` —
+    ya'ni bu BBCode emas, Label'lardan iborat VBoxContainer. Inventar ham ancha kengroq:
+    menyuda 28 ta, boshqaruv jadvalida 26 ta kalit.
+  - **5 (determinizm):** tasdiqlandi, tanqidchining uchta tafsiloti xato.
+- **✅ 1-QADAM TO'LIQ BAJARILDI VA TEKSHIRILDI (2026-09-15).** Kod yozildi, build toza
+  (0 xato, 0 ogohlantirish), 17/17 model import bo'ldi, avtomatik tekshiruv PASS berdi.
+  - `scripts/buxoro/models/BuxoroImport.cs` — post-import skript. `models.js` dagi
+    uchta funksiyaning aynan ko'chirmasi, o'sha tartibda (uchinchisi birinchisiga
+    bog'liq): `tayyorla` (material, masshtab, oyoqni yerga tushirish),
+    `klipNomlariniQoy` (klip nomlari), `ildizSiljishi` (ildiz harakatini olib tashlash).
+  - `moljal.tres` — 23 qator, `models.js:187-207` dagi MOLJAL va IKKI_TOMON dan aynan.
+    12 ta model ikki tomonlama.  `klip_xaritasi.tres` — 14 klip, nuqta pastki chiziqqa
+    almashtirilgan holda.
+  - `scripts/buxoro/tools/BuxoroImportCheck.cs` + `scenes/buxoro/BuxoroImportCheck.tscn` —
+    natijani qayta o'lchaydigan tekshiruv. Ishga tushirish:
+    `Godot --headless --path . scenes/buxoro/BuxoroImportCheck.tscn`.
+    Xato bo'lsa exit code 1 qaytaradi, ya'ni build'ni to'xtata oladi.
+  - **Tekshiruv natijasi:** balandliklar aniq tushdi — shomurod 1.78, noyon 2.05,
+    mogul_piyoda 1.72, hunarmand 1.35, ark_qalasi 46.0, terak 11.0. Klip nomlarida
+    nuqta yo'q, kliplar siklda, ildiz siljishi qolmagan. 12 ta model ikki tomonlama,
+    qolgani bir tomonlama. PASS — 17 model.
+  - **⚠️ O'LCHAB TOPILGAN GODOT XUSUSIYATI:** import paytida C# skriptli `.tres`
+    oddiy `Godot.Resource` bo'lib yuklanadi, C# o'rami umuman yaratilmaydi. Bu faqat
+    Buxoro resurslariga xos emas — loyihaning o'z `character_roster.tres` i ham shu
+    kontekstda tipsiz keladi. Shuning uchun `BuxoroImport` jadvallarni `Get()` orqali
+    generik o'qiydi. Ish vaqtida tiplangan yuklash normal ishlaydi.
+- **✅ Yordamchilar erkak qilindi (2026-09-16).** Bozordagi 6 hunarmand va 6 shogird
+  `ayol.glb` dan olinardi. Xom modellar ichida bo‘sh erkak yo‘q edi (beshtasi ham band),
+  shuning uchun `jangchi-b` ikkinchi va uchinchi marta `hunarmand` va `shogird` nomlari
+  bilan chiqarildi — ikkala eksport vositasiga `QOSHIMCHA_NUSXA` jadvali qo‘shildi.
+  - Yo‘l-yo‘lakay bitta regressiya topildi va tuzatildi: yangi modelning bind pozasi
+    T-poza, eski `ayol.glb` niki esa tik turgan holat edi. Shogirdlarning animatsiya
+    nazoratchisi `shogird` nomi bo‘yicha qidiradi, o‘sha nomli model esa yo‘q edi.
+    Endi `shogird.glb` ham bor, klipllari nomlangan (`idle_waiting`, `carry_walk`,
+    `carry_run`), va `carry_run` mavjud bo‘lgani uchun protsedural harakat ham o‘chdi.
+    Bozordagi sotuvchilarga `world.js` da idle klip biriktirildi.
+  - **`--faqat <nom>` bayrog‘i qo‘shildi va U MUHIM:** hammasini qayta eksport qilish
+    xavfli, chunki `world.js` darvoza halqasi segmentlari sonini `shahar_devori` va
+    `qala_darvoza` ning O‘LCHAMIDAN hisoblaydi (world.js:377-419), ular esa determinizm
+    oqimining bir qismi. Bir necha millimetr farq butun oqimni siljitadi.
+  - Godot tomonida ham ikkala model chiqarildi, `klip_xaritasi.tres` ga 4 qator
+    qo‘shildi. Import tekshiruvi: **PASS — 18 model** (shogird 1.62, hunarmand 1.35).
+  - Web zip qayta yig‘ildi: 62 fayl, 20.2 MB, itch.io tekshiruvlari o‘tdi.
+  - Eski ayol modeli zaxirasi scratchpad da: `hunarmand-ayol-zaxira.glb`.
+- **✅ 2-QADAM: DETERMINIZM DARVOZASI O'TDI (2026-09-15).** Build toza, parity tekshiruvi
+  haqiqiy web o'yin bilan solishtirildi va o'tdi.
+  - **Yozilgan:** `Lcg.cs` (urug' 1238/8317/4711, ulong — nega uint EMAS ekani izohda),
+    `BuxoroTerrain.cs` (sof funksiya; x=120 faza xatosi izohda), `Smoothing.cs` (web ning
+    9 ta silliqlash idiomi bitta joyda — to'rttasi kadr tezligiga bog'liq, shuning uchun
+    60 Hz majburiy), `BuxoroBalance.cs` + 4 ta qator tipi, `BuxoroWorldStream.cs`
+    (tugun/terak/uy draw ketma-ketligi), `BuxoroRuntime.cs` (autoload), `ParityDump.cs`
+    + sahnasi, `balance_buxoro.tres` (14 sub-resource), `Torobiy/tools/parity/dump_web.js`.
+  - **DARVOZA NATIJASI — eng kuchli tekshiruv turi:** web o'yin brauzerda ishga tushirilib,
+    `__O.dunyo.tugunlar` dan HAQIQIY 66 tugun olindi va Godot chiqishi bilan solishtirildi:
+    **66/66 tugun, 6 xona aniqlikda AYNAN bir xil.** Generator qayta yozilmadi — haqiqiy
+    o'yin natijasi bilan tasdiqlandi.
+  - Draw sanoqlari aniq: tugunlar 1080, teraklar 1259, uylar 1267, klaster o'lchamlari
+    2,4,4,2,3. Web o'yin 53 terak xabar qildi — mos. Relyef 6 nuqtada mustaqil hisob bilan mos.
+  - **⚠️ SIZDAN:** `BuxoroRuntime` ni Project Settings → Autoload ga qo'shing
+    (nom `BuxoroRuntime`, yo'l `res://scripts/buxoro/core/BuxoroRuntime.cs`). Yana
+    `physics_ticks_per_second = 60` va `max_physics_steps_per_frame = 3` qo'ying — hozir
+    `project.godot` da `[physics]` bo'limi umuman yo'q, `Smoothing` dagi to'rtta idiom esa
+    aynan 60 Hz ga sozlangan.
+  - **3-qadamga qoldi:** darvoza halqasi (207 draw) va chekka devorlar (80 draw) hali
+    yozilmagan, shuning uchun C blokida dastlabki uchta sanoq bor. Tuzatilgan
+    spetsifikatsiyaning 2.10-bandi shunga ruxsat beradi.
+
+  - **Rejadan chetlanish:** reja `tools/buxoro_models.sh` deb yozgan edi; o'rniga
+    avvaldan yozilgan `Torobiy/tools/godot-eksport.js` ishlatildi, u xuddi shu ishni
+    qiladi va NOM_XARITASI hamda uchburchak byudjetini `optimize-models.js` bilan
+    bo'lishadi.
+  - **Oldingi holat (eksport bosqichi):** Godot 4.7.1 `KHR_draco_mesh_compression` ni
+  tanimaydi — o'lchab tasdiqlandi, har bir model `ERR_PARSE_ERROR` bilan yiqiladi.
+  `Torobiy/tools/godot-eksport.js` yozildi (draco/meshopt/quantization YO'Q, webp tekstura BOR).
+  17/17 model `assets/models/buxoro/` ga eksport qilindi, 136 MB → 10 MB, ChronoShift'ga
+  **xatosiz** import bo'ldi. Skeletlar, klipllar va `L_Hand`/`R_Hand` suyaklari saqlangan.
+  Hisobot: `assets/models/buxoro/eksport-hisoboti.json` (masshtab koeffitsientlari bilan).
+- **⏳ Bloklangan:** 12 ta mp4 kadr. Godot faqat Ogg Theora o'ynatadi, bu mashinadagi
+  ffmpeg 8.1.2 da Theora **dekoderi bor, enkoderi yo'q**. Kerak: `brew install ffmpeg@7`
+  yoki `ffmpeg2theora`. Foydalanuvchi qaroriga qoldirildi.
+- **Eslatma:** Godot glTF klip nomidagi nuqtani pastki chiziqqa aylantiradi
+  (`NlaTrack.001` → `NlaTrack_001`), `klip-xaritasi.json` esa nuqtali nom ishlatadi.
+  Xarita o'zi ham to'liq emas — 8 klipdan faqat 3 tasi nomlangan.
 
 ### 📋 Playtest feedback bloklari (2026-08-03, foydalanuvchi ro'yxati)
 

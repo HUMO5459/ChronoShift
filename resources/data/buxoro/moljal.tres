@@ -1,0 +1,146 @@
+[gd_resource type="Resource" script_class="BuxoroModelTable" load_steps=25 format=3 uid="uid://bxmoljal01"]
+
+[ext_resource type="Script" path="res://scripts/buxoro/models/BuxoroModelTable.cs" id="1_table"]
+[ext_resource type="Script" path="res://scripts/buxoro/models/BuxoroModelRow.cs" id="2_row"]
+
+[sub_resource type="Resource" id="r_shomurod"]
+script = ExtResource("2_row")
+Name = "shomurod"
+TargetHeight = 1.78
+TwoSided = false
+
+[sub_resource type="Resource" id="r_tarobiy"]
+script = ExtResource("2_row")
+Name = "tarobiy"
+TargetHeight = 1.70
+TwoSided = false
+
+[sub_resource type="Resource" id="r_shogird"]
+script = ExtResource("2_row")
+Name = "shogird"
+TargetHeight = 1.62
+TwoSided = false
+
+[sub_resource type="Resource" id="r_askar"]
+script = ExtResource("2_row")
+Name = "askar"
+TargetHeight = 1.74
+TwoSided = false
+
+[sub_resource type="Resource" id="r_mogul_piyoda"]
+script = ExtResource("2_row")
+Name = "mogul_piyoda"
+TargetHeight = 1.72
+TwoSided = false
+
+[sub_resource type="Resource" id="r_mogul_otliq"]
+script = ExtResource("2_row")
+Name = "mogul_otliq"
+TargetHeight = 1.72
+TwoSided = false
+
+[sub_resource type="Resource" id="r_noyon"]
+script = ExtResource("2_row")
+Name = "noyon"
+TargetHeight = 2.05
+TwoSided = false
+
+[sub_resource type="Resource" id="r_hunarmand"]
+script = ExtResource("2_row")
+Name = "hunarmand"
+TargetHeight = 1.35
+TwoSided = false
+
+[sub_resource type="Resource" id="r_ot"]
+script = ExtResource("2_row")
+Name = "ot"
+TargetHeight = 1.65
+TwoSided = false
+
+[sub_resource type="Resource" id="r_humo"]
+script = ExtResource("2_row")
+Name = "humo"
+TargetHeight = 0.70
+TwoSided = false
+
+[sub_resource type="Resource" id="r_qala_darvoza"]
+script = ExtResource("2_row")
+Name = "qala_darvoza"
+TargetHeight = 11.00
+TwoSided = true
+
+[sub_resource type="Resource" id="r_shahar_devori"]
+script = ExtResource("2_row")
+Name = "shahar_devori"
+TargetHeight = 8.50
+TwoSided = true
+
+[sub_resource type="Resource" id="r_ark_qalasi"]
+script = ExtResource("2_row")
+Name = "ark_qalasi"
+TargetHeight = 46.00
+TwoSided = true
+
+[sub_resource type="Resource" id="r_uy_kichik"]
+script = ExtResource("2_row")
+Name = "uy_kichik"
+TargetHeight = 3.40
+TwoSided = true
+
+[sub_resource type="Resource" id="r_uy_katta"]
+script = ExtResource("2_row")
+Name = "uy_katta"
+TargetHeight = 4.80
+TwoSided = true
+
+[sub_resource type="Resource" id="r_uy_vayrona"]
+script = ExtResource("2_row")
+Name = "uy_vayrona"
+TargetHeight = 2.40
+TwoSided = true
+
+[sub_resource type="Resource" id="r_paxsa_devor"]
+script = ExtResource("2_row")
+Name = "paxsa_devor"
+TargetHeight = 2.10
+TwoSided = true
+
+[sub_resource type="Resource" id="r_ustaxona"]
+script = ExtResource("2_row")
+Name = "ustaxona"
+TargetHeight = 3.10
+TwoSided = true
+
+[sub_resource type="Resource" id="r_bozor_rastasi"]
+script = ExtResource("2_row")
+Name = "bozor_rastasi"
+TargetHeight = 2.40
+TwoSided = true
+
+[sub_resource type="Resource" id="r_terak"]
+script = ExtResource("2_row")
+Name = "terak"
+TargetHeight = 11.00
+TwoSided = true
+
+[sub_resource type="Resource" id="r_devor_seksiya"]
+script = ExtResource("2_row")
+Name = "devor_seksiya"
+TargetHeight = 0.0
+TwoSided = true
+
+[sub_resource type="Resource" id="r_devor_buzilgan"]
+script = ExtResource("2_row")
+Name = "devor_buzilgan"
+TargetHeight = 0.0
+TwoSided = true
+
+[sub_resource type="Resource" id="r_tugun_tosh"]
+script = ExtResource("2_row")
+Name = "tugun_tosh"
+TargetHeight = 0.0
+TwoSided = false
+
+[resource]
+script = ExtResource("1_table")
+Models = [SubResource("r_shomurod"), SubResource("r_tarobiy"), SubResource("r_shogird"), SubResource("r_askar"), SubResource("r_mogul_piyoda"), SubResource("r_mogul_otliq"), SubResource("r_noyon"), SubResource("r_hunarmand"), SubResource("r_ot"), SubResource("r_humo"), SubResource("r_qala_darvoza"), SubResource("r_shahar_devori"), SubResource("r_ark_qalasi"), SubResource("r_uy_kichik"), SubResource("r_uy_katta"), SubResource("r_uy_vayrona"), SubResource("r_paxsa_devor"), SubResource("r_ustaxona"), SubResource("r_bozor_rastasi"), SubResource("r_terak"), SubResource("r_devor_seksiya"), SubResource("r_devor_buzilgan"), SubResource("r_tugun_tosh")]

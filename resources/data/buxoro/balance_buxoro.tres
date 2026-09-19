@@ -1,0 +1,131 @@
+[gd_resource type="Resource" script_class="BuxoroBalance" load_steps=20 format=3 uid="uid://bxbalance01"]
+
+[ext_resource type="Script" path="res://scripts/buxoro/data/BuxoroBalance.cs" id="1_bal"]
+[ext_resource type="Script" path="res://scripts/buxoro/data/BuxoroNodeCountRow.cs" id="2_node"]
+[ext_resource type="Script" path="res://scripts/buxoro/data/BuxoroRecipeRow.cs" id="3_rec"]
+[ext_resource type="Script" path="res://scripts/buxoro/data/BuxoroEnemySpec.cs" id="4_enemy"]
+[ext_resource type="Script" path="res://scripts/buxoro/data/BuxoroWaveRow.cs" id="5_wave"]
+
+[sub_resource type="Resource" id="n_tosh"]
+script = ExtResource("2_node")
+Tur = "tosh"
+Soni = 18
+Qoldi = 4
+ProtseduralDraw = 0
+Zona = Vector4(28, 118, -42, 42)
+GlbNomi = "tugun_tosh"
+
+[sub_resource type="Resource" id="n_yogoch"]
+script = ExtResource("2_node")
+Tur = "yogoch"
+Soni = 16
+Qoldi = 2
+ProtseduralDraw = 16
+Zona = Vector4(126, 146, -44, -18)
+GlbNomi = "tugun_yogoch"
+
+[sub_resource type="Resource" id="n_teri"]
+script = ExtResource("2_node")
+Tur = "teri"
+Soni = 10
+Qoldi = 2
+ProtseduralDraw = 1
+Zona = Vector4(132, 150, 10, 34)
+GlbNomi = "tugun_teri"
+
+[sub_resource type="Resource" id="n_temir"]
+script = ExtResource("2_node")
+Tur = "temir"
+Soni = 14
+Qoldi = 2
+ProtseduralDraw = 35
+Zona = Vector4(84, 122, -40, -8)
+GlbNomi = "tugun_temir"
+
+[sub_resource type="Resource" id="n_komir"]
+script = ExtResource("2_node")
+Tur = "komir"
+Soni = 8
+Qoldi = 2
+ProtseduralDraw = 24
+Zona = Vector4(96, 124, 14, 40)
+GlbNomi = "tugun_komir"
+
+[sub_resource type="Resource" id="r_devor"]
+script = ExtResource("3_rec")
+Nomi = "devor"
+Tosh = 4
+Yogoch = 0
+Teri = 0
+Temir = 0
+Komir = 0
+
+[sub_resource type="Resource" id="r_kamon"]
+script = ExtResource("3_rec")
+Nomi = "kamon"
+Tosh = 0
+Yogoch = 2
+Teri = 1
+Temir = 0
+Komir = 0
+
+[sub_resource type="Resource" id="r_qilich"]
+script = ExtResource("3_rec")
+Nomi = "qilich"
+Tosh = 0
+Yogoch = 0
+Teri = 0
+Temir = 3
+Komir = 1
+
+[sub_resource type="Resource" id="d_piyoda"]
+script = ExtResource("4_enemy")
+Tur = "piyoda"
+Hp = 50.0
+Zarar = 7.0
+Tezlik = 4.5
+Hujum = 1.2
+
+[sub_resource type="Resource" id="d_otliq"]
+script = ExtResource("4_enemy")
+Tur = "otliq"
+Hp = 72.0
+Zarar = 12.0
+Tezlik = 8.4
+Hujum = 1.7
+
+[sub_resource type="Resource" id="d_noyon"]
+script = ExtResource("4_enemy")
+Tur = "noyon"
+Hp = 200.0
+Zarar = 18.0
+Tezlik = 5.0
+Hujum = 1.5
+
+[sub_resource type="Resource" id="w_0"]
+script = ExtResource("5_wave")
+Vaqt = 480.0
+Piyoda = 6
+Otliq = 0
+Noyon = 0
+
+[sub_resource type="Resource" id="w_1"]
+script = ExtResource("5_wave")
+Vaqt = 330.0
+Piyoda = 5
+Otliq = 3
+Noyon = 0
+
+[sub_resource type="Resource" id="w_2"]
+script = ExtResource("5_wave")
+Vaqt = 150.0
+Piyoda = 6
+Otliq = 3
+Noyon = 1
+
+[resource]
+script = ExtResource("1_bal")
+TugunSoni = [SubResource("n_tosh"), SubResource("n_yogoch"), SubResource("n_teri"), SubResource("n_temir"), SubResource("n_komir")]
+Retsept = [SubResource("r_devor"), SubResource("r_kamon"), SubResource("r_qilich")]
+Dushman = [SubResource("d_piyoda"), SubResource("d_otliq"), SubResource("d_noyon")]
+Tolqin = [SubResource("w_0"), SubResource("w_1"), SubResource("w_2")]

@@ -1,0 +1,134 @@
+[gd_resource type="Resource" script_class="BuxoroClipMap" load_steps=20 format=3 uid="uid://bxklip01"]
+
+[ext_resource type="Script" path="res://scripts/buxoro/models/BuxoroClipMap.cs" id="1_map"]
+[ext_resource type="Script" path="res://scripts/buxoro/models/BuxoroClipRow.cs" id="2_row"]
+
+[sub_resource type="Resource" id="c_0"]
+script = ExtResource("2_row")
+Model = "shomurod"
+GlbClip = "NlaTrack"
+GameClip = "idle"
+Loop = true
+
+[sub_resource type="Resource" id="c_1"]
+script = ExtResource("2_row")
+Model = "shomurod"
+GlbClip = "NlaTrack_003"
+GameClip = "walk"
+Loop = true
+
+[sub_resource type="Resource" id="c_2"]
+script = ExtResource("2_row")
+Model = "shomurod"
+GlbClip = "NlaTrack_004"
+GameClip = "run"
+Loop = true
+
+[sub_resource type="Resource" id="c_3"]
+script = ExtResource("2_row")
+Model = "askar"
+GlbClip = "NlaTrack"
+GameClip = "idle_unarmed"
+Loop = true
+
+[sub_resource type="Resource" id="c_4"]
+script = ExtResource("2_row")
+Model = "askar"
+GlbClip = "NlaTrack_005"
+GameClip = "walk"
+Loop = true
+
+[sub_resource type="Resource" id="c_5"]
+script = ExtResource("2_row")
+Model = "askar"
+GlbClip = "NlaTrack_004"
+GameClip = "run"
+Loop = true
+
+[sub_resource type="Resource" id="c_6"]
+script = ExtResource("2_row")
+Model = "tarobiy"
+GlbClip = "NlaTrack"
+GameClip = "idle_talk"
+Loop = true
+
+[sub_resource type="Resource" id="c_7"]
+script = ExtResource("2_row")
+Model = "tarobiy"
+GlbClip = "NlaTrack_001"
+GameClip = "idle"
+Loop = true
+
+[sub_resource type="Resource" id="c_8"]
+script = ExtResource("2_row")
+Model = "tarobiy"
+GlbClip = "NlaTrack_002"
+GameClip = "walk"
+Loop = true
+
+[sub_resource type="Resource" id="c_9"]
+script = ExtResource("2_row")
+Model = "ot"
+GlbClip = "NlaTrack"
+GameClip = "horse_idle"
+Loop = true
+
+[sub_resource type="Resource" id="c_10"]
+script = ExtResource("2_row")
+Model = "noyon"
+GlbClip = "NlaTrack"
+GameClip = "idle_bored"
+Loop = true
+
+[sub_resource type="Resource" id="c_11"]
+script = ExtResource("2_row")
+Model = "noyon"
+GlbClip = "NlaTrack_001"
+GameClip = "walk_heavy"
+Loop = true
+
+[sub_resource type="Resource" id="c_12"]
+script = ExtResource("2_row")
+Model = "mogul_piyoda"
+GlbClip = "NlaTrack"
+GameClip = "walk_menace"
+Loop = true
+
+[sub_resource type="Resource" id="c_13"]
+script = ExtResource("2_row")
+Model = "mogul_piyoda"
+GlbClip = "NlaTrack_001"
+GameClip = "charge"
+Loop = true
+
+[sub_resource type="Resource" id="c_14"]
+script = ExtResource("2_row")
+Model = "shogird"
+GlbClip = "NlaTrack"
+GameClip = "idle_waiting"
+Loop = true
+
+[sub_resource type="Resource" id="c_15"]
+script = ExtResource("2_row")
+Model = "shogird"
+GlbClip = "NlaTrack_005"
+GameClip = "carry_walk"
+Loop = true
+
+[sub_resource type="Resource" id="c_16"]
+script = ExtResource("2_row")
+Model = "shogird"
+GlbClip = "NlaTrack_004"
+GameClip = "carry_run"
+Loop = true
+
+[sub_resource type="Resource" id="c_17"]
+script = ExtResource("2_row")
+Model = "hunarmand"
+GlbClip = "NlaTrack"
+GameClip = "idle_waiting"
+Loop = true
+
+[resource]
+script = ExtResource("1_map")
+Clips = [SubResource("c_0"), SubResource("c_1"), SubResource("c_2"), SubResource("c_3"), SubResource("c_4"), SubResource("c_5"), SubResource("c_6"), SubResource("c_7"), SubResource("c_8"), SubResource("c_9"), SubResource("c_10"), SubResource("c_11"), SubResource("c_12"), SubResource("c_13"), SubResource("c_14"), SubResource("c_15"), SubResource("c_16"), SubResource("c_17")]
