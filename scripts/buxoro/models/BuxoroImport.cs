@@ -1,3 +1,7 @@
+// Editor-only: EditorScenePostImport lives in GodotSharpEditor, which exported
+// builds do not reference. Without this guard `dotnet publish` fails and the
+// exported game ships with no C# at all.
+#if TOOLS
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Godot;
@@ -524,3 +528,4 @@ public partial class BuxoroImport : EditorScenePostImport
         }
     }
 }
+#endif

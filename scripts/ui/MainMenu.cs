@@ -15,6 +15,7 @@ public partial class MainMenu : Control
     [Export] private NodePath _vehiclePath = "Left/Menu/Vehicle";
     [Export] private NodePath _controlsPath = "Left/Menu/Controls";
     [Export] private NodePath _aircraftDemoPath = "Left/Menu/AircraftDemo";
+    [Export] private NodePath _buxoroPath = "Left/Menu/Buxoro";
     [Export] private NodePath _quitPath = "Left/Menu/Quit";
     [Export] private NodePath _controlsPanelPath = "ControlsPanel";
     [Export] private NodePath _missionsPanelPath = "MissionsPanel";
@@ -23,6 +24,9 @@ public partial class MainMenu : Control
     [Export] private NodePath _vehiclePanelPath = "VehicleSelectPanel";
 
     private const string GameplayScene = "res://scenes/main/Main.tscn";
+
+    /// <summary>The Buxoro 1238 port, reachable while it is being built (plan step 16 makes this a catalog row).</summary>
+    private const string BuxoroScene = "res://scenes/buxoro/BuxoroEpisode.tscn";
 
     private Control _menu = null!;
     private ControlsPanel _controlsPanel = null!;
@@ -56,6 +60,13 @@ public partial class MainMenu : Control
         GetNode<Button>(_vehiclePath).Pressed += OnVehiclePressed;
         GetNode<Button>(_controlsPath).Pressed += () => ShowPanel(_controlsPanel);
         GetNode<Button>(_quitPath).Pressed += OnQuitPressed;
+        GetNode<Button>(_buxoroPath).Pressed += () => GetTree().ChangeSceneToFile(BuxoroScene);
+
+        // Direct entry for testers and shortcuts: ChronoShift.exe -- --buxoro
+        if (System.Array.IndexOf(OS.GetCmdlineUserArgs(), "--buxoro") >= 0)
+        {
+            GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, BuxoroScene);
+        }
 
         SetUpLoadButton();
         SetUpAircraftDemoButton();

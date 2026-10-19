@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxepisode01"]
+
+[ext_resource type="Script" path="res://scripts/buxoro/core/GameDirector.cs" id="1_gd"]
+
+[node name="BuxoroEpisode" type="Node3D"]
+script = ExtResource("1_gd")
+
+[node name="Dunyo" type="Node3D" parent="."]
+
+[node name="Tugunlar" type="Node3D" parent="Dunyo"]
+
+[node name="Teraklar" type="Node3D" parent="Dunyo"]
+
+[node name="Binolar" type="Node3D" parent="Dunyo"]
+
+[node name="Shogirdlar" type="Node3D" parent="Dunyo"]
+
+[node name="Dushmanlar" type="Node3D" parent="Dunyo"]
+
+[node name="Askarlar" type="Node3D" parent="Dunyo"]
+
+[node name="Oqlar" type="Node3D" parent="Dunyo"]
+
+[node name="Kamera" type="Camera3D" parent="."]
+fov = 70.0
+far = 600.0

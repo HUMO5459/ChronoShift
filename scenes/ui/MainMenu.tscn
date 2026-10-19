@@ -129,7 +129,7 @@ offset_top = -450.0
 offset_right = 830.0
 offset_bottom = 450.0
 grow_vertical = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 6
 
 [node name="LogoCard" type="PanelContainer" parent="Left"]
 custom_minimum_size = Vector2(186, 0)
@@ -144,7 +144,7 @@ layout_mode = 2
 theme_override_constants/separation = 5
 
 [node name="Logo" type="TextureRect" parent="Left/LogoCard/LogoBox"]
-custom_minimum_size = Vector2(160, 118)
+custom_minimum_size = Vector2(160, 90)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -185,7 +185,7 @@ text = "MVP VERTICAL SLICE — 1900 → 2050"
 custom_minimum_size = Vector2(410, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_constants/separation = 8
+theme_override_constants/separation = 4
 
 [node name="NewGame" type="Button" parent="Left/Menu"]
 custom_minimum_size = Vector2(410, 60)
@@ -213,6 +213,14 @@ theme_override_colors/font_color = Color(0.0706, 0.2118, 0.3882, 1)
 theme_override_font_sizes/font_size = 18
 text = "→"
 horizontal_alignment = 2
+
+[node name="Buxoro" type="Button" parent="Left/Menu"]
+custom_minimum_size = Vector2(410, 50)
+layout_mode = 2
+theme_type_variation = &"BlueprintOutline"
+theme_override_font_sizes/font_size = 19
+text = "1-BO'LIM — BUXORO 1238"
+alignment = 0
 
 [node name="Load" type="Button" parent="Left/Menu"]
 custom_minimum_size = Vector2(410, 60)

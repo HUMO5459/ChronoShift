@@ -46,7 +46,7 @@ public static class BuxoroWorldStream
     public readonly record struct DrawCounts(int Nodes, int Poplars, int Houses);
 
     /// <summary>Poplar clusters, as (x, z). Source: world.js:114.</summary>
-    private static readonly (double X, double Z)[] Clusters =
+    internal static readonly (double X, double Z)[] Clusters =
     {
         (112, -46), (104, 40), (120, 34), (96, -44), (88, 42),
     };
@@ -55,7 +55,7 @@ public static class BuxoroWorldStream
     /// The eight house sites. Source: world.js:248-254. Positions are fixed; only
     /// the yaw is drawn, one draw each, in this order.
     /// </summary>
-    private static readonly (string Model, double X, double Z)[] Houses =
+    internal static readonly (string Model, double X, double Z)[] Houses =
     {
         ("uy_katta", 140, -40), ("uy_kichik", 150, -30), ("uy_kichik", 134, -46),
         ("uy_katta", 146, 36), ("uy_kichik", 156, 26),

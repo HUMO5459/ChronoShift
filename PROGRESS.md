@@ -13,8 +13,133 @@
 
 ## Joriy holat
 
-- **Faza:** **BUXORO 1238 PORTI — reja tayyor, kod yozish boshlanmagan.** Yonma-yon: eski playtest feedback bloklari (A–E) hamon playtest kutmoqda.
-- **Oxirgi yangilanish:** 2026-09-15 (Sessiya 17)
+- **Faza:** **BUXORO 1238 = CHRONOSHIFT 1-BO'LIMI — port 1–3-qadamlari bajarildi va Godot ichida tekshirildi; keyingisi 4-qadam (Player.cs).** Yonma-yon: eski playtest feedback bloklari (A–E) hamon playtest kutmoqda.
+- **Oxirgi yangilanish:** 2026-10-19 (Sessiya 18 — Windows noutbukda davom ettirildi)
+
+### 🧭 FOYDALANUVCHI QARORI (2026-10-19) — loyiha ChronoShift bo'lib davom etadi
+
+So'zma-so'z mazmuni: "bundan keyin Chronoshift bo'lib davom etadi loyiha … Buxoro 1238 o'yinini
+Chronoshift ning 1-bo'limi qilib qo'shish kerak … o'tgan davrni ko'rsatishda Buxoro 1238 ni tanladik …
+Buxoro 1238 dagi barcha funksionallik va modellar Chronoshiftga o'tkazilishi kerak".
+
+- **Buxoro 1238 = ChronoShift'ning 1-BO'LIMI** (davrlar bo'ylab o'yinning o'tgan davri). Bosh menyuda
+  "YANGI O'YIN" tagida `1-BO'LIM — BUXORO 1238` tugmasi bor → `scenes/buxoro/BuxoroEpisode.tscn`.
+- **Torobiy (Three.js web) endi faqat MANBA va solishtirish etaloni.** Uning alohida web/desktop
+  build'lari endi chiqarilmaydi — har bir .exe ChronoShift (Godot) dan.
+- Barcha funksionallik va modellar ko'chiriladi — port rejasining 18 qadami bo'yicha, hech narsa qisqartirilmaydi.
+- **Ochiq savol (keyingi qadamlarda foydalanuvchi bilan hal qilinadi):** 1-bo'lim tugagach o'yinchi
+  1900-yilgi kampaniyaga avtomatik o'tadimi, yoki bo'limlar menyudan alohida tanlanadimi.
+
+### 🔁 WEB MANBA O'ZGARDI (2026-10-19, foydalanuvchi talabi) — PORTGA HAM KO'CHIRILSIN
+
+Torobiy web versiyasiga (worktree `claude/torobiy-chronoshift-integration-6f62fe`) kiritildi; port shu
+yangi manbaga ergashishi shart:
+- **Yashil o'tloq:** yer `0x685a3e` → `0x4f6a2c` (world.js:79); o't 800/600/120/150 → 2600/1600/160/320,
+  ranglar yashil (otlar.js:19-22). Godot: `BuxoroWorld.YerRangi` va `Otlar.Tur`.
+- **Otliqlar kelganda qahramon otda:** otliqli to'lqin chiqishi bilan (2-to'lqin, 5:30) ot yonida paydo bo'ladi
+  va qahramon avtomatik minadi (game.js `otgaMindir`, toast `otdasiz`); 3-pardada ikkinchi ot yaratilmaydi.
+- **Haqiqiy chavandozlar:** `mogul_otliq.glb` yo'q bo'lsa, `mogul_piyoda` modeli otga o'tqaziladi, qo'lida nayza
+  (combat.js). O'tirgan poza: `L/R_Thigh` rotateX(-1.4), `L/R_Calf` rotateX(+1.4) mikserdan keyin har kadr
+  (`MODELS.otir`); egar: ildiz y = yer + 0.30, ot chavandozdan 0.25 m oldinda (`MODELS.EGAR`).
+- **Ot yo'nalishi tuzatildi:** ot.glb ning boshi −X ga qaragan → `rotation.y = yaw + PI/2` (`MODELS.otBurilish`);
+  avval otlar yonlama sirpanib yurardi.
+- **Yollash tezlashdi:** `YOLLASH_VAQTI` 11.0 → **4.0 s** (balance.js:44; foydalanuvchi: "yollash va yasash 3–5 s").
+  Yasash allaqachon oraliqda: kamon/devor 3.0 s, qilich 4.0 s — o'zgarmadi. O'lchandi: 4.03 / 3.02 / 4.02 s.
+  Godot: `balance_buxoro.tres` `YollashVaqti = 4.0`.
+
+### 🚧 TO'LIQ PORT DAVOM ETMOQDA (2026-10-19, sessiya 18 oxiri) — KEYINGI SESSIYA SHU YERDAN
+
+Foydalanuvchi: "Torobiydan faqat model o'tkazilibti, o'yinni to'liq ko'chirish kerak". Bu sessiyada yozildi
+(`dotnet build` 0 xato, lekin 5–18-qadam kodlari HALI `Game.Yangila` ga ULANMAGAN):
+- ✅ **4-qadam o'ynaladi:** `input/BuxoroInput.cs` (15 ta `buxoro_*` action project.godot da), `player/Player.cs`
+  (harakat, sakrash, kamera, poplar okklyuziyasi, qurol biriktirish, Urish/Oting/ZarbaPozasi, qurol tanlash, OtMin),
+  `anim/Anim.cs` (anim.js to'liq), `core/Game.cs` (skelet), `GameDirector` = main.js tsikli (`_Process`, dt ≤ 1/20).
+  Sekundomer `-- --test-harakat`: yurish 12.000 s, yugurish 8.58 s, sakrash 1.041 m / 0.933 s (web'ning 60 Hz diskret
+  qiymati; rejadagi 1.079/0.939 analitik formula) — PASS.
+- ✅ `audio/BuxoroAudio.cs` — audio.js to'liq real vaqt sintezi (15 SFX, shamol LFO, Phrygian kuy), fayl yo'q.
+- ✅ `world/Otlar.cs` (1670 o't, 4711 oqimi) ulangan; `world/Actors.cs` (actors.js to'liq), `world/Qurollar.cs`
+  (qurollar.js to'liq), `BuxoroModels` ga Qol/SuyakTop/SuyakkaUla/QolTayanch.
+- 📝 YOZILGAN, ULANMAGAN: `apprentices/Apprentices.cs` (apprentices.js to'liq), `combat/Combat.cs` (combat.js to'liq),
+  `Humo.cs` (humo.js to'liq), `ui/BuxoroHud.cs` (hud.js + styles.css HUD qismi, vmin).
+- ⏭ **KEYINGI:** `Game.cs` ni game.js:1-674 bo'yicha to'liq yozish (GAP matnlari, tarobiyYarat, yangila tartibi,
+  ozaroTasir, nimaYasaladi/yasa/qilichBer, vaqtQosh, pardalar 1-3, tolqinYangila, hodisa, yakunla/yakunYangila/kadrKorsat;
+  setTimeout → `GetTree().CreateTimer(s, processAlways)`), `GameDirector` da HUD/Humo/Askarlar yaratish, kamera maslahati
+  (mouse capture faqat birinchi bosishda), oddiy pauza. Keyin: chizma.js (13), videolar.js (15, ffmpeg+Theora kerak),
+  menyu.js (16, menyu videosi), touch.js (18), binolar.js zaxira generatorlari (5), .exe.
+- ⚠ Web'dagi topilma: apprentices.js:90 `scale *= 1.62/1.35` shogird.glb ga ham qo'llanadi (shogird ~1.94 m).
+  1:1 ko'chirildi; foydalanuvchiga aytish kerak.
+
+### 🆕 3-QADAM: World.cs (2026-10-19, Windows)
+
+Ish MacBook'dan Windows noutbukka ko'chdi. **Bu mashinada Godot, Node va Python YO'Q** — faqat
+.NET SDK 10.0.401 bor (`dotnet build` 0 xato / 0 ogohlantirish). Godot keyinroq `D:\Tools\` ga o'rnatildi (pastda).
+
+- **Yozildi:**
+  - `scripts/buxoro/world/World.cs` — world.js ning funksiyama-funksiya ko'chirmasi: `Qur`, yer
+    ArrayMesh (DUNYO x bilan siljitilgan, analitik normal), `TugunYarat` (5 ta protsedural tarmoq,
+    draw tartibi aynan), `TerakYarat`, `UylarQoy`, `UstaxonaYarat` (protsedural + 6 qo'lda yozilgan
+    to'siq + kul), `BozorYarat` (2.4×2.0 supa izi), `DarvozaYarat` (halqa, 3×45 + 72 draw, muzlatilgan
+    o'lchamlar + 0.05 m AABB tekshiruvi), `ArkYarat`, `Chekkalar` (80 draw), `TosiqQosh/TosiqOchir/
+    BinoTosiq`, `ToqnashuvHal`. Har draw nomli o'zgaruvchiga chiqarilgan, manba tartibida.
+  - `world/BuxoroSolver.cs` — 3 o'tishli yechuvchi, Godot turlarisiz (shuning uchun dvigatelsiz test qilinadi).
+  - `world/Actors.cs` (Mat/Quti/Silindr/Dodekaedr; three.js chiziqli hex → sRGB konvertatsiyasi;
+    `JsRotation` — three.js XYZ Euler tartibi, Godot'niki YXZ), `world/Binolar.cs` (faqat `PaxsaDevor`
+    + `QiyaBlok`, o'zining 8317 oqimida — paxsa_devor.glb yo'q), `world/BuxoroModels.cs` (minimal `MODELS.ol` + AABB).
+  - `data/BuxoroWorld.cs` + `resources/data/buxoro/world_buxoro.tres` — balance.js da yo'q world.js literallari.
+  - `core/GameDirector.cs` (STUB) + `scenes/buxoro/BuxoroEpisode.tscn` — dunyoni quradi, draw nazorat
+    nuqtalarini tekshiradi (1080/1259/1267/1474/1554, binolar 504), x=60 da 6 ta DEBUG ustun qo'yadi.
+  - `project.godot`: `BuxoroRuntime` autoload va `[physics]` (60 Hz, max 3 qadam) **qo'shildi** —
+    bu 2-qadamdagi foydalanuvchi vazifasi edi, endi bajarilgan.
+  - Torobiy: `tools/parity/solver_web.js`. ChronoShift: `tools/parity/` (`.gdignore` bilan) — web natijalari.
+- **✅ MEXANIK ISBOT (to'qnashuv yechuvchisi):** web o'yin brauzerda ishga tushirildi (18 model yuklandi,
+  66 tugun, 20-tugun = 135.075675, -28.064980 — reja bilan aynan), `O.dunyo.tosiqlar` (75 ta) va
+  0.5 m panjara (72 561 nuqta, r = 0.45) olindi. C# `BuxoroSolver` o'sha to'siqlar bilan:
+  **0 ta nuqta 1e-4 dan oshdi, maksimal farq 5e-10 — PASS.**
+  - **O'lchab topilgan tuzoq:** to'siqlarni 6 xona bilan yozganda 6 nuqta yiqildi — darvozaning
+    burchagi π/2 → 1.570796 ga yaxlitlanib, markaz chizig'idagi nuqtalarda boshqa qirra tanlanardi.
+    Shuning uchun CSV to'liq aniqlikda, va `BinoTosiq` endi burchakni float node'dan emas, generator
+    hisoblagan double'dan oladi (uylar, darvoza).
+- **✅ GODOT ICHIDA TEKSHIRILDI (2026-10-19, keyin).** Godot 4.7.1 .NET + eksport shablonlari
+  `D:\Tools\` ga o'rnatildi (SHA-512 mos), loyiha headless import qilindi:
+  - `BuxoroImportCheck` — **PASS, 18 model**.
+  - `BuxoroEpisode` — draw nazorat nuqtalari **1080 / 1259 / 1267 / 1474 / 1554, binolar 504 — PASS**.
+  - Godot tomonidagi to'siqlar + yechuvchi web bilan:
+    `Godot --headless --path . scenes/buxoro/BuxoroEpisode.tscn -- --solver-compare <loyiha>/tools/parity/solver_web.csv`
+    → **72 561 nuqta, 0 ta > 1e-4, maksimal 3.3e-8 — PASS, exit 0.**
+  - **O'lchab topilgan ikki tuzoq (tuzatildi):** (1) ~1e-6 float xatosi teng masofali nuqtalarda
+    yechuvchining qirra tanlovini o'zgartiradi (bozor rastalari 8 nuqta) → barcha to'siqlar endi
+    generatorning double qiymatlaridan olinadi; halqa radiuslari to'liq double. (2) Godot importeri uy
+    AABB'sini three.js Box3 dan ~3e-5 ga boshqacha o'lchaydi, uy burchagiga 2 mm dan tegib o'tgan nuqta
+    buni 50x kuchaytiradi (144,-36 → 1.4 mm) → uy va darvoza izlari `world_buxoro.tres` da
+    `IzModellar/IzQiymatlar` sifatida web qiymatlaridan MUZLATILDI (halqa kabi), Godot faqat 0.05 m tekshiradi.
+- **✅ YORUG'LIK/TUMAN web kadrlariga kalibrlandi** (`core/BuxoroEkran.cs`, `World.TumanQoy`). Web o'yin
+  brauzerda o'sha kamera holatidan render qilinib, piksel bilan solishtirildi:
+  - three.js r128 va Godot ACES — bir xil egri; farq faqat bias (1/0.6 vs 1.8) va Godot'ning white
+    normallashtirishi → `TonemapWhite = 1000`, ekspozitsiya `0.86/0.6/1.8`.
+  - three.js fon va tumanni tonemap'dan KEYIN chizadi → ularning rangi Godot ACES'i orqali teskari
+    hisoblanadi. Natija: osmon aynan `216,204,180` (web bilan bir xil).
+  - **gl_compatibility'da quyosh va atrof yorug'ligi alohida aynan mos, birga esa ~2.3x yorqin** —
+    o'lchandi, sababi topilmadi; `YoruglikKoef = 0.7` bilan yer `138,120,82` (web `138,124,93`).
+  - FogExp2 Godot'da yo'q → depth fog, end = 1.65/zichlik (220 m), curve 1.5; 50–190 m oralig'ida
+    exp2 dan farq ≤ 0.15. Qolgan farq: Godot biroz sarg'ishroq (to'yinganlik) — 12-qadamda.
+- **✅ 1-BO'LIM MENYUDA + WINDOWS .EXE:** bosh menyuda "YANGI O'YIN" tagida `1-BO'LIM — BUXORO 1238`
+  (`-- --buxoro` argumenti bilan to'g'ridan-to'g'ri ochiladi). Menyu sig'ishi uchun oraliqlar 14→6 / 8→4,
+  bo'sh logotip kartasi 118→90 px. Vaqtinchalik `debug/BuxoroFlyCamera.cs` (WASD/Shift/sichqoncha/Esc)
+  va ekrandagi holat yozuvi — 4-qadamda Player.cs almashtiradi.
+  - **Eksport bloki tuzatildi:** `BuxoroImport.cs` (editor-only `EditorScenePostImport`) `#if TOOLS`
+    bilan o'raldi — aks holda `dotnet publish` yiqilib, eksport qilingan o'yinda C# umuman bo'lmasdi.
+    Bu 1-qadamdan beri yashirin edi (Mac'da eksport qilinmagan).
+  - Tayyor build: `ChronoShift/build/ChronoShift-windows-2026-10-19/` (465 MB, `OQING.txt` bilan).
+    Exe ichida sinaldi: menyu xatosiz, `--buxoro` → maydon PASS.
+- **Ochiq (keyingi qadamlarga):** o't-o'lan (Otlar, 4711 oqimi) va `Binolar` ning qolgan generatorlari — 5-qadam;
+  hunarmandning protsedural zaxirasi va to'liq ANIM — 6-qadam (hozir `idle_waiting` to'g'ridan-to'g'ri Autoplay);
+  devor nuqtalarining haqiqiy belgilari — 8/9-qadam. Rang to'yinganligi farqi — 12-qadam.
+  **Menyu orqasidagi video** (web: `kirish.mp4`, loop, jim, opacity .42, blur 3px, saturate .75,
+  scale 1.06 + `#menyuQoplama` gradient — styles.css:282-320, menyu.js:8) — foydalanuvchi qarori
+  (2026-10-19): rejadagi tartibda, 15–16-qadamda, ChronoShift bosh menyusiga ham. Kerak: Theora'li
+  ffmpeg (bu noutbukda ffmpeg yo'q) → `.ogv`.
+  `Dodekaedr` hozircha past poligonli shar.
+- **KEYINGI QADAM:** 4-qadam (Player.cs) — Shomurod, harakat, sakrash, kamera, `buxoro_*` Input Map action'lari.
 
 ### 🆕 Buxoro 1238 porti (2026-09-15)
 

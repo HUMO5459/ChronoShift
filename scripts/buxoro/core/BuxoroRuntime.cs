@@ -23,11 +23,15 @@ namespace ChronoShift;
 public partial class BuxoroRuntime : Node
 {
     private const string BalancePath = "res://resources/data/buxoro/balance_buxoro.tres";
+    private const string WorldPath = "res://resources/data/buxoro/world_buxoro.tres";
 
     public static BuxoroRuntime Instance { get; private set; } = null!;
 
     /// <summary>Everything transcribed from balance.js.</summary>
     [Export] public BuxoroBalance? Balance;
+
+    /// <summary>world.js literals balance.js does not carry (ground, light, wall ring).</summary>
+    [Export] public BuxoroWorld? World;
 
     /// <summary>True when every table loaded and passed its own checks.</summary>
     public bool IsReady { get; private set; }
@@ -37,11 +41,23 @@ public partial class BuxoroRuntime : Node
         ?? throw new System.InvalidOperationException(
             "BuxoroRuntime.Balance is null — see the startup error.");
 
+    /// <summary>Shorthand for the world table. Throws if startup failed.</summary>
+    public static BuxoroWorld W => Instance.World
+        ?? throw new System.InvalidOperationException(
+            "BuxoroRuntime.World is null — see the startup error.");
+
     public override void _Ready()
     {
         Instance = this;
 
         Balance ??= ResourceLoader.Load<BuxoroBalance>(BalancePath);
+        World ??= ResourceLoader.Load<BuxoroWorld>(WorldPath);
+
+        if (World == null)
+        {
+            GD.PushError($"[buxoro] BuxoroRuntime: {WorldPath} did not load as BuxoroWorld.");
+            return;
+        }
 
         if (Balance == null)
         {
