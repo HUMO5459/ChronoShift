@@ -1,40 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using Godot;
 
 namespace ChronoShift;
 
 /// <summary>
-/// Root of BuxoroEpisode.tscn. STEP-3 STUB: builds the world and checks it.
-/// Step 8 turns this into the ordered tick of game.js:121-181.
+/// Root of BuxoroEpisode.tscn — the port of main.js: bootstrap, the per-frame
+/// loop, the opening camera, pause, the camera hint. game.js lives in <see cref="Game"/>.
 /// </summary>
 /// <remarks>
-/// Command-line hooks (after <c>--</c>):
-///   <c>--solver-sweep</c>                 write user://tosiqlar_godot.csv and
-///                                         user://solver_godot.csv, then quit
-///   <c>--solver-compare &lt;web.csv&gt;</c>  also diff the sweep against the
-///                                         browser's tools/parity/solver_web.js
-///                                         output; exit code 1 on any point &gt; 1e-4
+/// Command-line hooks (after <c>--</c>), the URL parameters of the web build:
+///   <c>--skip</c>            no opening shot          (?skip)
+///   <c>--t 240</c>           start the clock there    (?t=240)
+///   <c>--shogird 6</c>       start with N apprentices (?shogird=6)
+///   <c>--missiya parda2</c>  a mission preset (menyu.js MISSIYALAR)
+///   <c>--sensorli</c>        touch controls, the mouse as one finger
+///   <c>--glbsiz a,b</c>      as if these GLBs were missing (<c>hammasi</c> = all)
+/// plus the verification hooks in GameDirector.Tekshiruv.cs.
 /// </remarks>
 public partial class GameDirector : Node3D
 {
-    /// <summary>
-    /// Cumulative world-stream checkpoints for the 18-GLB set (BUXORO_PORT_PLAN.md
-    /// §2.4). They are a property of the ASSET SET: adding a tugun_*.glb or
-    /// paxsa_devor.glb legitimately changes them — and re-rolls the field.
-    /// </summary>
-    private static readonly (string Nom, int Draw)[] KutilganSanoq =
+    /// <summary>menyu.js:43-100 — key, start clock (null = 600), apprentices.</summary>
+    private static readonly Dictionary<string, (double? Vaqt, int Shogird)> Missiyalar = new()
     {
-        ("nodes", 1080), ("poplars", 1259), ("houses", 1267), ("gate", 1474), ("edges", 1554),
+        ["toliq"] = (null, 2),
+        ["parda1"] = (600, 2),
+        ["parda2"] = (480, 4),
+        ["parda3"] = (240, 6),
     };
 
-    /// <summary>binolar.js stream after Chekkalar: 42 PaxsaDevor calls x 12 draws.</summary>
-    private const int KutilganBinolarDraw = 504;
+    /// <summary>The preset the Buxoro menu (Menyu.cs) chose; a direct start leaves it at "toliq".</summary>
+    public static string Missiya = "toliq";
 
-    /// <summary>Lattice: 0.5 m over x 0..180, z -50..50, player radius on foot.</summary>
-    private const double Qadam = 0.5;
+    /// <summary>Set by Menyu.cs: the menu fades out over the running game (#menyu.yoq, opacity .8 s).</summary>
+    public static bool MenyudanKirdi;
 
     public Dunyo? Dunyo { get; private set; }
 
@@ -43,112 +43,27 @@ public partial class GameDirector : Node3D
 
     private Camera3D _kamera = null!;
     private BuxoroInput? _input;
-    private Label? _holat;
-    private string _holatBosh = "";
+    private Touch? _sensor;
     private bool _kameraQotgan; // --kamera was given: keep that pose (reference renders)
 
-    /// <summary>
-    /// main.js tsikl (main.js:267-297): one tick per rendered frame, dt clamped to
-    /// 1/20 s. Run per frame rather than at a fixed physics rate so the web's
-    /// per-frame idioms behave exactly as they do in the browser on this display.
-    /// </summary>
-    public override void _Process(double delta)
+    // main.js:136-140 — the opening camera move
+    private sealed class OchilishHolat
     {
-        if (O == null)
-        {
-            return;
-        }
-
-        double dt = Math.Min(delta, 1.0 / 20);
-        if (dt <= 0)
-        {
-            return;
-        }
-
-        Anim.Yangila(dt);
-        _input?.Oqi();
-        Game.Yangila(O, dt);
-        if (O.Tugadi == null && !_kameraQotgan)
-        {
-            Player.Kamera(O.Oyinchi, _kamera, dt);
-        }
-
-        HolatYangila();
+        public double T, Davomiylik = 6.0;
+        public Vector3 BoshPoz, BoshQara;
     }
 
-    public override void _UnhandledInput(InputEvent e)
-    {
-        // Temporary until the pause menu (step 16): Escape leaves to the main menu.
-        if (e.IsActionPressed(BuxoroActions.Pauza))
-        {
-            Input.MouseMode = Input.MouseModeEnum.Visible;
-            GetTree().ChangeSceneToFile("res://scenes/ui/MainMenu.tscn");
-        }
-    }
+    private OchilishHolat? _ochilish;
 
-    /// <summary>
-    /// Step-4 stopwatch (BUXORO_PORT_PLAN.md): x 96 → 156 walking 12.0 s, running
-    /// 8.57 s; jump apex 1.079 m, airtime 0.939 s. Simulated at 60 Hz through the
-    /// real Player.Yangila, obstacles included.
-    /// </summary>
-    private bool HarakatTesti()
-    {
-        Oyinchi p = O!.Oyinchi;
-        const double dt = 1.0 / 60;
+    // main.js:178 — pause
+    private bool _pauza, _musiqaEdi;
+    private CanvasLayer? _pauzaQatlam;
+    private Control? _pzJadval;
+    private Button? _pauzaTugma;
+    private StyleBoxFlat? _ptNormal, _ptUstida;
+    private float _ptV = -1;
+    private bool _ptTor;
 
-        double Yugur(bool yugur)
-        {
-            p.X = 96;
-            p.Z = 6;
-            p.Yonalish = -Math.PI / 2; // camera behind, looking east
-            p.Tugmalar = new Tugmalar { Oldinga = true, Yugur = yugur };
-            double t = 0;
-            while (p.X < 156 && t < 60)
-            {
-                Player.Yangila(p, dt, Dunyo);
-                t += dt;
-            }
-
-            return t;
-        }
-
-        double yur = Yugur(false), yug = Yugur(true);
-
-        p.Tugmalar = new Tugmalar { Space = true };
-        double cho = 0, havo = 0;
-        Player.Yangila(p, dt, Dunyo);
-        p.Tugmalar = new Tugmalar();
-        havo += dt;
-        while (p.Sakramoqda && havo < 5)
-        {
-            cho = Math.Max(cho, p.Balandlik);
-            Player.Yangila(p, dt, Dunyo);
-            havo += dt;
-        }
-
-        // The plan's 1.079 m / 0.939 s are the analytic v²/2g and 2v/g. player.js
-        // integrates per frame (vy -= g·dt; h += vy·dt), so the web build itself
-        // peaks at 1.041 m and lands after 0.933 s at 60 fps — those are the targets.
-        bool ok = Math.Abs(yur - 12.0) < 0.05 && Math.Abs(yug - 8.571) < 0.05 &&
-                  Math.Abs(cho - 1.041) < 0.01 && Math.Abs(havo - 0.933) < 0.02;
-        GD.Print(string.Format(CultureInfo.InvariantCulture,
-            "[buxoro] harakat: yurish {0:F3} s (12.0), yugurish {1:F3} s (8.571), sakrash cho'qqisi {2:F3} m (1.041 @60Hz), havoda {3:F3} s (0.933 @60Hz) — {4}",
-            yur, yug, cho, havo, ok ? "PASS" : "FAIL"));
-        return ok;
-    }
-
-    /// <summary>DEBUG readout for the step-4 stopwatch checks; replaced by BuxoroHud.</summary>
-    private void HolatYangila()
-    {
-        if (_holat == null || O == null)
-        {
-            return;
-        }
-
-        Oyinchi p = O.Oyinchi;
-        _holat.Text = _holatBosh +
-            string.Format(CultureInfo.InvariantCulture, "\nx {0:F2}  z {1:F2}  sakrash {2:F3} m  vaqt {3:F1}", p.X, p.Z, p.Balandlik, O.Vaqt);
-    }
     public override void _Ready()
     {
         if (BuxoroRuntime.Instance == null || !BuxoroRuntime.Instance.IsReady)
@@ -160,32 +75,125 @@ public partial class GameDirector : Node3D
         var world = new World(BuxoroRuntime.B, BuxoroRuntime.W);
         var dunyo3d = GetNodeOrNull<Node3D>("Dunyo") ?? this;
         Dunyo = world.Qur(dunyo3d);
-
         bool ok = SanoqTekshir(world);
-        DevorBelgilari(dunyo3d);
+        GD.Print($"[buxoro] world built — {Dunyo.Tugunlar.Count} nodes, {Dunyo.Teraklar.Count} poplars, " +
+                 $"{Dunyo.Tosiqlar.Count} obstacles, draws {world.Lcg.DrawCount}. {(ok ? "PASS" : "FAIL")}");
 
         // ---- main.js boshla() / oyinniBoshla() ----
         _kamera = GetNode<Camera3D>("Kamera");
         BuxoroAudio.Boshla(this);
         BuxoroAudio.Shamol(0.22, 2.5);
+        BuxoroHud.Ulash(this);
+        Chizma.Ulash(this);
+        Videolar.Ulash(this);
         Anim.Tozala();
-        O = Game.Yarat(dunyo3d, _kamera, Dunyo);
+        O = Game.Yarat(dunyo3d, _kamera, Dunyo, world, Dunyo.Muhit!.Environment, Kechik);
         Player.OkklyuziyaTayyorla(Dunyo.Teraklar);
         _input = new BuxoroInput { Name = "BuxoroInput", P = O.Oyinchi };
         AddChild(_input);
-        BuxoroAudio.Musiqa(true);
-        Player.KameraniJoylashtir(O.Oyinchi, _kamera);
-        KameraArg();
-        Input.MouseMode = Input.MouseModeEnum.Captured;
+        _sensor = Touch.Ulash(this, O, _input);
+        BuxoroHud.Chizmalar(O.Chizma);
+        BuxoroHud.Soat(O.Vaqt);
 
-        GD.Print($"[buxoro] world built — {Dunyo.Tugunlar.Count} nodes, {Dunyo.Teraklar.Count} poplars, " +
-                 $"{Dunyo.Tosiqlar.Count} obstacles, draws {world.Lcg.DrawCount}. {(ok ? "PASS" : "FAIL")}");
-        HolatYozuvi(world, ok);
-
+        // mission preset (chosen in the menu)
         string[] args = OS.GetCmdlineUserArgs();
+        string? argMissiya = ArgQiymat(args, "--missiya");
+        string missiya = argMissiya ?? Missiya;
+        if (Missiyalar.TryGetValue(missiya, out var mi))
+        {
+            if (mi.Vaqt is double mv)
+            {
+                O.Vaqt = mv;
+            }
+
+            int n = Math.Min(6, mi.Shogird);
+            while (O.Shogirdlar.Shogirdlar.Count < n)
+            {
+                Apprentices.ShogirdQosh(dunyo3d, O.Shogirdlar, Dunyo);
+            }
+
+            O.Missiya = missiya;
+            GD.Print($"[buxoro] missiya {missiya}: soat {O.Vaqt:F0} s, shogird {O.Shogirdlar.Shogirdlar.Count}");
+        }
+
+        // styles.css:303-306 — the menu (#100d09 under its video) fades out over .8 s while the game already runs
+        if (MenyudanKirdi)
+        {
+            MenyudanKirdi = false;
+            var qatlam = new CanvasLayer { Layer = 50 };
+            var parda = new ColorRect { Color = new Color("#100d09"), MouseFilter = Control.MouseFilterEnum.Ignore };
+            parda.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+            qatlam.AddChild(parda);
+            AddChild(qatlam);
+            Tween tw = CreateTween();
+            tw.TweenProperty(parda, "color:a", 0f, 0.8f);
+            tw.TweenCallback(Callable.From(qatlam.QueueFree));
+        }
+
+        // dev parameters outrank the mission (main.js:92-97)
+        if (ArgQiymat(args, "--t") is string ts && double.TryParse(ts, NumberStyles.Float, CultureInfo.InvariantCulture, out double tv))
+        {
+            O.Vaqt = Math.Max(1, tv);
+        }
+
+        if (ArgQiymat(args, "--shogird") is string ss && int.TryParse(ss, out int sv))
+        {
+            while (O.Shogirdlar.Shogirdlar.Count < Math.Min(6, sv))
+            {
+                Apprentices.ShogirdQosh(dunyo3d, O.Shogirdlar, Dunyo);
+            }
+        }
+
+        // the opening shot only on a full run — the practice missions play at once
+        bool ochilishKerak = Array.IndexOf(args, "--skip") < 0 && missiya == "toliq";
+        if (ochilishKerak)
+        {
+            Videolar.Sabab("boshlanish");
+            OchilishBoshla();
+        }
+        else
+        {
+            BuxoroAudio.Musiqa(true);
+            Player.KameraniJoylashtir(O.Oyinchi, _kamera);
+        }
+
+        KameraArg();
+        Input.MouseMode = Input.MouseModeEnum.Visible; // captured on the first click (pointer lock)
+        PauzaTugmaQur();
+
+        // DEBUG: -- --chizma qilich — opens the blueprint viewer at once (kamon / qilich / kaltak / galvir_qalqon)
+        if (ArgQiymat(args, "--chizma") is string cn)
+        {
+            Chizma.Korsat(cn, 60);
+        }
+
+        if (Array.IndexOf(args, "--test-sensor") >= 0)
+        {
+            SensorTesti();
+            return;
+        }
+
+        if (Array.IndexOf(args, "--test-video") >= 0)
+        {
+            VideoTesti();
+            return;
+        }
+
+        if (Array.IndexOf(args, "--test-qayta") >= 0)
+        {
+            QaytaTesti();
+            return;
+        }
+
         if (Array.IndexOf(args, "--test-harakat") >= 0)
         {
             GetTree().Quit(HarakatTesti() ? 0 : 1);
+            return;
+        }
+
+        if (Array.IndexOf(args, "--test-oyin") >= 0)
+        {
+            GetTree().Quit(OyinTesti() ? 0 : 1);
             return;
         }
 
@@ -199,186 +207,364 @@ public partial class GameDirector : Node3D
             }
 
             GetTree().Quit(ok ? 0 : 1);
+            return;
+        }
+
+        if (ArgQiymat(args, "--binolar-compare") is string bp)
+        {
+            GetTree().Quit(BinolarCompare(world, bp) ? 0 : 1);
         }
     }
 
-    /// <summary>
-    /// DEBUG: <c>-- --kamera px,py,pz,tx,ty,tz</c> poses the camera, so --write-movie can
-    /// render reference views headlessly-by-script (e.g. the web game's same view).
-    /// </summary>
-    private void KameraArg()
+    private static string? ArgQiymat(string[] args, string nom)
     {
-        string[] args = OS.GetCmdlineUserArgs();
-        int i = Array.IndexOf(args, "--kamera");
-        if (i < 0 || i + 1 >= args.Length)
+        int i = Array.IndexOf(args, nom);
+        return i >= 0 && i + 1 < args.Length ? args[i + 1] : null;
+    }
+
+    /// <summary>setTimeout: wall-clock, runs through pause like the browser's.</summary>
+    private void Kechik(double soniya, Action a)
+    {
+        if (!IsInsideTree())
         {
             return;
         }
 
-        string[] p = args[i + 1].Split(',');
-        if (p.Length != 6)
+        GetTree().CreateTimer(soniya, processAlways: true, processInPhysics: false, ignoreTimeScale: true).Timeout += () =>
         {
-            GD.PushError("[buxoro] --kamera expects px,py,pz,tx,ty,tz");
+            if (IsInstanceValid(this))
+            {
+                a();
+            }
+        };
+    }
+
+    // ================= LOOP, main.js:267-297 =================
+
+    /// <summary>
+    /// One tick per rendered frame, dt clamped to 1/20 s — run per frame (not at a
+    /// fixed physics rate) so the web's per-frame idioms behave as in the browser.
+    /// </summary>
+    public override void _Process(double delta)
+    {
+        if (O == null)
+        {
             return;
         }
 
-        float F(int k) => float.Parse(p[k], CultureInfo.InvariantCulture);
-        GetNodeOrNull<Camera3D>("Kamera")?.LookAtFromPosition(new Vector3(F(0), F(1), F(2)), new Vector3(F(3), F(4), F(5)), Vector3.Up);
-        _kameraQotgan = true;
+        PauzaTugmaJoyla();
+
+        double dt = Math.Min(delta, 1.0 / 20);
+        if (dt <= 0)
+        {
+            return;
+        }
+
+        Anim.Yangila(dt);
+
+        if (_ochilish != null)
+        {
+            OchilishYangila(dt);
+            Humo.Yangila(O.Humo, dt);
+        }
+        else if (Videolar.Toxtatadimi() || _pauza)
+        {
+            // a fullscreen video or the pause — the game stops, rendering goes on
+        }
+        else
+        {
+            _input?.Oqi();
+            Game.Yangila(O, dt);
+            if (O.Tugadi == null && !_kameraQotgan)
+            {
+                Player.Kamera(O.Oyinchi, _kamera, dt);
+            }
+
+            _sensor?.Yangila(O.SensorHolat);
+            Chizma.Yangila(dt);
+            KameraMaslahat();
+        }
     }
+
+    public override void _UnhandledInput(InputEvent e)
+    {
+        // main.js:251-256 — Escape toggles the pause (a cutscene takes Escape first)
+        if (!e.IsActionPressed(BuxoroActions.Pauza) || O == null || O.Tugadi != null || Videolar.Ochiqmi())
+        {
+            return;
+        }
+
+        GetViewport().SetInputAsHandled();
+        if (_pauza)
+        {
+            PauzaYop();
+        }
+        else
+        {
+            PauzaOch();
+        }
+    }
+
+    public override void _Notification(int what)
+    {
+        // main.js:336-338 — a hidden window plays no sound
+        if (what == NotificationApplicationFocusOut && BuxoroAudio.Tayyor)
+        {
+            BuxoroAudio.OvozYoq(false);
+        }
+        else if (what == NotificationApplicationFocusIn && BuxoroAudio.Tayyor)
+        {
+            BuxoroAudio.OvozYoq(true);
+        }
+    }
+
+    // ================= OPENING SHOT, main.js:129-170 =================
+
+    /// <summary>The camera starts at Humo, crosses the field, stops behind Shomurod. 6 s.</summary>
+    private void OchilishBoshla()
+    {
+        BuxoroHud.Kadr(null, Game.G("ochilish"));
+        Vector3 tayanch = O!.Dunyo.HumoTayanchi!.Position;
+        _ochilish = new OchilishHolat { BoshPoz = tayanch + new Vector3(-26, 8, 6), BoshQara = tayanch };
+        _kamera.LookAtFromPosition(_ochilish.BoshPoz, _ochilish.BoshQara, Vector3.Up);
+        Kechik(2.0, () =>
+        {
+            if (_ochilish != null)
+            {
+                BuxoroHud.KadrYashir();
+            }
+        });
+    }
+
+    private void OchilishYangila(double dt)
+    {
+        OchilishHolat oc = _ochilish!;
+        Oyinchi p = O!.Oyinchi;
+        oc.T += dt;
+        double n = Math.Min(1, oc.T / oc.Davomiylik);
+        double e = n < 0.5 ? 2 * n * n : 1 - (Math.Pow((-2 * n) + 2, 2) / 2); // easeInOutQuad
+
+        var oxirgiPoz = new Vector3((float)(p.X + (Math.Sin(p.Yonalish) * 6)), (float)(p.Y + 4.5), (float)(p.Z + (Math.Cos(p.Yonalish) * 6)));
+        var oxirgiQara = new Vector3((float)p.X, (float)(p.Y + 1.5), (float)p.Z);
+        _kamera.Position = oc.BoshPoz.Lerp(oxirgiPoz, (float)e);
+        _kamera.LookAt(oc.BoshQara.Lerp(oxirgiQara, (float)e), Vector3.Up);
+
+        // Space skips it
+        if (p.SpaceBosildi || n >= 1)
+        {
+            p.SpaceBosildi = false;
+            _ochilish = null;
+            BuxoroHud.KadrYashir();
+            Player.KameraniJoylashtir(p, _kamera);
+            BuxoroAudio.Musiqa(true);
+        }
+    }
+
+    /// <summary>main.js:302-314 — "click to look" until the cursor is captured, only early on.</summary>
+    private void KameraMaslahat()
+    {
+        bool korsat = !Touch.Bormi() && Input.MouseMode != Input.MouseModeEnum.Captured && O!.Otgan < 12 && O.Tugadi == null;
+        BuxoroHud.KameraMaslahat(korsat);
+    }
+
+    // ================= PAUSE, main.js:178-249 =================
 
     /// <summary>
-    /// DEBUG ONLY: the build status and fly-camera keys on screen, so a tester running
-    /// the exported .exe sees the result without a console. Replaced by BuxoroHud (step 11).
+    /// #pauzaTugma, index.html:127 + styles.css:591-600. A touch device has no Esc, so this
+    /// button is mandatory there; the web shows it on every device (body.oyinda).
     /// </summary>
-    private void HolatYozuvi(World world, bool ok)
+    private void PauzaTugmaQur()
     {
-        var layer = new CanvasLayer { Name = "HolatYozuvi" };
-        var label = new Label { Position = new Vector2(24, 20) };
-        label.AddThemeColorOverride("font_color", ok ? new Color(1, 1, 1) : new Color(1, 0.35f, 0.3f));
-        label.AddThemeColorOverride("font_outline_color", new Color(0, 0, 0));
-        label.AddThemeConstantOverride("outline_size", 6);
-        _holatBosh = "1-BO'LIM — BUXORO 1238 · port, 4-qadam (Shomurod)\n" +
-                     $"tugunlar {Dunyo!.Tugunlar.Count} · teraklar {Dunyo.Teraklar.Count} · to'siqlar {Dunyo.Tosiqlar.Count} · " +
-                     $"draw {world.Lcg.DrawCount} — {(ok ? "PASS" : "FAIL")}\n" +
-                     "WASD — yurish · Shift — yugurish · Space — sakrash · sichqoncha — qarash · Esc — menyu";
-        label.Text = _holatBosh;
-        _holat = label;
-        layer.AddChild(label);
-        AddChild(layer);
+        var qatlam = new CanvasLayer { Layer = 60 };
+        AddChild(qatlam);
+        _pauzaTugma = new Button { Text = "❚❚", TooltipText = "Pauza (Esc)", FocusMode = Control.FocusModeEnum.None };
+        _ptNormal = new StyleBoxFlat { BgColor = new Color(16 / 255f, 13 / 255f, 9 / 255f, 0.5f), BorderColor = new Color(0xe8dfc94d) };
+        _ptNormal.SetBorderWidthAll(1);
+        _ptUstida = (StyleBoxFlat)_ptNormal.Duplicate();
+        _ptUstida.BgColor = new Color(30 / 255f, 25 / 255f, 17 / 255f, 0.8f);
+        _ptUstida.BorderColor = new Color(0xf2c14e99);
+        _pauzaTugma.AddThemeStyleboxOverride("normal", _ptNormal);
+        _pauzaTugma.AddThemeStyleboxOverride("hover", _ptUstida);
+        _pauzaTugma.AddThemeStyleboxOverride("pressed", _ptUstida);
+        _pauzaTugma.AddThemeColorOverride("font_color", new Color("#e8dfc9"));
+        _pauzaTugma.Pressed += PauzaOch;
+        qatlam.AddChild(_pauzaTugma);
+        PauzaTugmaJoyla();
     }
 
-    private bool SanoqTekshir(World world)
+    /// <summary>right 1vmin, bottom 5.6vmin; a small screen 8vmin. Gone during a video and the pause.</summary>
+    private void PauzaTugmaJoyla()
     {
-        bool ok = true;
-        var sb = new StringBuilder("[buxoro] draw checkpoints:");
-        for (int i = 0; i < KutilganSanoq.Length; i++)
+        if (_pauzaTugma == null)
         {
-            (string nom, int draw) = Dunyo!.DrawSanoq[i];
-            bool mos = nom == KutilganSanoq[i].Nom && draw == KutilganSanoq[i].Draw;
-            ok &= mos;
-            sb.Append($" {nom} {draw}{(mos ? "" : $" (EXPECTED {KutilganSanoq[i].Draw})")}");
+            return;
         }
 
-        GD.Print(sb.ToString());
-        if (!ok)
+        _pauzaTugma.Visible = !_pauza && !Videolar.Ochiqmi();
+        if (!_pauzaTugma.Visible)
         {
-            GD.PushError("[buxoro] world stream diverged from the web build — every node position after the first " +
-                         "mismatch is wrong. Did the GLB set in assets/models/buxoro change?");
+            return;
         }
 
-        if (world.BinolarLcg.DrawCount != KutilganBinolarDraw)
+        Vector2 ekran = GetViewport().GetVisibleRect().Size;
+        float v = Math.Min(ekran.X, ekran.Y) / 100f;
+        bool tor = Touch.TorEkran(this);
+        if (v != _ptV || tor != _ptTor)
         {
-            GD.PushError($"[buxoro] binolar stream at {world.BinolarLcg.DrawCount}, expected {KutilganBinolarDraw}.");
-            ok = false;
-        }
-
-        if (Dunyo!.Tugunlar.Count != 66)
-        {
-            GD.PushError($"[buxoro] {Dunyo.Tugunlar.Count} resource nodes, expected 66.");
-            ok = false;
-        }
-
-        return ok;
-    }
-
-    /// <summary>
-    /// DEBUG ONLY: thin posts at the six wall points so step 3 can be checked by eye.
-    /// The real markers and walls arrive with GameDirector/CombatSystem (steps 8-9).
-    /// </summary>
-    private void DevorBelgilari(Node3D ota)
-    {
-        var m = new StandardMaterial3D { AlbedoColor = new Color(0.9f, 0.5f, 0.1f), ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded };
-        foreach (DevorNuqta n in Dunyo!.DevorNuqtalari)
-        {
-            var post = Actors.Quti(0.3f, 3f, 0.3f, m, (float)n.X, (float)World.YerBalandligi(n.X, n.Z) + 1.5f, (float)n.Z);
-            post.Name = "DevorNuqtaDebug";
-            ota.AddChild(post);
-        }
-    }
-
-    /// <summary>Runs ToqnashuvHal over the whole field. Mirrors tools/parity/solver_web.js line for line.</summary>
-    private static List<string> SolverSweep(Dunyo d)
-    {
-        CultureInfo inv = CultureInfo.InvariantCulture;
-        double r = BuxoroRuntime.B.ToqnashuvRadiusPiyoda;
-
-        var tos = new StringBuilder("i,shakl,x,z,r,r1,r2,w,d,burilish\n");
-        for (int i = 0; i < d.Tosiqlar.Count; i++)
-        {
-            Tosiq t = d.Tosiqlar[i];
-            tos.Append(string.Format(inv, "{0},{1},{2:R},{3:R},{4:R},{5:R},{6:R},{7:R},{8:R},{9:R}\n",
-                i, t.Shakl, t.X, t.Z, t.R, t.R1, t.R2, t.W, t.D, t.Burilish));
-        }
-
-        Yoz("user://tosiqlar_godot.csv", tos.ToString());
-
-        var rows = new List<string>();
-        var sb = new StringBuilder("x,z,ox,oz\n");
-        for (int ix = 0; ix <= 360; ix++)
-        {
-            for (int iz = 0; iz <= 200; iz++)
+            _ptV = v;
+            _ptTor = tor;
+            float px = (tor ? 2.6f : 1.5f) * v;
+            foreach (StyleBoxFlat sb in new[] { _ptNormal!, _ptUstida! })
             {
-                double x = ix * Qadam, z = -50 + (iz * Qadam);
-                double ox = x, oz = z;
-                BuxoroSolver.ToqnashuvHal(d.Tosiqlar, ref ox, ref oz, r);
-                string row = string.Format(inv, "{0},{1},{2:F9},{3:F9}", x, z, ox, oz);
-                rows.Add(row);
-                sb.Append(row).Append('\n');
+                sb.ContentMarginLeft = sb.ContentMarginRight = (tor ? 1.8f : 1.2f) * v;
+                sb.ContentMarginTop = sb.ContentMarginBottom = (tor ? 1.2f : 0.7f) * v;
+                sb.SetCornerRadiusAll((int)(0.4f * v));
             }
+
+            _pauzaTugma.AddThemeFontOverride("font", MenyuShrift.Georgia(0.1f * px));
+            _pauzaTugma.AddThemeFontSizeOverride("font_size", Math.Max(6, (int)Math.Round(px)));
         }
 
-        Yoz("user://solver_godot.csv", sb.ToString());
-        GD.Print($"[buxoro] solver sweep: {rows.Count} points, {d.Tosiqlar.Count} obstacles → " +
-                 ProjectSettings.GlobalizePath("user://solver_godot.csv"));
-        return rows;
+        _pauzaTugma.Size = _pauzaTugma.GetCombinedMinimumSize();
+        _pauzaTugma.Position = new Vector2(ekran.X - v - _pauzaTugma.Size.X, ekran.Y - ((tor ? 8 : 5.6f) * v) - _pauzaTugma.Size.Y);
     }
 
-    private static bool SolverCompare(List<string> godot, string webPath)
+    private void PauzaOch()
     {
-        if (!System.IO.File.Exists(webPath))
+        if (_pauza || O == null || O.Tugadi != null || Videolar.Ochiqmi())
         {
-            GD.PushError($"[buxoro] solver compare: {webPath} not found");
-            return false;
+            return;
         }
 
-        string[] web = System.IO.File.ReadAllLines(webPath);
-        int n = Math.Min(godot.Count, web.Length - 1), yomon = 0;
-        double eng = 0;
-        for (int i = 0; i < n; i++)
+        _pauza = true;
+        Input.MouseMode = Input.MouseModeEnum.Visible;
+        _input?.Tozala(); // held keys and the shield do not stick
+
+        // §9: after Tarobiy's death the music is gone for good — resuming must not bring it back
+        _musiqaEdi = BuxoroAudio.MusiqaYoniqmi;
+        BuxoroAudio.Musiqa(false);
+        PauzaQur();
+    }
+
+    private void PauzaYop()
+    {
+        if (!_pauza)
         {
-            double[] a = Sonlar(godot[i]), b = Sonlar(web[i + 1]);
-            double farq = Math.Max(Math.Abs(a[2] - b[2]), Math.Abs(a[3] - b[3]));
-            eng = Math.Max(eng, farq);
-            if (farq > 1e-4 || a[0] != b[0] || a[1] != b[1])
+            return;
+        }
+
+        _pauza = false;
+        _pauzaQatlam?.QueueFree();
+        _pauzaQatlam = null;
+        if (_musiqaEdi)
+        {
+            BuxoroAudio.Musiqa(true);
+        }
+
+        if (!Touch.Bormi())
+        {
+            Input.MouseMode = Input.MouseModeEnum.Captured;
+        }
+    }
+
+    /// <summary>The pause card, styles.css:602-640; a small screen has its @media sizes (styles.css:635-640).</summary>
+    private void PauzaQur()
+    {
+        bool en = BuxoroHud.Til == "en";
+        string Q(string uz, string ing) => en ? ing : uz;
+        float v = Math.Min(GetViewport().GetVisibleRect().Size.X, GetViewport().GetVisibleRect().Size.Y) / 100f;
+        var shrift = new SystemFont { FontNames = new[] { "Georgia", "Times New Roman", "serif" } };
+        var krem = new Color("#e8dfc9");
+        var oltin = new Color("#f2c14e");
+        bool tor = Touch.TorEkran(this);
+
+        _pauzaQatlam = new CanvasLayer { Layer = 58 };
+        var fon = new ColorRect { Color = new Color(10 / 255f, 8 / 255f, 5 / 255f, 0.82f) };
+        fon.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        fon.GuiInput += ev =>
+        {
+            if (ev is InputEventMouseButton { Pressed: true }) // a click on the backdrop closes it
             {
-                if (yomon++ < 10)
-                {
-                    GD.Print($"[buxoro]   diff at {godot[i]}  web {web[i + 1]}");
-                }
+                PauzaYop();
             }
-        }
+        };
+        _pauzaQatlam.AddChild(fon);
 
-        bool ok = yomon == 0 && godot.Count == web.Length - 1;
-        GD.Print($"[buxoro] solver compare: {n} points, {yomon} over 1e-4, max {eng:E2} — {(ok ? "PASS" : "FAIL")}");
-        return ok;
-    }
+        var markaz = new CenterContainer { MouseFilter = Control.MouseFilterEnum.Ignore };
+        markaz.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        _pauzaQatlam.AddChild(markaz);
 
-    private static double[] Sonlar(string row)
-    {
-        string[] p = row.Split(',');
-        var v = new double[p.Length];
-        for (int i = 0; i < p.Length; i++)
+        var quti = new PanelContainer();
+        var sb = new StyleBoxFlat
         {
-            v[i] = double.Parse(p[i], CultureInfo.InvariantCulture);
+            BgColor = new Color(20 / 255f, 16 / 255f, 11 / 255f, 0.94f), BorderColor = new Color(krem, 0.28f),
+            ContentMarginLeft = 5.5f * v, ContentMarginRight = 5.5f * v, ContentMarginTop = 4.5f * v, ContentMarginBottom = 4.5f * v,
+        };
+        sb.SetBorderWidthAll(1);
+        quti.AddThemeStyleboxOverride("panel", sb);
+        markaz.AddChild(quti);
+
+        var ust = new VBoxContainer();
+        ust.AddThemeConstantOverride("separation", (int)(1.3f * v));
+        quti.AddChild(ust);
+
+        Label Yozuv(string matn, float px, Color rang)
+        {
+            var l = new Label { Text = matn, HorizontalAlignment = HorizontalAlignment.Center };
+            l.AddThemeFontOverride("font", shrift);
+            l.AddThemeFontSizeOverride("font_size", (int)px);
+            l.AddThemeColorOverride("font_color", rang);
+            return l;
         }
 
-        return v;
-    }
+        ust.AddChild(Yozuv(Q("P A U Z A", "P A U S E D"), (tor ? 4.4f : 3) * v, oltin));
+        ust.AddChild(new Control { CustomMinimumSize = new Vector2(0, 1.9f * v) });
 
-    private static void Yoz(string path, string text)
-    {
-        using var f = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Write);
-        f.StoreString(text);
+        Button Tugma(string matn, Action bosildi)
+        {
+            var b = new Button { Text = matn, CustomMinimumSize = new Vector2((tor ? 52 : 30) * v, 0), FocusMode = Control.FocusModeEnum.None };
+            var n = new StyleBoxFlat
+            {
+                BgColor = new Color(30 / 255f, 25 / 255f, 17 / 255f, 0.55f), BorderColor = new Color(krem, 0.3f),
+                ContentMarginLeft = (tor ? 3 : 2.4f) * v, ContentMarginRight = (tor ? 3 : 2.4f) * v,
+                ContentMarginTop = (tor ? 2 : 1.3f) * v, ContentMarginBottom = (tor ? 2 : 1.3f) * v,
+            };
+            n.SetBorderWidthAll(1);
+            var h = (StyleBoxFlat)n.Duplicate();
+            h.BgColor = new Color(38 / 255f, 31 / 255f, 20 / 255f, 0.8f);
+            h.BorderColor = new Color(oltin, 0.8f);
+            b.AddThemeStyleboxOverride("normal", n);
+            b.AddThemeStyleboxOverride("hover", h);
+            b.AddThemeStyleboxOverride("pressed", h);
+            b.AddThemeFontOverride("font", shrift);
+            b.AddThemeFontSizeOverride("font_size", (int)((tor ? 3 : 2) * v));
+            b.AddThemeColorOverride("font_color", krem);
+            b.AddThemeColorOverride("font_hover_color", oltin);
+            b.Pressed += bosildi;
+            ust.AddChild(b);
+            return b;
+        }
+
+        Tugma(Q("DAVOM ETTIRISH", "RESUME"), PauzaYop);
+        Tugma(Q("QAYTA BOSHLASH", "RESTART"), () => GetTree().ReloadCurrentScene());
+        Tugma(Q("BOSHQARUV", "CONTROLS"), () =>
+        {
+            if (_pzJadval != null)
+            {
+                _pzJadval.Visible = !_pzJadval.Visible;
+            }
+        });
+        Tugma(Q("SERIYA MENYUSI", "SERIES MENU"), () => GetTree().ChangeSceneToFile("res://scenes/ui/MainMenu.tscn"));
+        Tugma(Q("O‘YINDAN CHIQISH", "QUIT GAME"), () => GetTree().Quit()); // desktop build: a real quit
+
+        // main.js:229-232 — the menu's controls table, cloned (margin-top 3vmin, styles.css:630)
+        var jadval = new VBoxContainer { Visible = false };
+        jadval.AddThemeConstantOverride("separation", 0);
+        jadval.AddChild(new Control { CustomMinimumSize = new Vector2(0, 3 * v - (1.3f * v)) });
+        jadval.AddChild(BoshqaruvJadvali.Qur(v));
+        _pzJadval = jadval;
+        ust.AddChild(jadval);
+        ust.AddChild(Yozuv(Q("Esc — davom ettirish", "Esc — resume"), (tor ? 2.2f : 1.5f) * v, new Color(krem, 0.42f)));
+        AddChild(_pauzaQatlam);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -23,6 +24,22 @@ public static class BuxoroModels
 
     private static readonly Dictionary<string, PackedScene?> Scenes = new();
 
+    /// <summary>DEBUG: <c>-- --glbsiz uy_katta,ark_qalasi</c> or <c>hammasi</c> — plays as if these GLBs were not there.</summary>
+    private static readonly string[] Glbsiz = GlbsizArg();
+
+    /// <summary>The asset set is not the shipped one, so the draw checkpoints do not apply.</summary>
+    public static bool GlbsizMi => Glbsiz.Length > 0;
+
+    private static string[] GlbsizArg()
+    {
+        string[] a = OS.GetCmdlineUserArgs();
+        int i = Array.IndexOf(a, "--glbsiz");
+        return i >= 0 && i + 1 < a.Length ? a[i + 1].Split(',') : Array.Empty<string>();
+    }
+
+    private static bool Fayl(string nom, string path) =>
+        ResourceLoader.Exists(path) && !(GlbsizMi && (Glbsiz[0] == "hammasi" || Array.IndexOf(Glbsiz, nom) >= 0));
+
     /// <summary>True when <c>{nom}.glb</c> is present.</summary>
     public static bool Bor(string nom) => Sahna(nom) != null;
 
@@ -40,12 +57,148 @@ public static class BuxoroModels
         return n;
     }
 
+    /// <summary>
+    /// <c>FindChildren("*", T, true, false)</c> — depth-first pre-order, internal
+    /// children included — as a C# list. A Godot.Collections.Array result is freed
+    /// only by the .NET finalizer, which can run after the engine has shut down
+    /// (0xC0000005 in godotsharp_array_destroy on exit), so the episode makes none.
+    /// </summary>
+    public static List<T> Avlodlar<T>(Node ota)
+        where T : class
+    {
+        var r = new List<T>();
+        Yig(ota, r);
+        return r;
+    }
+
+    private static void Yig<T>(Node n, List<T> r)
+        where T : class
+    {
+        int soni = n.GetChildCount(true);
+        for (int i = 0; i < soni; i++)
+        {
+            Node b = n.GetChild(i, true);
+            if (b is T t)
+            {
+                r.Add(t);
+            }
+
+            Yig(b, r);
+        }
+    }
+
+    /// <summary><c>GetChildren()</c> as a C# list (see <see cref="Avlodlar{T}"/>).</summary>
+    public static List<Node> Bolalar(Node ota)
+    {
+        int soni = ota.GetChildCount();
+        var r = new List<Node>(soni);
+        for (int i = 0; i < soni; i++)
+        {
+            r.Add(ota.GetChild(i));
+        }
+
+        return r;
+    }
+
+    /// <summary>models.js:8-26 KUTILGAN — every model the game asks for; 18 exist as GLB today, the rest are procedural.</summary>
+    public static readonly string[] Kutilgan =
+    {
+        // characters
+        "shomurod", "tarobiy", "shogird", "askar",
+        "mogul_piyoda", "mogul_otliq", "noyon", "hunarmand", "ot", "humo",
+        // weapons
+        "kaltak", "galvir_qalqon", "kamon", "qilich",
+        // the wall the player builds
+        "devor_seksiya", "devor_buzilgan",
+        // architecture — fired brick
+        "qala_darvoza", "shahar_devori", "ark_qalasi",
+        // architecture — mud plaster
+        "uy_kichik", "uy_katta", "uy_vayrona", "paxsa_devor",
+        // surroundings
+        "ustaxona", "bozor_rastasi", "terak",
+        // grass (hundreds of instances)
+        "ot_tutam", "ot_past", "gul_sariq", "butta",
+        // resource nodes
+        "tugun_tosh", "tugun_yogoch", "tugun_teri", "tugun_temir", "tugun_komir",
+    };
+
+    private static readonly List<string> Yuklanmoqda = new();
+
+    /// <summary>
+    /// models.js yukla() — starts a threaded load of every expected GLB while the
+    /// menu is up, so starting the game does not stall on disk. A missing file
+    /// counts as done at once (the web's 404 → placeholder).
+    /// </summary>
+    public static void YuklashniBoshla()
+    {
+        foreach (string nom in Kutilgan)
+        {
+            if (Scenes.ContainsKey(nom) || Yuklanmoqda.Contains(nom))
+            {
+                continue;
+            }
+
+            string path = Dir + nom + ".glb";
+            if (!Fayl(nom, path) ||
+                ResourceLoader.LoadThreadedRequest(path, "PackedScene", true) != Error.Ok)
+            {
+                Scenes[nom] = null;
+                continue;
+            }
+
+            Yuklanmoqda.Add(nom);
+        }
+    }
+
+    /// <summary>The loaded share, 0..1 (models.js onProgress: done / KUTILGAN.length). Moves finished loads into the cache.</summary>
+    public static double Yuklanish()
+    {
+        for (int i = Yuklanmoqda.Count - 1; i >= 0; i--)
+        {
+            string path = Dir + Yuklanmoqda[i] + ".glb";
+            ResourceLoader.ThreadLoadStatus st = ResourceLoader.LoadThreadedGetStatus(path);
+            if (st == ResourceLoader.ThreadLoadStatus.InProgress)
+            {
+                continue;
+            }
+
+            Scenes[Yuklanmoqda[i]] = st == ResourceLoader.ThreadLoadStatus.Loaded ? ResourceLoader.LoadThreadedGet(path) as PackedScene : null;
+            Yuklanmoqda.RemoveAt(i);
+        }
+
+        int tayyor = 0;
+        foreach (string nom in Kutilgan)
+        {
+            if (Scenes.ContainsKey(nom))
+            {
+                tayyor++;
+            }
+        }
+
+        return tayyor / (double)Kutilgan.Length;
+    }
+
+    /// <summary>models.js hisobot() — how many of the expected models are real GLBs.</summary>
+    public static (int Glb, int Jami) Hisobot()
+    {
+        int glb = 0;
+        foreach (string nom in Kutilgan)
+        {
+            if (Scenes.TryGetValue(nom, out PackedScene? s) && s != null)
+            {
+                glb++;
+            }
+        }
+
+        return (glb, Kutilgan.Length);
+    }
+
     private static PackedScene? Sahna(string nom)
     {
         if (!Scenes.TryGetValue(nom, out PackedScene? s))
         {
             string path = Dir + nom + ".glb";
-            s = ResourceLoader.Exists(path) ? ResourceLoader.Load<PackedScene>(path) : null;
+            s = Fayl(nom, path) ? ResourceLoader.Load<PackedScene>(path) : null;
             Scenes[nom] = s;
         }
 
@@ -68,7 +221,7 @@ public static class BuxoroModels
     /// <summary>player.js:96-103 — the first bone whose name (prefix stripped) matches.</summary>
     public static Suyak? SuyakTop(Node obj, System.Text.RegularExpressions.Regex naqsh)
     {
-        foreach (Node n in obj.FindChildren("*", nameof(Skeleton3D), true, false))
+        foreach (Node n in BuxoroModels.Avlodlar<Skeleton3D>(obj))
         {
             if (n is not Skeleton3D sk)
             {
@@ -109,6 +262,60 @@ public static class BuxoroModels
         Actors.JsRotation(obj, burilish.X, burilish.Y, burilish.Z);
         ba.AddChild(obj);
         return true;
+    }
+
+    /// <summary>
+    /// models.js otBurilish (web 2026-10-19): ot.glb's head points −X while every
+    /// character faces +Z, so a horse turned with its rider needs yaw + π/2. The
+    /// procedural horse (Actors.Ot) faces +Z and needs nothing.
+    /// </summary>
+    public static double OtBurilish() => Bor("ot") ? Math.PI / 2 : 0;
+
+    /// <summary>models.js EGAR — rider root above the ground, and how far behind the horse's centre.</summary>
+    public const double EgarY = 0.30, EgarOrqa = 0.25;
+
+    private static readonly System.Text.RegularExpressions.Regex Oyoq =
+        new("^(L|R)_(Thigh|Calf)$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    private static readonly Dictionary<ulong, List<Suyak>> OyoqKesh = new();
+
+    /// <summary>
+    /// models.js otir — the seated pose: thigh rotateX(−1.4), calf rotateX(+1.4) in
+    /// the bone's own space. Call AFTER the animation advanced this frame (the clip
+    /// rewrites these bones every frame, so nothing accumulates) and only while a
+    /// clip is playing.
+    /// </summary>
+    public static bool Otir(Node3D mesh)
+    {
+        if (!OyoqKesh.TryGetValue(mesh.GetInstanceId(), out List<Suyak>? s))
+        {
+            s = new List<Suyak>();
+            foreach (Node n in BuxoroModels.Avlodlar<Skeleton3D>(mesh))
+            {
+                if (n is Skeleton3D sk)
+                {
+                    for (int i = 0; i < sk.GetBoneCount(); i++)
+                    {
+                        string nom = sk.GetBoneName(i);
+                        int c = nom.LastIndexOf(':');
+                        if (Oyoq.IsMatch(c >= 0 ? nom[(c + 1)..] : nom))
+                        {
+                            s.Add(new Suyak(sk, i));
+                        }
+                    }
+                }
+            }
+
+            OyoqKesh[mesh.GetInstanceId()] = s;
+        }
+
+        foreach (Suyak b in s)
+        {
+            float a = b.Skelet.GetBoneName(b.Idx).EndsWith("Thigh", StringComparison.OrdinalIgnoreCase) ? -1.4f : 1.4f;
+            b.Skelet.SetBonePoseRotation(b.Idx, b.Skelet.GetBonePoseRotation(b.Idx) * new Quaternion(Vector3.Right, a));
+        }
+
+        return s.Count > 0;
     }
 
     /// <summary>
@@ -164,7 +371,7 @@ public static class BuxoroModels
             first = false;
         }
 
-        foreach (Node child in node.GetChildren())
+        foreach (Node child in BuxoroModels.Bolalar(node))
         {
             Transform3D ct = child is Node3D c3 ? t * c3.Transform : t;
             Accumulate(child, ct, ref box, ref first);

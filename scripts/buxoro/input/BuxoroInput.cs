@@ -29,7 +29,7 @@ public static class BuxoroActions
 /// <summary>
 /// The keyboard/mouse half of player.js <c>kirish()</c> (player.js:106-203).
 /// Writes the same fields the web's listeners write, so the player code reads
-/// one shape whatever the source (touch.js writes them too).
+/// one shape whatever the source (<see cref="Touch"/> writes them too).
 /// </summary>
 /// <remarks>
 /// Pointer lock maps to Input.MouseMode.Captured: a left click captures (and
@@ -46,9 +46,24 @@ public partial class BuxoroInput : Node
     /// <summary>Set by the director: no camera turning while paused or in a cutscene.</summary>
     public bool Faol = true;
 
+    /// <summary>
+    /// Touch buttons held down (touch.js:164-169). <see cref="Oqi"/> rewrites p.tugmalar
+    /// and p.bloklaymi every frame, so a held button joins that poll instead of writing
+    /// them once, as the web's event does.
+    /// </summary>
+    public bool SensorE, SensorF, SensorBlok;
+
     public override void _UnhandledInput(InputEvent e)
     {
         if (P == null || !Faol)
+        {
+            return;
+        }
+
+        // The mouse Godot synthesises from a touch: touch.js's e.preventDefault() keeps the
+        // browser from doing the same, or every tap would swing and grab the cursor.
+        // Under --sensorli the real mouse IS the finger.
+        if (e is InputEventMouse && (e.Device == InputEvent.DeviceIdEmulation || Input.EmulateTouchFromMouse))
         {
             return;
         }
@@ -81,6 +96,21 @@ public partial class BuxoroInput : Node
         {
             P.SpaceBosildi = true; // player.js:122
         }
+
+        if (e.IsActionPressed(BuxoroActions.Qurol1) && !e.IsEcho())
+        {
+            P.Tugmalar.Digit1 = true;
+        }
+
+        if (e.IsActionPressed(BuxoroActions.Qurol2) && !e.IsEcho())
+        {
+            P.Tugmalar.Digit2 = true;
+        }
+
+        if (e.IsActionPressed(BuxoroActions.Qurol3) && !e.IsEcho())
+        {
+            P.Tugmalar.Digit3 = true;
+        }
     }
 
     /// <summary>
@@ -101,14 +131,14 @@ public partial class BuxoroInput : Node
         t.Chapga = Input.IsActionPressed(BuxoroActions.Chapga);
         t.Ongga = Input.IsActionPressed(BuxoroActions.Ongga);
         t.Yugur = Input.IsActionPressed(BuxoroActions.Yugur);
-        t.E = Input.IsActionPressed(BuxoroActions.Belgila);
-        t.F = Input.IsActionPressed(BuxoroActions.Yasa);
+        t.E = Input.IsActionPressed(BuxoroActions.Belgila) || SensorE;
+        t.F = Input.IsActionPressed(BuxoroActions.Yasa) || SensorF;
 
         // player.js:275-278: Space jumps once per press — JustPressed has no echo.
         t.Space = Input.IsActionJustPressed(BuxoroActions.Sakra);
 
         // player.js:170/173 — RMB down/up toggles bloklaymi
-        P.Bloklaymi = Input.IsActionPressed(BuxoroActions.Blok);
+        P.Bloklaymi = Input.IsActionPressed(BuxoroActions.Blok) || SensorBlok;
 
         // player.js:128-129 — releasing E / F resets their hold timers
         if (!t.E)
@@ -135,6 +165,7 @@ public partial class BuxoroInput : Node
 
         P.Tugmalar = new Tugmalar();
         P.Bloklaymi = false;
+        SensorE = SensorF = SensorBlok = false;
     }
 
     public override void _Notification(int what)
@@ -150,4 +181,7 @@ public partial class BuxoroInput : Node
 public sealed class Tugmalar
 {
     public bool Oldinga, Orqaga, Chapga, Ongga, Yugur, Space, E, F;
+
+    // game.js:307-316 — set on press, consumed (cleared) by the game
+    public bool Digit1, Digit2, Digit3;
 }

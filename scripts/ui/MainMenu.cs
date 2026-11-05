@@ -25,8 +25,10 @@ public partial class MainMenu : Control
 
     private const string GameplayScene = "res://scenes/main/Main.tscn";
 
-    /// <summary>The Buxoro 1238 port, reachable while it is being built (plan step 16 makes this a catalog row).</summary>
+    /// <summary>Chapter 1 — Buxoro 1238: its own menu (BOSHLASH / MISSIYALAR / BOSHQARUV), then the episode.</summary>
     private const string BuxoroScene = "res://scenes/buxoro/BuxoroEpisode.tscn";
+
+    private static bool _argBajarildi;
 
     private Control _menu = null!;
     private ControlsPanel _controlsPanel = null!;
@@ -60,12 +62,28 @@ public partial class MainMenu : Control
         GetNode<Button>(_vehiclePath).Pressed += OnVehiclePressed;
         GetNode<Button>(_controlsPath).Pressed += () => ShowPanel(_controlsPanel);
         GetNode<Button>(_quitPath).Pressed += OnQuitPressed;
-        GetNode<Button>(_buxoroPath).Pressed += () => GetTree().ChangeSceneToFile(BuxoroScene);
+        GetNode<Button>(_buxoroPath).Pressed += () => GetTree().ChangeSceneToFile(Menyu.Sahna);
 
-        // Direct entry for testers and shortcuts: ChronoShift.exe -- --buxoro
-        if (System.Array.IndexOf(OS.GetCmdlineUserArgs(), "--buxoro") >= 0)
+        // The chapter's background video behind the series sheet, as on Buxoro 1238's
+        // series page (styles.css:584-587: opacity .95, no filter; the sheet turns translucent).
+        if (MenyuFon.Qosh(this, 0, seriya: true) != null)
         {
+            MenyuFon.VaraqniOch(GetNode<CanvasItem>("Sheet"));
+        }
+
+        // Direct entry for testers and shortcuts: ChronoShift.exe -- --buxoro (the episode)
+        // or -- --buxoro-menyu (the chapter's menu). Consumed once, so the episode's
+        // "SERIYA MENYUSI" lands here instead of looping back into the game.
+        string[] args = OS.GetCmdlineUserArgs();
+        if (!_argBajarildi && System.Array.IndexOf(args, "--buxoro") >= 0)
+        {
+            _argBajarildi = true;
             GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, BuxoroScene);
+        }
+        else if (!_argBajarildi && System.Array.IndexOf(args, "--buxoro-menyu") >= 0)
+        {
+            _argBajarildi = true;
+            GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, Menyu.Sahna);
         }
 
         SetUpLoadButton();

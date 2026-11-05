@@ -92,7 +92,7 @@ public partial class BuxoroBalance : Resource
     /// screen and the store page claim. This is the hardest decision in the game,
     /// so the real number matters.
     /// </summary>
-    [Export] public float YollashVaqti = 11.0f;
+    [Export] public float YollashVaqti = 4.0f; // 2026-10-19: 11 s -> 4 s (balance.js:44, user request)
 
     [Export] public float QochishRadiusi = 4.0f;
     [Export] public float QochishDavomiyligi = 5.0f;

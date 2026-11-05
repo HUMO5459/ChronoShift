@@ -64,7 +64,7 @@ public static class Anim
             return null;
         }
 
-        var ap = mesh.FindChildren("*", nameof(AnimationPlayer), true, false).OfType<AnimationPlayer>().FirstOrDefault();
+        var ap = BuxoroModels.Avlodlar<AnimationPlayer>(mesh).OfType<AnimationPlayer>().FirstOrDefault();
         if (ap == null || ap.GetAnimationList().Length == 0)
         {
             return null;

@@ -18,6 +18,7 @@ public sealed class Dushman
     public double HujumTaymer, OlimTaymer;
     public double Faza = GD.Randf() * 6;
     public bool OlimKlipi;
+    public bool Chavandoz; // a GLB rider seated on the horse (web 2026-10-19)
     public readonly ProtseduralHolat Yurish = new();
     public double X, Y, Z, Yaw;
 }
@@ -157,6 +158,7 @@ public static class Combat
         Node3D? mesh;
         Gumanoid? proc = null;
         Node3D? otMesh = null;
+        bool chavandoz = false;
 
         if (tur == "piyoda")
         {
@@ -184,20 +186,46 @@ public static class Combat
         else if (tur == "otliq")
         {
             mesh = KlonMat(BuxoroModels.Ol("mogul_otliq"));
+
             if (mesh == null)
             {
-                proc = Actors.MogulPiyoda();
-                mesh = proc.Root;
+                /* The rider — the Mongol infantry model seated on the horse (web
+                   2026-10-19: "riders on the horses too"); the box figure only
+                   when that model is missing. */
+                mesh = KlonMat(BuxoroModels.Ol("mogul_piyoda"));
+                if (mesh != null)
+                {
+                    chavandoz = true;
+                }
+                else
+                {
+                    proc = Actors.MogulPiyoda();
+                    mesh = proc.Root;
+                    proc.ChapOyoq.Rotation = new Vector3(-1.1f, 0, 0);
+                    proc.OngOyoq.Rotation = new Vector3(-1.1f, 0, 0);
+                }
+
                 otMesh = BuxoroModels.Ol("ot") ?? Actors.Ot(0x7d6a4c);
                 scene.AddChild(otMesh);
-                proc.ChapOyoq.Rotation = new Vector3(-1.1f, 0, 0);
-                proc.OngOyoq.Rotation = new Vector3(-1.1f, 0, 0);
             }
 
             scene.AddChild(mesh);
+            if (chavandoz)
+            {
+                Node3D nayza = Qurollar.Nayza();
+                if (!BuxoroModels.SuyakkaUla(BuxoroModels.Qol(mesh, 'R'), nayza, new Vector3(0, 0.30f, 0.02f), new Vector3(Mathf.Pi / 2, 0, 0)))
+                {
+                    nayza.Rotation = new Vector3(0.25f, 0, 0);
+                    BuxoroModels.QolTayanch(mesh, 'R').AddChild(nayza);
+                }
+            }
 
-            // red banner (§5)
-            mesh.AddChild(Actors.Quti(0.02f, 0.42f, 0.42f, Actors.Unlit(0xa8342a), 0, 2.05f, -0.5f));
+            // red banner (§5) — ~3.5 m above the ground; a GLB root is scaled, so cancel it
+            float s = mesh.Scale.Y == 0 ? 1 : mesh.Scale.Y;
+            float bayroqY = chavandoz ? (float)(2.05 + 1.42 - BuxoroModels.EgarY) : 2.05f;
+            MeshInstance3D bayroq = Actors.Quti(0.02f, 0.42f, 0.42f, Actors.Unlit(0xa8342a), 0, bayroqY / s, -0.5f / s);
+            bayroq.Scale = Vector3.One / s;
+            mesh.AddChild(bayroq);
         }
         else
         {
@@ -229,16 +257,18 @@ public static class Combat
         double syer = World.YerBalandligi(sx, z);
         var d = new Dushman
         {
-            Tur = tur, Spec = spec, Mesh = mesh, Proc = proc, OtMesh = otMesh, Hp = spec.Hp,
-            X = sx, Y = syer + (tur == "otliq" && otMesh != null ? 1.42 : 0), Z = z,
+            Tur = tur, Spec = spec, Mesh = mesh, Proc = proc, OtMesh = otMesh, Hp = spec.Hp, Chavandoz = chavandoz,
+            X = sx, Y = syer + (tur == "otliq" && otMesh != null ? (chavandoz ? BuxoroModels.EgarY : 1.42) : 0), Z = z,
         };
         mesh.Position = new Vector3((float)d.X, (float)d.Y, (float)d.Z);
         if (otMesh != null)
         {
-            otMesh.Position = new Vector3((float)sx, (float)syer, (float)z);
+            // the horse a little ahead (saddle under the rider), head toward the march
+            otMesh.Position = new Vector3((float)sx, (float)syer, (float)(z + (chavandoz ? BuxoroModels.EgarOrqa : 0)));
+            otMesh.Rotation = new Vector3(0, (float)BuxoroModels.OtBurilish(), 0);
         }
 
-        d.Anim = Anim.Ulash(mesh, tur == "piyoda" ? "mogul_piyoda" : tur == "otliq" ? "mogul_otliq" : "noyon");
+        d.Anim = Anim.Ulash(mesh, tur == "piyoda" ? "mogul_piyoda" : tur == "otliq" ? (chavandoz ? "mogul_piyoda" : "mogul_otliq") : "noyon");
         return d;
     }
 
@@ -250,7 +280,7 @@ public static class Combat
             return null;
         }
 
-        foreach (Node n in mesh.FindChildren("*", nameof(MeshInstance3D), true, false))
+        foreach (Node n in BuxoroModels.Avlodlar<MeshInstance3D>(mesh))
         {
             if (n is MeshInstance3D mi && mi.Mesh != null)
             {
@@ -539,9 +569,10 @@ public static class Combat
             if (d.OtMesh != null)
             {
                 double yer = World.YerBalandligi(d.X, d.Z);
-                d.OtMesh.Position = new Vector3((float)d.X, (float)yer, (float)d.Z);
-                d.OtMesh.Rotation = new Vector3(0, (float)d.Yaw, 0);
-                d.Y = yer + 1.42;
+                double old = d.Chavandoz ? BuxoroModels.EgarOrqa : 0;
+                d.OtMesh.Position = new Vector3((float)(d.X + (Math.Sin(d.Yaw) * old)), (float)yer, (float)(d.Z + (Math.Cos(d.Yaw) * old)));
+                d.OtMesh.Rotation = new Vector3(0, (float)(d.Yaw + BuxoroModels.OtBurilish()), 0);
+                d.Y = yer + (d.Chavandoz ? BuxoroModels.EgarY : 1.42);
             }
 
             SyncD(d);
@@ -718,7 +749,21 @@ public static class Combat
             Anim.ProtseduralYurish(d.Yurish, d.Mesh, harakatda, dt, d.Tur == "noyon" ? "ogir" : "yurish", World.YerBalandligi(d.X, d.Z));
         }
 
-        if (d.Anim != null)
+        if (d.Anim != null && d.Chavandoz)
+        {
+            // A rider: the run clip would kick the legs — a slow walk_menace (arms and
+            // torso sway), legs bent by Otir (web 2026-10-19).
+            if (!Anim.Oynat(d.Anim, "horse_ride"))
+            {
+                Anim.Oynat(d.Anim, "walk_menace", new AnimOpt { Tezlik = 0.45 });
+            }
+
+            if (d.Anim.Joriy != null)
+            {
+                BuxoroModels.Otir(d.Mesh);
+            }
+        }
+        else if (d.Anim != null)
         {
             if (harakatda)
             {

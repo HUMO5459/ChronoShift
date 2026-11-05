@@ -21,7 +21,8 @@ public partial class BuxoroWorld : Resource
     [Export] public float YerX = 120f;
     [Export] public Vector2 YerOlcham = new(680f, 520f);
     [Export] public Vector2I YerBolak = new(110, 80);
-    [Export] public Color YerRangi = new(0x685a3eff);
+    /// <summary>Green meadow (web 2026-10-19, world.js:80); was 0x685a3e dry earth.</summary>
+    [Export] public Color YerRangi = new(0x4f6a2cff);
 
     // ---- Light, fog, sky (world.js:46-62, main.js:17-19) ----
     [Export] public Color OsmonRangi = new(0xc6bda6ff);

@@ -13,8 +13,145 @@
 
 ## Joriy holat
 
-- **Faza:** **BUXORO 1238 = CHRONOSHIFT 1-BO'LIMI — port 1–3-qadamlari bajarildi va Godot ichida tekshirildi; keyingisi 4-qadam (Player.cs).** Yonma-yon: eski playtest feedback bloklari (A–E) hamon playtest kutmoqda.
-- **Oxirgi yangilanish:** 2026-10-19 (Sessiya 18 — Windows noutbukda davom ettirildi)
+- **Faza:** **BUXORO 1238 = CHRONOSHIFT 1-BO'LIMI — o'yin sikli to'liq ulangan va boshidan oxirigacha o'ynaladi; port kodi tugadi (18 qadam, sensorli boshqaruv va binolar.js zaxiralari bilan).** Yonma-yon: eski playtest feedback bloklari (A–E) hamon playtest kutmoqda.
+- **Oxirgi yangilanish:** 2026-11-04 (18-qadam + 5-qadam qoldig'i tayyor — commit kutilmoqda; yangi exe: `build/ChronoShift-windows-2026-11-04-2`)
+
+### ✅ 18-QADAM (touch.js) VA 5-QADAM QOLDIG'I (binolar.js) — 2026-11-04, HALI COMMIT QILINMAGAN
+
+**Sensorli boshqaruv.** `input/Touch.cs` — touch.js: chapda joystik (radius 52 CSS px, kuch > .75 = yugurish), o'ngda surib qarash,
+qisqa tegish (< 280 ms, < 14 px) = belgilash (30 m gacha; klaviaturada 3 m), 5 ta tugma faqat kerak bo'lganda.
+`BuxoroInput` yozadigan maydonlarning o'zini yozadi, o'yin kodi qurilmani bilmaydi. `Oqi()` har kadrda `Tugmalar`/`Bloklaymi` ni qayta o'qigani uchun
+ushlab turilgan tugmalar `BuxoroInput.SensorE/SensorF/SensorBlok` orqali o'sha pollga qo'shiladi. Holat — `O.SensorHolat` (game.js:330, `Game.OzaroTasir`).
+- **Tap nuri:** three.js Raycaster kabi faqat berilgan obyektlarning uchburchaklari (yer va binolar to'smaydi); skinned mesh joriy pozada
+  (`BakeMeshFromCurrentSkeletonPose`; headless'da RS skeleti yo'q, u yerda dam olish pozasi).
+- **CSS px:** `Touch.Px` = devicePixelRatio (`ScreenGetScale`) / oyna→kanvas cho'zilishi. Telefon uchun `@media` o'lchamlari `Touch.TorEkran`.
+- **Aniqlash:** `Touch.Bormi()` = `IsTouchscreenAvailable` (Android/iOS) yoki birinchi haqiqiy tegish: Godot Windows sensorli ekranini oldindan bilmaydi,
+  shuning uchun `BuxoroRuntime._Input` kuzatadi va qatlam shu zahoti quriladi.
+- **CSS / HTML:** `body.sensorli` qoidalari — `BuxoroHud.Joylash` (#toastlar, #korsatma, #ushla, #gap, #chizmalar, #jon), `Chizma` (#chizmaKorik 38 % / 6 %), kamera maslahati yo'q.
+  `BoshqaruvJadvali`: #yordamSensor (4 qator), sahifa ochilganda qurilmaga qarab tanlanadi.
+- **Qo'shildi: `#pauzaTugma` (❚❚)** — sensorli qurilmada Esc yo'q; web uni har qurilmada ko'rsatadi (`body.oyinda`), shuning uchun desktop'da ham chiqadi.
+- **Rad etildi (rejadan):** `Sensor.tscn` + TouchScreenButton — ular tegishni _input'da o'qib, quvurda qoldiradi, bitta barmoq joystikni ham boshlardi. Web'dagi `stopPropagation` = MouseFilter.Stop.
+- **Sinash:** sensorli ekransiz: `-- --buxoro --sensorli` (sichqoncha = bitta barmoq).
+
+**Binolar.** `world/Binolar.cs` — qolgan oltita generator (`Uy`, `UyVayrona`, `BozorRastasi`, `QalaDarvoza`, `ShaharDevori`, `ArkQalasi`), `KesikSilindr`/`KesikShar` (three.js'ning kesik geometriyasi),
+`World.cs` ga ulandi. GLB yo'q bo'lsa halqa o'lchamlari web kabi namunadan o'lchanadi (GLB bilan hamon muzlatilgan qiymatlar). 18 GLB bilan 8317 oqimi o'zgarmadi: dunyo 1080/1259/1267/1474/1554, binolar 504.
+- **Yangi vositalar:** `tools/parity/binolar_web.js` — haqiqiy web manbalarni (three.js bilan) Node'da ishga tushiradi; `binolar_web.csv` — natija. `-- --glbsiz a,b|hammasi` — bu GLB'lar yo'qdek.
+  Solishtirish 319 qator, 0 farq, max 2.4e-6: har generator meshi (AABB, rang, roughness), iz, oqim holati; GLB'siz butun dunyo (nazorat nuqtalari 1404/1527/1535/1697/1777, binolar 1019, 93 to'siq).
+
+**Yo'lda topilgan xatolar (tuzatildi):**
+- **Pauza kartasi umuman ko'rinmasdi** — `PauzaQur` qatlamni sahnaga qo'shmagan edi (`AddChild` yo'q): Esc o'yinni to'xtatardi, menyu chiqmasdi. Foydalanuvchi sinayotgan exe'da ham shu xato bor.
+- **Tarobiy gapi kichik chiqardi** — matn butunlay `[i]`, `italics_font_size` berilmagani uchun 16 px edi (CSS: 2.3vmin ≈ 25 px). Endi desktop'da ham spec bo'yicha kattaroq.
+- **`QiyaBlok` normallari** area-og'irlikli emas edi (Godot `GenerateNormals`) — endi three.js `computeVertexNormals` bilan raqamma-raqam bir xil; paxsa devor yorug'ligi sal o'zgaradi.
+- **Bir tegish ikki videoni o'tkazardi** — `Videolar._Input` tegishni ham, undan yasalgan sichqonchani ham sanardi.
+- **`KadrYashir`** so'nish paytida tegishlarni yutardi (`.yoq` = pointer-events: none).
+
+**Web'ning o'zidagi g'alatiliklar — 1:1 saqlandi:** `qiyaBlok` indekslari teskari (blok ichidan ko'rinadi, faqat GLB'siz seziladi); protsedural shahar devori uzun o'qi Z bo'ylab, urinma esa X — GLB'siz halqa ko'ndalang turadi;
+joystik halqasi katta ekranda barmoqdan siljigan (o'lcham px bilan chegaralangan, margin vmin).
+
+**Testlar (hammasi exit 0, `dotnet build` 0 ogohlantirish):** `--test-harakat`, `--test-oyin`, `--test-video`, `--test-qayta`, `--solver-compare` (72 561 nuqta, max 3.3e-8);
+**yangi:** `--test-sensor` (real kirish quvuri orqali, headless ham, render ham), `--glbsiz hammasi --binolar-compare tools/parity/binolar_web.csv`; `--test-oyin` GLB'siz ham o'tdi.
+Barqarorlik (chiqishdagi qulash uchun): `--test-sensor` 12/12, `--test-harakat` 30/30, `--test-oyin` 10/10 exit 0, Application log'da Id 1026 hodisasi 0 ta.
+Render ko'zdan kechirildi (1280x720 va 800x360): tugmalar, joystik, HUD siljishlari, pauza kartasi + sensor jadvali.
+
+**Qolgan / tekshirilmagan:**
+- Haqiqiy barmoq bilan sinalmagan (sensorli qurilma yo'q): kirish hodisalari sintetik, lekin Godot'ning to'liq quvuridan o'tadi. Android preset yo'q (`export_presets.cfg`: macOS, Windows).
+- ⚠ **Sensorli qurilmada qilich tanlovi javobsiz** (1 / 2 tugmasi yo'q; web'da ham shunday) — 1:1 qoldirildi, foydalanuvchi qarori kerak.
+- `World.BozorYarat`: `hunarmand` zaxirasi (world.js:324-331 gumanoid) hali bo'sh Node3D — binolar.js emas, GLB bor, qoldirildi.
+- Rejadagi `docs/BUXORO_PARITY.md` + `BUXORO_REFUSALS.md` va ikki build'ni yonma-yon o'ynash yozilmagan (bu vazifaga kirmagan).
+- `Anim.cs:74` da `Setting autoplay after the node has been added` ogohlantirishlari ilgaridan bor, tegilmadi.
+- **Kichik farq (ko'rinmaydi):** `Kechik` taymeri birinchi kadrning delta'sini ham sanaydi, shuning uchun menyu orqali kirilganda ochilish kadrining 2 s taymeri yuklanish vaqtida tugaydi. Kadr videolar ostida qoladi, o'yinchi sezmaydi; tuzatilmadi.
+- **Build:** `build/ChronoShift-windows-2026-11-04-2/` (`OQING.txt` bilan; eski build tegilmadi). Exe ichida headless sinaldi, menyu orqali: `--test-video`, `--test-qayta`, `--buxoro-menyu --menyu-boshla parda2` PASS; `--test-sensor` 56 tekshiruvdan 55 tasi, qolgan bittasi test xatosi (kadr taymeri, yuqorida) — keyin faqat test kodi tuzatildi, shuning uchun exe'dagi nusxada hamon FAIL chiqaradi, manbada PASS. O'yin kodi exe bilan bir xil.
+- **Exe oynada (real renderer) ham sinaldi:** `--test-video` 10/10 (38 s, muddatidan oldin yopilmadi), `--buxoro-menyu --menyu-boshla parda2` 0 ERROR, `--test-sensor` 56/56 (`--fixed-fps 15`); pauza kartasi yozib olingan kadrda ko'rildi (❚❚ orqali; Esc o'sha `PauzaOch` ni chaqiradi, lekin exe'da haqiqiy tugma bilan bosilmadi).
+- **Headless'dagi soxta xato:** menyu yo'lida ba'zan `servers/rendering/dummy/...` `^ERROR` lari chiqadi (bir ishga tushirishda 15 ta, boshqasida 0): `BuxoroModels` fon ipida GLB yuklayotganda dummy renderer'ning RID omborlari to'qnashadi. Real renderer'da 0 ta, o'yinga ta'sir qilmaydi.
+- ⏭ **KEYINGI:** foydalanuvchi yangi exe'ni sinaydi; commit haqida qaror.
+
+### 🔀 PORT ASOSIY LOYIHAGA BIRLASHTIRILDI (2026-11-04) — HALI COMMIT QILINMAGAN
+
+- **Loyihalar ko'chdi:** `D:\MAC-PROJECTS\PROJECTS\*` → `D:\PROJECTS\*`. Asosiy joy endi `D:\PROJECTS\ChronoShift` (`main`).
+  Eski worktree `.claude\worktrees\torobiy-chronoshift-integration-1d04df` papka bo'lib keldi, lekin `.git` ko'rsatkichi
+  eski yo'lda (git: "prunable"; o'qish: `git --git-dir=.git/worktrees/<nom> --work-tree=<papka>`). Endi faqat zaxira, o'chirilmadi.
+- **Birlashtirish:** `main` foydalanuvchining `fix` commit'iga (dcc25e7) fast-forward qilindi (push qilinmagan), worktree'dagi commit
+  qilinmagan ish (64 yo'l, har biri `cmp` bilan bir xil) main ishchi nusxasiga ko'chirildi. Keyingi tuzatishlar bilan jami 67 yo'l —
+  **hammasi commit kutmoqda** (foydalanuvchi qoidasi). ⚠ 37 MB .ogv git'ga to'g'ridan-to'g'ri tushadi (LFS yo'q).
+- **Chiqishdagi qulash (exit 139, PASS dan keyin) — BIR EMAS, IKKI ALOHIDA SABAB edi:**
+  1. *Audio ipi (9 %):* `--test-oyin` 3/33 marta yiqildi, boshqariladigan stek yo'q. Windows Application log (Id 1026) doim bir xil manzil
+     beradi; manzil − modul bazasi = RVA 0x327E30B, atrofidagi satrlar `audio_stream_generator.cpp`, kod `generator->mix_rate_mode`.
+     `AudioStreamGeneratorPlayback` generatoriga XOM ko'rsatkich saqlaydi, mikser to'xtatilgan playback'ni yana bir marta miks qiladi —
+     player bilan birga bo'shatilgan generator = use-after-free (sahna almashganda ham xuddi shu xavf). Tuzatish: `BuxoroAudio._generator` —
+     jarayon bo'yi yagona, hech qachon bo'shatilmaydi (`Reference()`). Natija: 60/60 toza.
+  2. *Finalizer (≈4 %):* `Array.Finalize → godotsharp_array_destroy`, `--test-harakat` flush'siz 1/26 marta. `GameDirector._ExitTree` dagi
+     flush olib tashlandi (u sahna almashganda ham ishlardi va faqat oynani toraytirardi). Tuzatish: `BuxoroRuntime._ExitTree` (autoload — faqat
+     dastur yopilganda): `GC.Collect + WaitForPendingFinalizers`, keyin `GC.TryStartNoGCRegion` — yangi GC yo'q, tirik qolganini DisposablesTracker yopadi.
+  - **Yakuniy o'lchov (ikkala tuzatish bilan): `--test-harakat` 100/100, `--test-oyin` 30/30, Id 1026 hodisasi 0 ta.**
+    Eslatma: `--verbose` poyga (race)ni yashiradi — tuzatishsiz ham 40/40 toza edi.
+- **Yangi test `--test-qayta`:** 5 marta qayta yuklash (QAYTA BOSHLASH yo'li), har birida ovoz mikserdan o'tayotgani tekshiriladi
+  (ring buffer 8191 dan ko'p namuna: 12287), keyin MainMenu va chiqish.
+- **Testlar main'dan (hammasi exit 0):** `--test-harakat`, `--test-oyin`, `--test-video`, `--test-qayta`,
+  `--solver-compare` (72 561 nuqta, max 3.3e-8).
+- **Eksport shishishi tuzatildi:** main'da git-ignored `assets/3DModels/` (1.2 GB xom modellar, worktree'da yo'q edi) import qilinib .pck ga
+  kirdi — 1.37 GB. `export_presets.cfg` `exclude_filter` ga `assets/3DModels/*` qo'shildi → **334 MB**. Hech bir sahna u papkaga tayanmaydi.
+  Import u yerda 51 ta `.import` va `.godot/imported` da ~1 GB kesh qoldirdi (git-ignored).
+- **Build:** `build/ChronoShift-windows-2026-11-04/` (502 MB, `OQING.txt`). Exe ichida sinaldi: `-- --buxoro-menyu --menyu-boshla parda2` →
+  `missiya parda2: soat 480 s, shogird 4`, exit 0; bosh menyu videoli, Buxoro menyusi xira video bilan render'da ko'rindi.
+  Menyu bosishlari real GUI yo'li (`Viewport.PushInput`) orqali vaqtinchalik test bilan tekshirildi (kod qaytarildi): 1-BO'LIM → ← SERIYA → 1-BO'LIM →
+  MISSIYALAR → Esc → BOSHQARUV → ← ORQAGA → MISSIYALAR → PARDA II kartasi → `missiya parda2`. Ovozni quloq bilan va to'liq o'yinni odam hali sinamagan.
+- ⏭ **KEYINGI (o'sha paytda):** foydalanuvchi exe'ni sinaydi va commit haqida qaror qiladi; touch.js va binolar.js keyin bajarildi (yuqoriga qarang).
+  Web o'yinni `chronoshift.uz` ga chiqarish (itch.io qoidaga zid) — alohida vazifa, alohida sessiyada.
+
+### ✅ 1-BO'LIM O'YNALADI (2026-10-21) — Game.cs ulandi
+
+- `core/Game.cs` — game.js:1-674 to'liq: GAP matnlari (uz/en), `Yarat`, `Tarobiy`, `Yangila` (game.js tartibida:
+  soat → mag'lubiyat/g'alaba → Player → parda → to'lqin → Humo → shogirdlar → jang → zarba → o'zaro ta'sir → HUD →
+  Tarobiy → tuman), `OzaroTasir` (otga minish, yollash, belgilash, devor, ustaxona, qilich tanlovi, 1/2/3),
+  `NimaYasaladi/Yasa/QilichBer`, `VaqtQosh`, pardalar 1–3, `OtYarat/OtgaMindir`, `Hodisa`, `Yakunla/YakunYangila/
+  KadrKorsat`. `setTimeout` → `GetTree().CreateTimer(s, processAlways, ignoreTimeScale)`.
+- `core/GameDirector.cs` endi main.js: missiyalar (`toliq/parda1/parda2/parda3`, `-- --missiya parda2`), ochilish
+  parvozi (6 s, Space o'tkazadi), Esc pauza kartasi (DAVOM ETTIRISH / QAYTA BOSHLASH / BOSHQARUV / SERIYA MENYUSI /
+  CHIQISH), fokus yo'qolsa ovoz o'chadi. Tekshiruvlar `GameDirector.Tekshiruv.cs` ga ajratildi.
+- `ui/BuxoroHud.cs` ga `Qizar` (zarba vinyeti) va `Kadr` (yakun kartasi + QAYTA O'YNASH) qo'shildi.
+- Chavandozlar: `mogul_piyoda` + nayza otda (`BuxoroModels.Otir/EgarY/EgarOrqa/OtBurilish`), qahramon 2-to'lqinda otga mingan.
+- `ui/Videolar.cs` — `Videolar` va `Chizma` hozircha STUB (video yo'q = web'dagi "fayl topilmadi" yo'li).
+- **Testlar (hammasi PASS):** `--test-harakat` (12.000 / 8.58 s / 1.041 m / 0.933 s); `--solver-compare` (72 561 nuqta,
+  max 3.3e-8); draw nazorat nuqtalari; **yangi `--test-oyin`** — butun o'yin 30 Hz da: 480 s 1-to'lqin + 2-parda,
+  330 s 2-to'lqin + otda (3 chavandoz), 240 s 3-parda, 150 s 3-to'lqin, yakun bor, ombor to'ldi.
+- **Build:** `ChronoShift/build/ChronoShift-windows-2026-10-21/` (465 MB, `OQING.txt` — yangi boshqaruv). Exe ichida
+  `-- --buxoro`: maydon PASS, ochilish parvozi va HUD render'da ko'rindi.
+- ✅ **13-qadam — chizma.js:** `ui/Chizma.cs` — kamon/qilich chizmasi ochilganda qurol chap burchakda aylanadi
+  (o'z World3D li shaffof SubViewport, HUD ostida; yozuvlar HUD ustida, styles.css:240-263 bo'yicha). Hemisphere
+  yorug'lik: ambient = o'rtacha + yuqoridan va pastdan (manfiy) yorug'lik — diffuzda aniq. Web bilan yonma-yon
+  render solishtirildi: poza, o'lcham, joy va rang mos. Sinash: `-- --chizma qilich` (kamon/kaltak/galvir_qalqon).
+- 🛠 **Chiqishdagi qulash (1-urinish, 2026-11-04 da almashtirildi — yuqoriga qarang):** `--test-harakat` 139 bilan chiqardi —
+  minglab `FindChildren` massivlari dvigatel o'chayotganda finalizatsiya qilinib, `godotsharp_array_destroy` da 0xC0000005.
+- ✅ **15-qadam — videolar.js:** `ui/Videolar.cs` (CanvasLayer 46) — 7 ta sabab, 11 ta video jadvali aynan; to'liq ekran
+  (contain, qora fon) + burchak rejimi, "n / jami" hisobi, O'TKAZIB YUBORISH tugmasi (SKIP — en), Space/Enter/bosish →
+  keyingi, Esc → hammasi; video paytida HUD 0.3 s da so'nadi (`BuxoroHud.VideoOchiq`), o'yin to'xtaydi, ochilish
+  parvozi video ostida davom etadi (main.js kabi); yakun kartasi video tugagach chiqadi. Fayl yo'q bo'lsa — keyingisi.
+  - Videolar: Torobiy `src/assets/video/*.mp4` (1280x720, 24 fps, 10 s, AAC) → `assets/video/buxoro/*.ogv`
+    (`tools/video-ogv.sh`, Theora q6 + Vorbis q4 — manba bilan ko'z bilan farq yo'q), jami **37 MB**, .pck 296 → 334 MB.
+    `kirish.ogv` (menyu foni, 16-qadam uchun) ham tayyor. ffmpeg 9.0.2 essentials (gyan.dev, SHA-256 mos):
+    `D:\Tools\ffmpeg-dl\x\ffmpeg-9.0.2-essentials_build\bin`.
+  - **Test `--test-video` — PASS** (real vaqtda, ~27 s: Theora audio soatiga ergashadi, `--fixed-fps` uni to'xtatib
+    qo'yadi): Space → 2/3, Space ochilishga yetmaydi, 2-video o'zi tugaydi → 3/3 → yopiladi, video paytida soat to'xtagan,
+    keyin yuradi; mag'lubiyatda (oldin `toshTugadi`) video → Esc → yakun kartasi, pauza ochilmaydi.
+  - ⚠ Commit oldidan qaror: 37 MB .ogv ChronoShift git'iga to'g'ridan-to'g'ri tushadi (LFS yo'q; Torobiy'da videolar gitignore'da).
+- ✅ **16-qadam — menyu.js + menyu videosi:** `scenes/buxoro/BuxoroMenyu.tscn` + `ui/Menyu.cs` — Buxoro'ning o'z menyusi
+  (BOSHLASH / MISSIYALAR / BOSHQARUV, "← SERIYA"), 4 ta missiya kartasi (uz/en matn, maqsadlar ro'yxati oltin "·" bilan),
+  boshqaruv jadvali (`ui/BoshqaruvJadvali.cs` — pauzadagi jadval ham shu, web'dagi kabi bitta manba). Fon: `kirish.ogv`
+  (`ui/MenyuFon.cs`): opacity .42, blur(3px), saturate(.75), scale 1.06 + `#menyuQoplama` gradienti (shader).
+  - **Qaror (seriya darajasi):** web'dagi tashqi "CHRONOSHIFT — SERIYA KATALOGI" varag'i = ChronoShift'ning o'z `MainMenu`'si
+    (u allaqachon o'sha ko'k chizma varag'i). "1-BO'LIM — BUXORO 1238" tugmasi endi Buxoro menyusini ochadi; "← SERIYA" va
+    Esc → MainMenu. MainMenu orqasiga ham `kirish.ogv` qo'yildi — web'dagi seriya varag'i kabi (opacity .95, filtrsiz),
+    varaq gradienti shaffof (`.chizmaTur`: chapda quyuq, o'ngda ochiq).
+  - "YUKLANMOQDA…" → web modellarni yuklaganda; bu yerda menyu ochilganda 35 ta kutilgan modelning 18 ta GLB'si
+    fon ipida oldindan yuklanadi (`BuxoroModels.YuklashniBoshla/Yuklanish/Hisobot`), so'ng "BOSHLASH" va
+    "18 model · qolgan 17 tasi protsedural" (web bilan aynan).
+  - Boshlanganda menyu 0.8 s da so'nadi (`GameDirector.MenyudanKirdi`). parda2 tanlansa darhol 4-video (Parda I tugadi)
+    chiqadi — web'da ham shunday (soat 8:00 dan boshlanadi).
+  - Sinash: `-- --buxoro-menyu [--sahifa missiya|boshqaruv] [--menyu-boshla parda2]`. `--buxoro` endi bir marta ishlaydi
+    (avval pauzadagi "SERIYA MENYUSI" MainMenu orqali yana o'yinga qaytarardi).
+- 🛠 **Chiqishdagi qulash (2-urinish):** `--test-oyin` ham ba'zan 139 bilan chiqdi. Buxoro kodidagi barcha `FindChildren`/
+  `GetChildren` (Godot massivi) → C# ro'yxat (`BuxoroModels.Avlodlar/Bolalar`), kamera nurining lug'ati `using` bilan.
+  Bu axlatni kamaytirdi, lekin haqiqiy sabablar boshqa edi — eng yuqoridagi 2026-11-04 bo'limiga qarang.
 
 ### 🧭 FOYDALANUVCHI QARORI (2026-10-19) — loyiha ChronoShift bo'lib davom etadi
 
@@ -47,7 +184,7 @@ yangi manbaga ergashishi shart:
   Yasash allaqachon oraliqda: kamon/devor 3.0 s, qilich 4.0 s — o'zgarmadi. O'lchandi: 4.03 / 3.02 / 4.02 s.
   Godot: `balance_buxoro.tres` `YollashVaqti = 4.0`.
 
-### 🚧 TO'LIQ PORT DAVOM ETMOQDA (2026-10-19, sessiya 18 oxiri) — KEYINGI SESSIYA SHU YERDAN
+### 🚧 TO'LIQ PORT DAVOM ETMOQDA (2026-10-19, sessiya 18 oxiri) — 2026-10-21 da yuqoridagi bo'lim bilan yopildi
 
 Foydalanuvchi: "Torobiydan faqat model o'tkazilibti, o'yinni to'liq ko'chirish kerak". Bu sessiyada yozildi
 (`dotnet build` 0 xato, lekin 5–18-qadam kodlari HALI `Game.Yangila` ga ULANMAGAN):

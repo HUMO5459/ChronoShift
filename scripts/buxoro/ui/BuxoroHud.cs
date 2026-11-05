@@ -37,6 +37,7 @@ public partial class BuxoroHud : CanvasLayer
             ["kaltak"] = "KALTAK", ["kamon"] = "KAMON", ["qilich"] = "QILICH",
             ["jon"] = "JON", ["haliYoq"] = "hali yo‘q",
             ["kamonOzimga"] = "kamon sizda — 2 bilan tanlang",
+            ["otdasiz"] = "otliqlar keldi — siz ham otdasiz",
         },
         ["en"] = new()
         {
@@ -49,6 +50,7 @@ public partial class BuxoroHud : CanvasLayer
             ["kaltak"] = "CLUB", ["kamon"] = "BOW", ["qilich"] = "SWORD",
             ["jon"] = "HP", ["haliYoq"] = "not yet",
             ["kamonOzimga"] = "bow is yours — press 2",
+            ["otdasiz"] = "riders are coming — you are mounted too",
         },
     };
 
@@ -85,6 +87,9 @@ public partial class BuxoroHud : CanvasLayer
     private Label _maslahat = null!;
     private ColorRect _oqarish = null!;
     private Font _shrift = null!;
+    private TextureRect? _qizar;
+    private Tween? _qizarTween;
+    private CanvasLayer? _kadrQatlam;
 
     // ---- state ----
     private int _oxirgiSoat = -1;
@@ -208,7 +213,19 @@ public partial class BuxoroHud : CanvasLayer
         return l;
     }
 
-    private static void Shrift(Control c, float px) => c.AddThemeFontSizeOverride(c is RichTextLabel ? "normal_font_size" : "font_size", Math.Max(6, (int)Math.Round(px)));
+    private static void Shrift(Control c, float px)
+    {
+        int s = Math.Max(6, (int)Math.Round(px));
+        if (c is RichTextLabel)
+        {
+            c.AddThemeFontSizeOverride("normal_font_size", s);
+            c.AddThemeFontSizeOverride("italics_font_size", s); // #gap's text is all [i]
+        }
+        else
+        {
+            c.AddThemeFontSizeOverride("font_size", s);
+        }
+    }
 
     // ================= layout (styles.css) =================
 
@@ -216,6 +233,9 @@ public partial class BuxoroHud : CanvasLayer
     {
         float v = Vmin;
         Vector2 ekran = GetViewport().GetVisibleRect().Size;
+
+        // body.sensorli (styles.css:231-236): out of the touch buttons' way
+        bool sensorli = Touch.Bormi();
 
         // #soat — top 2.5vmin, centred, 6.4vmin
         Shrift(_soat, 6.4f * v);
@@ -237,36 +257,39 @@ public partial class BuxoroHud : CanvasLayer
         _chizmalar.AddThemeConstantOverride("separation", (int)(1.1f * v));
         _chizmalar.Size = _chizmalar.GetCombinedMinimumSize();
         _chizmalar.Position = new Vector2(2.5f * v, (ekran.Y - _chizmalar.Size.Y) / 2);
+        _chizmalar.PivotOffset = new Vector2(0, _chizmalar.Size.Y / 2); // sensorli: scale(.85) from left centre
+        _chizmalar.Scale = Vector2.One * (sensorli ? 0.85f : 1f);
 
-        // #toastlar — bottom 9vmin, centred
+        // #toastlar — bottom 9vmin (sensorli 26), centred
         _toastlar.AddThemeConstantOverride("separation", (int)(0.6f * v));
         _toastlar.Size = _toastlar.GetCombinedMinimumSize();
-        _toastlar.Position = new Vector2((ekran.X - _toastlar.Size.X) / 2, ekran.Y - (9 * v) - _toastlar.Size.Y);
+        _toastlar.Position = new Vector2((ekran.X - _toastlar.Size.X) / 2, ekran.Y - ((sensorli ? 26 : 9) * v) - _toastlar.Size.Y);
 
-        // #korsatma — bottom 15vmin, 2.5vmin
+        // #korsatma — bottom 15vmin (sensorli 32), 2.5vmin
         Shrift(_korsatma, 2.5f * v);
         _korsatma.Size = _korsatma.GetCombinedMinimumSize();
-        _korsatma.Position = new Vector2((ekran.X - _korsatma.Size.X) / 2, ekran.Y - (15 * v) - _korsatma.Size.Y);
+        _korsatma.Position = new Vector2((ekran.X - _korsatma.Size.X) / 2, ekran.Y - ((sensorli ? 32 : 15) * v) - _korsatma.Size.Y);
 
-        // #ushla — bottom 21vmin, 22vmin x 0.8vmin
+        // #ushla — bottom 21vmin (sensorli 38), 22vmin x 0.8vmin
         _ushla.Size = new Vector2(22 * v, 0.8f * v);
-        _ushla.Position = new Vector2((ekran.X - _ushla.Size.X) / 2, ekran.Y - (21 * v) - _ushla.Size.Y);
+        _ushla.Position = new Vector2((ekran.X - _ushla.Size.X) / 2, ekran.Y - ((sensorli ? 38 : 21) * v) - _ushla.Size.Y);
         _ushlaBar.Size = new Vector2(_ushlaBar.Size.X, _ushla.Size.Y);
 
-        // #jon — left 2.5vmin, bottom 2.5vmin
+        // #jon — left 2.5vmin, bottom 2.5vmin (sensorli: top 2.5vmin, clear of the joystick)
         Shrift(_jonYorliq, 1.8f * v);
         Shrift(_jonSon, 1.8f * v);
         _jon.AddThemeConstantOverride("separation", (int)v);
         _jonFon.CustomMinimumSize = new Vector2(22 * v, 1.1f * v);
         _jonSon.CustomMinimumSize = new Vector2(4 * v, 0);
         _jon.Size = _jon.GetCombinedMinimumSize();
-        _jon.Position = new Vector2(2.5f * v, ekran.Y - (2.5f * v) - _jon.Size.Y);
+        _jon.Position = new Vector2(2.5f * v, sensorli ? 2.5f * v : ekran.Y - (2.5f * v) - _jon.Size.Y);
         _jonBar.Size = new Vector2(_jonBar.Size.X, 1.1f * v);
 
-        // #gap — bottom 5vmin, max 62vmin, 2.3vmin italic
-        Shrift(_gap, 2.3f * v);
-        _gap.Size = new Vector2(62 * v, _gap.Size.Y);
-        _gap.Position = new Vector2((ekran.X - (62 * v)) / 2, ekran.Y - (5 * v) - _gap.GetContentHeight());
+        // #gap — bottom 5vmin, max 62vmin, 2.3vmin italic (sensorli 3vmin, 78vmin, 2.8vmin)
+        float gapEn = (sensorli ? 78 : 62) * v;
+        Shrift(_gap, (sensorli ? 2.8f : 2.3f) * v);
+        _gap.Size = new Vector2(gapEn, _gap.Size.Y);
+        _gap.Position = new Vector2((ekran.X - gapEn) / 2, ekran.Y - ((sensorli ? 3 : 5) * v) - _gap.GetContentHeight());
 
         // #til — top right 2.5vmin, 1.8vmin
         Shrift(_tilEl, 1.8f * v);
@@ -406,7 +429,7 @@ public partial class BuxoroHud : CanvasLayer
         }
 
         h._oxirgiResurslar = kalit;
-        foreach (Node c in h._resurslar.GetChildren())
+        foreach (Node c in BuxoroModels.Bolalar(h._resurslar))
         {
             c.QueueFree();
         }
@@ -464,7 +487,7 @@ public partial class BuxoroHud : CanvasLayer
     /// <summary>hud.js:104-108 + styles.css:68-86 — the blueprint strip.</summary>
     private void ChizmalarQayta()
     {
-        foreach (Node c in _chizmalar.GetChildren())
+        foreach (Node c in BuxoroModels.Bolalar(_chizmalar))
         {
             c.QueueFree();
         }
@@ -636,6 +659,160 @@ public partial class BuxoroHud : CanvasLayer
         }
     }
 
+    /// <summary>
+    /// game.js:577-586 — the damage vignette: an inset red glow (box-shadow inset
+    /// 18vmin rgba(160,30,20,.75)) shown at once, faded out over 0.45 s after 90 ms.
+    /// </summary>
+    public static void Qizar()
+    {
+        BuxoroHud? h = Instance;
+        if (h == null)
+        {
+            return;
+        }
+
+        if (h._qizar == null)
+        {
+            var g = new Gradient();
+            g.SetColor(0, new Color(160 / 255f, 30 / 255f, 20 / 255f, 0));
+            g.SetOffset(0, 0.62f);
+            g.SetColor(1, new Color(160 / 255f, 30 / 255f, 20 / 255f, 0.75f));
+            g.SetOffset(1, 1.0f);
+            h._qizar = new TextureRect
+            {
+                Texture = new GradientTexture2D
+                {
+                    Gradient = g, Fill = GradientTexture2D.FillEnum.Radial,
+                    FillFrom = new Vector2(0.5f, 0.5f), FillTo = new Vector2(1.08f, 0.5f), Width = 256, Height = 256,
+                },
+                ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize, StretchMode = TextureRect.StretchModeEnum.Scale,
+                MouseFilter = Control.MouseFilterEnum.Ignore, Modulate = new Color(1, 1, 1, 0),
+            };
+            h._qizar.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+            var qatlam = new CanvasLayer { Layer = 25 };
+            qatlam.AddChild(h._qizar);
+            h.AddChild(qatlam);
+        }
+
+        h._qizarTween?.Kill();
+        h._qizar.Modulate = new Color(1, 1, 1, 1);
+        h._qizarTween = h.CreateTween();
+        h._qizarTween.TweenInterval(0.09);
+        h._qizarTween.TweenProperty(h._qizar, "modulate:a", 0f, 0.45f);
+    }
+
+    /// <summary>
+    /// The #kadr frame (styles.css:159-177): a dark full-screen card for the
+    /// opening line and the ending stats, fading in and out over 1.2 s. With a
+    /// button label, a RESTART button reloads the episode.
+    /// </summary>
+    public static void Kadr(string? katta, string matn, string? stat = null, string? tugma = null)
+    {
+        BuxoroHud? h = Instance;
+        if (h == null)
+        {
+            return;
+        }
+
+        h._kadrQatlam?.QueueFree();
+        float v = h.Vmin;
+        h._kadrQatlam = new CanvasLayer { Layer = 40 };
+        var ildiz = new Control { Modulate = new Color(1, 1, 1, 0) };
+        ildiz.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        var fon = new ColorRect { Color = new Color("#0a0806") };
+        fon.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        ildiz.AddChild(fon);
+
+        var markaz = new CenterContainer();
+        markaz.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        var ust = new VBoxContainer { Alignment = BoxContainer.AlignmentMode.Center };
+        markaz.AddChild(ust);
+        ildiz.AddChild(markaz);
+
+        if (!string.IsNullOrEmpty(katta))
+        {
+            Label k = h.YangiLabel(Krem2, ust);
+            k.Text = katta;
+            k.HorizontalAlignment = HorizontalAlignment.Center;
+            Shrift(k, 5.5f * v);
+            ust.AddChild(new Control { CustomMinimumSize = new Vector2(0, 2 * v) });
+        }
+
+        var m = new RichTextLabel
+        {
+            BbcodeEnabled = true, FitContent = true, ScrollActive = false, CustomMinimumSize = new Vector2(70 * v, 0),
+            Text = "[center][i]" + Regex.Replace(matn, "<br\\s*/?>", "\n").Replace("<b>", "[b]").Replace("</b>", "[/b]") + "[/i][/center]",
+            Modulate = new Color(1, 1, 1, 0.92f), MouseFilter = Control.MouseFilterEnum.Ignore,
+        };
+        m.AddThemeFontOverride("normal_font", h._shrift);
+        m.AddThemeFontOverride("italics_font", new FontVariation { BaseFont = h._shrift, VariationTransform = new Transform2D(1, 0, 0.2f, 1, 0, 0) });
+        m.AddThemeFontSizeOverride("normal_font_size", (int)(2.8f * v));
+        m.AddThemeFontSizeOverride("italics_font_size", (int)(2.8f * v));
+        m.AddThemeConstantOverride("line_separation", (int)(2.5f * v));
+        m.AddThemeColorOverride("default_color", Krem2);
+        ust.AddChild(m);
+
+        if (!string.IsNullOrEmpty(stat))
+        {
+            ust.AddChild(new Control { CustomMinimumSize = new Vector2(0, 4 * v) });
+            Label st = h.YangiLabel(new Color(Krem2, 0.7f), ust);
+            st.Text = stat;
+            st.HorizontalAlignment = HorizontalAlignment.Center;
+            st.AddThemeConstantOverride("line_spacing", (int)(1.2f * v));
+            Shrift(st, 2.1f * v);
+        }
+
+        if (!string.IsNullOrEmpty(tugma))
+        {
+            ust.AddChild(new Control { CustomMinimumSize = new Vector2(0, 4 * v) });
+            var b = new Button { Text = tugma, SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter, FocusMode = Control.FocusModeEnum.None };
+            var sb = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0), BorderColor = new Color(Krem2, 0.5f), ContentMarginLeft = 4 * v, ContentMarginRight = 4 * v, ContentMarginTop = 1.4f * v, ContentMarginBottom = 1.4f * v };
+            sb.SetBorderWidthAll(Math.Max(1, (int)(0.22f * v)));
+            sb.SetCornerRadiusAll((int)(0.4f * v));
+            var sbH = (StyleBoxFlat)sb.Duplicate();
+            sbH.BgColor = new Color(Krem2, 0.12f);
+            sbH.BorderColor = Krem2;
+            b.AddThemeStyleboxOverride("normal", sb);
+            b.AddThemeStyleboxOverride("hover", sbH);
+            b.AddThemeStyleboxOverride("pressed", sbH);
+            b.AddThemeFontOverride("font", h._shrift);
+            b.AddThemeFontSizeOverride("font_size", (int)(2.3f * v));
+            b.AddThemeColorOverride("font_color", Krem2);
+            b.Pressed += () => h.GetTree().ReloadCurrentScene();
+            ust.AddChild(b);
+        }
+
+        h._kadrQatlam.AddChild(ildiz);
+        h.AddChild(h._kadrQatlam);
+        h.CreateTween().TweenProperty(ildiz, "modulate:a", 1f, 1.2f); // transition: opacity 1.2s
+    }
+
+    /// <summary>For --test-video: the ending card is on screen.</summary>
+    public static bool KadrOchiq => Instance?._kadrQatlam != null;
+
+    /// <summary>Fades the #kadr frame out (class 'yoq', 1.2 s).</summary>
+    public static void KadrYashir()
+    {
+        BuxoroHud? h = Instance;
+        if (h?._kadrQatlam == null || h._kadrQatlam.GetChildCount() == 0)
+        {
+            return;
+        }
+
+        CanvasLayer q = h._kadrQatlam;
+        h._kadrQatlam = null;
+
+        // #kadr.yoq has pointer-events: none from its first moment, fading or not
+        foreach (Control c in BuxoroModels.Avlodlar<Control>(q))
+        {
+            c.MouseFilter = Control.MouseFilterEnum.Ignore;
+        }
+
+        Tween tw = h.CreateTween();
+        tw.TweenProperty(q.GetChild(0), "modulate:a", 0f, 1.2f);
+        tw.TweenCallback(Callable.From(q.QueueFree));
+    }
+
     /// <summary>Hides every transient widget (game.js:592 on an ending).</summary>
     public static void Yashir(bool yashir)
     {
@@ -644,6 +821,32 @@ public partial class BuxoroHud : CanvasLayer
             Instance._ildiz.Visible = !yashir;
         }
     }
+
+    /// <summary>
+    /// body.videoOchiq (styles.css:445): the HUD fades out over .3 s while a video
+    /// plays; the transition lives only on that rule, so it comes back at once.
+    /// </summary>
+    public static void VideoOchiq(bool ochiq)
+    {
+        BuxoroHud? h = Instance;
+        if (h == null)
+        {
+            return;
+        }
+
+        h._videoTween?.Kill();
+        if (ochiq)
+        {
+            h._videoTween = h.CreateTween();
+            h._videoTween.TweenProperty(h._ildiz, "modulate:a", 0f, 0.3f);
+        }
+        else
+        {
+            h._ildiz.Modulate = Colors.White;
+        }
+    }
+
+    private Tween? _videoTween;
 
     // ================= drawn widgets =================
 

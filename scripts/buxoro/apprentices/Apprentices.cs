@@ -172,7 +172,7 @@ public static class Apprentices
             // Each apprentice a different dust tone, and the ikat robe desaturated
             // (art doc §0 bans "saturated candy colours"). Multiplies the texture.
             Color tus = Actors.Rang(Chang[i % 6]);
-            foreach (Node n in mesh.FindChildren("*", nameof(MeshInstance3D), true, false))
+            foreach (Node n in BuxoroModels.Avlodlar<MeshInstance3D>(mesh))
             {
                 if (n is not MeshInstance3D mi || mi.Mesh == null)
                 {

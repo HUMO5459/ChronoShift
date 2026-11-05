@@ -22,10 +22,11 @@ public static class Otlar
     /// <summary>otlar.js:18-23. Dark on purpose: flat blades face up and take full light.</summary>
     private static readonly (string Nom, int Soni, double Min, double Max, uint Rang)[] Tur =
     {
-        ("ot_past", 800, 0.8, 1.5, 0x6b6a56),
-        ("ot_tutam", 600, 0.7, 1.4, 0x77704f),
-        ("butta", 120, 0.8, 1.3, 0x5f5e4c),
-        ("gul_sariq", 150, 0.9, 1.2, 0x8f7f3e),
+        // Green meadow (web 2026-10-19, otlar.js:19-22): thicker and greener
+        ("ot_past", 2600, 0.9, 1.7, 0x4a6626),
+        ("ot_tutam", 1600, 0.8, 1.6, 0x58732e),
+        ("butta", 160, 0.8, 1.3, 0x41562a),
+        ("gul_sariq", 320, 0.9, 1.2, 0x9a8a32),
     };
 
     /// <summary>otlar.js:62-63 — (height, blades) for the procedural fallback.</summary>
@@ -99,7 +100,7 @@ public static class Otlar
         Node3D? glb = BuxoroModels.Ol(nom);
         if (glb != null)
         {
-            foreach (Node n in glb.FindChildren("*", nameof(MeshInstance3D), true, false))
+            foreach (Node n in BuxoroModels.Avlodlar<MeshInstance3D>(glb))
             {
                 if (n is MeshInstance3D mi && mi.Mesh != null)
                 {

@@ -26,6 +26,16 @@ public partial class BuxoroAudio : Node
 
     private const int Rate = 44100;
 
+    /// <summary>
+    /// The one generator of the process, deliberately never freed. Godot's
+    /// AudioStreamGeneratorPlayback keeps a RAW pointer to its generator, and the mixer
+    /// thread mixes a stopped playback once more to fade it out — so a generator freed
+    /// with its player is a use-after-free on that thread, at exit and on a scene change.
+    /// Measured: 3 of 33 --test-oyin exits died with 0xC0000005 in
+    /// _get_stream_sampling_rate (audio_stream_generator.cpp), no managed frames.
+    /// </summary>
+    private static AudioStreamGenerator? _generator;
+
     private AudioStreamPlayer _player = null!;
     private AudioStreamGeneratorPlayback? _pb;
     private long _n; // samples written so far — ctx.currentTime * Rate
@@ -62,8 +72,13 @@ public partial class BuxoroAudio : Node
     public override void _Ready()
     {
         Instance = this;
-        var gen = new AudioStreamGenerator { MixRate = Rate, BufferLength = 0.12f };
-        _player = new AudioStreamPlayer { Stream = gen };
+        if (_generator == null)
+        {
+            _generator = new AudioStreamGenerator { MixRate = Rate, BufferLength = 0.12f };
+            _generator.Reference(); // a native reference of its own: survives the C# wrapper's dispose at shutdown
+        }
+
+        _player = new AudioStreamPlayer { Stream = _generator };
         AddChild(_player);
         _player.Play();
         _pb = (AudioStreamGeneratorPlayback)_player.GetStreamPlayback();
@@ -113,6 +128,9 @@ public partial class BuxoroAudio : Node
     public static bool Tayyor => Instance != null;
 
     public static bool MusiqaYoniqmi => Instance?._musiqaYoniq ?? false;
+
+    /// <summary>For --test-qayta: samples written so far by the current episode's audio.</summary>
+    public static long Yozilgan => Instance?._n ?? 0;
 
     // ================= effects =================
 

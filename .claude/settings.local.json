@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/humoyunochilov/PROJECTS/**)",
+      "Bash(dotnet --list-sdks)",
+      "Bash(dotnet build)"
+    ]
+  }
+}

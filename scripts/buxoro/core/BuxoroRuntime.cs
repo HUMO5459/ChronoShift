@@ -50,6 +50,12 @@ public partial class BuxoroRuntime : Node
     {
         Instance = this;
 
+        // DEBUG: -- --sensorli — plays the touch controls with the mouse as one finger
+        if (System.Array.IndexOf(OS.GetCmdlineUserArgs(), "--sensorli") >= 0)
+        {
+            Input.EmulateTouchFromMouse = true;
+        }
+
         Balance ??= ResourceLoader.Load<BuxoroBalance>(BalancePath);
         World ??= ResourceLoader.Load<BuxoroWorld>(WorldPath);
 
@@ -77,6 +83,40 @@ public partial class BuxoroRuntime : Node
                 $"{Balance.Tolqin.Count} waves, {Balance.JamiDushman} enemies to win, " +
                 $"clock {Balance.BoshlangichVaqt:F0}s.");
         }
+    }
+
+    /// <summary>A real finger anywhere, in any scene, makes this a touch device (see <see cref="Touch.Bormi"/>).</summary>
+    public override void _Input(InputEvent e)
+    {
+        if (e is InputEventScreenTouch && e.Device != InputEvent.DeviceIdEmulation)
+        {
+            Touch.Tegildi();
+        }
+    }
+
+    /// <summary>
+    /// The last moment the engine is whole at shutdown: an autoload leaves the tree only
+    /// when the app quits, after the current scene. A Godot collection is freed by the
+    /// .NET finalizer unless disposed, and one finalized while the native side tears down
+    /// crashes the exit (0xC0000005 in godotsharp_array_destroy — measured: 1 of 26
+    /// --test-harakat exits). So run the pending finalizers now and allow no further GC:
+    /// nothing new can reach the finalizer queue, and Godot's own DisposablesTracker
+    /// disposes everything still alive.
+    /// </summary>
+    public override void _ExitTree()
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        try
+        {
+            GC.TryStartNoGCRegion(64L * 1024 * 1024); // far more than shutdown allocates; past it GC simply resumes
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentOutOfRangeException)
+        {
+            GD.PushWarning("[buxoro] no-GC region at exit: " + ex.Message);
+        }
+
+        GC.WaitForPendingFinalizers(); // starting the region may itself have collected
     }
 
     /// <summary>A fresh world generator. Seeded 1238, exactly as world.js:10.</summary>

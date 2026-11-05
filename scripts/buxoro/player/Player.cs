@@ -435,7 +435,11 @@ public static class Player
             // The key decides the clip: Shift shows run, otherwise walk (anim.js).
             if (p.Otda)
             {
-                Anim.Oynat(p.Anim, "ride_run");
+                // no riding clip -> idle, and Otir bends the legs (web 2026-10-19)
+                if (!Anim.Oynat(p.Anim, "ride_run"))
+                {
+                    Anim.Oynat(p.Anim, "idle");
+                }
             }
             else
             {
@@ -466,7 +470,10 @@ public static class Player
         }
         else
         {
-            Anim.Oynat(p.Anim, p.Otda ? "ride_idle" : (p.Bloklaymi ? "block_idle" : "idle"));
+            if (!Anim.Oynat(p.Anim, p.Otda ? "ride_idle" : (p.Bloklaymi ? "block_idle" : "idle")) && p.Otda)
+            {
+                Anim.Oynat(p.Anim, "idle");
+            }
             if (p.Proc != null && !p.Otda)
             {
                 float k = Smoothing.LimbRelax(dt);
@@ -514,13 +521,20 @@ public static class Player
         double yer = World.YerBalandligi(p.X, p.Z);
         if (p.Otda && p.Ot != null)
         {
-            p.Ot.Position = new Vector3((float)p.X, (float)yer, (float)p.Z);
-            p.Ot.Rotation = new Vector3(p.Ot.Rotation.X, p.Mesh.Rotation.Y, p.Ot.Rotation.Z);
-            p.Y = yer + 1.42;
+            // the horse stands a little ahead of the rider, so the saddle is under him (web 2026-10-19)
+            double yaw0 = p.Mesh.Rotation.Y;
+            double old = p.Proc != null ? 0 : BuxoroModels.EgarOrqa;
+            p.Ot.Position = new Vector3((float)(p.X + (Math.Sin(yaw0) * old)), (float)yer, (float)(p.Z + (Math.Cos(yaw0) * old)));
+            p.Ot.Rotation = new Vector3(p.Ot.Rotation.X, (float)(yaw0 + BuxoroModels.OtBurilish()), p.Ot.Rotation.Z);
+            p.Y = yer + (p.Proc != null ? 1.42 : BuxoroModels.EgarY);
             if (p.Proc != null)
             {
                 p.Proc.ChapOyoq.Rotation = new Vector3(-1.1f, 0, 0);
                 p.Proc.OngOyoq.Rotation = new Vector3(-1.1f, 0, 0);
+            }
+            else if (p.Anim?.Joriy != null)
+            {
+                BuxoroModels.Otir(p.Mesh); // GLB: the seated pose
             }
         }
         else
@@ -615,6 +629,8 @@ public static class Player
     /// <summary>Collision layer the occlusion ray hits — poplar trunks only.</summary>
     private const uint OkklyuziyaQatlami = 1u << 19;
 
+    private static readonly Godot.Collections.Array<Rid> Istisno = new();
+
     private static readonly List<GeometryInstance3D> Shaffoflar = new();
 
     /// <summary>The camera offset table (player.js:432-434): back, up, FOV.</summary>
@@ -678,11 +694,14 @@ public static class Player
         }
 
         Vector3 oxir = camera.Position + (yon.Normalized() * (masofa - 1.2f)); // rc.far = masofa - 1.2
-        var istisno = new Godot.Collections.Array<Rid>();
+        // one reused array, and the per-ray objects disposed here rather than by the
+        // finalizer — see BuxoroModels.Avlodlar (per-frame Godot garbage otherwise)
+        Godot.Collections.Array<Rid> istisno = Istisno;
+        istisno.Clear();
         for (int i = 0; i < 6; i++) // intersectObjects(...).slice(0, 6)
         {
-            var q = PhysicsRayQueryParameters3D.Create(camera.Position, oxir, OkklyuziyaQatlami, istisno);
-            var h = fazo.IntersectRay(q);
+            using var q = PhysicsRayQueryParameters3D.Create(camera.Position, oxir, OkklyuziyaQatlami, istisno);
+            using Godot.Collections.Dictionary h = fazo.IntersectRay(q);
             if (h.Count == 0)
             {
                 break;
@@ -706,7 +725,7 @@ public static class Player
     {
         foreach (Node3D t in teraklar)
         {
-            foreach (Node n in t.FindChildren("*", nameof(MeshInstance3D), true, false))
+            foreach (Node n in BuxoroModels.Avlodlar<MeshInstance3D>(t))
             {
                 if (n is not MeshInstance3D mi || mi.Mesh == null)
                 {

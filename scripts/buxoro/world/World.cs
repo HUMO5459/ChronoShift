@@ -496,12 +496,11 @@ public sealed class World
         foreach ((string nom, double x, double z) in BuxoroWorldStream.Houses)
         {
             Node3D? m = BuxoroModels.Ol(nom);
+            List<Tosiq>? lokal = null;
             if (m == null)
             {
-                // binolar.js uy()/uyVayrona() — step 5. Every house GLB exists today,
-                // so this branch is unreachable; it consumes no world draws either way.
-                GD.PushWarning($"[buxoro] {nom}.glb missing — procedural house is step 5");
-                m = new Node3D { Name = nom };
+                // binolar.js — these draw from the 8317 stream only, never from this one.
+                m = nom == "uy_vayrona" ? _binolar.UyVayrona(out lokal) : _binolar.Uy(nom == "uy_katta" ? "katta" : "kichik", out lokal);
                 m.Position = new Vector3((float)x, 0, (float)z);
             }
             else
@@ -512,7 +511,7 @@ public sealed class World
             double yaw = Rnd() * Math.PI * 2;
             m.Rotation = new Vector3(m.Rotation.X, (float)yaw, m.Rotation.Z);
             ota.AddChild(m);
-            BinoTosiq(dunyo, m, x, z, yaw, null, _w.Iz(nom));
+            BinoTosiq(dunyo, m, x, z, yaw, lokal, _w.Iz(nom));
         }
     }
 
@@ -584,7 +583,7 @@ public sealed class World
             double az = (Math.Floor(i / 3.0) * 4.6) - 2.3;
 
             // stall
-            Node3D rasta = BuxoroModels.Ol("bozor_rastasi") ?? new Node3D { Name = "bozor_rastasi" }; // procedural is step 5
+            Node3D rasta = BuxoroModels.Ol("bozor_rastasi") ?? _binolar.BozorRastasi();
             rasta.Position = new Vector3((float)ax, 0, (float)az);
             rastaJoy.Add((ax, az));
             g.AddChild(rasta);
@@ -617,7 +616,7 @@ public sealed class World
 
     private static void OynatIdle(Node n, string klip)
     {
-        var ap = n.FindChildren("*", nameof(AnimationPlayer), true, false).OfType<AnimationPlayer>().FirstOrDefault();
+        var ap = BuxoroModels.Avlodlar<AnimationPlayer>(n).OfType<AnimationPlayer>().FirstOrDefault();
         if (ap != null && ap.HasAnimation(klip))
         {
             ap.Autoplay = klip;
@@ -636,10 +635,10 @@ public sealed class World
     {
         var g = new Node3D { Name = "darvoza_halqa" };
 
-        // The procedural fallbacks (binolar.js qalaDarvoza/shaharDevori) are step 5;
-        // both GLBs exist today.
-        Node3D DModel() => BuxoroModels.Ol("qala_darvoza") ?? new Node3D { Name = "qala_darvoza" };
-        Node3D SModel() => BuxoroModels.Ol("shahar_devori") ?? new Node3D { Name = "shahar_devori" };
+        // GLB, else binolar.js (neither generator draws).
+        List<Tosiq>? darvozaIz = null;
+        Node3D DModel() => BuxoroModels.Ol("qala_darvoza") ?? Binolar.QalaDarvoza(out darvozaIz);
+        Node3D SModel() => BuxoroModels.Ol("shahar_devori") ?? Binolar.ShaharDevori();
 
         OlchamTekshir("qala_darvoza", _w.DarvozaEni);
         OlchamTekshir("shahar_devori", _w.DevorSegUzunlik);
@@ -664,8 +663,27 @@ public sealed class World
 
         // --- Segments around the ring (frozen derivation, see BuxoroWorld) ---
         int soni = _w.DevorSoni;
-        double qadam = Math.PI * 2 / soni;
         double darvozaBurchagi = _w.DarvozaBurchagi;
+        double r1 = _w.ShaharDevoriR1, r2 = _w.ShaharDevoriR2;
+
+        // world.js:380-407, 494 measures a sample of each model. For the GLBs those results
+        // are frozen in BuxoroWorld; a procedural stand-in has no frozen value, so it is
+        // measured as the web does — the ring follows it, and the draw total with it.
+        if (!BuxoroModels.Bor("qala_darvoza"))
+        {
+            darvozaBurchagi = OrnakOlcham(Binolar.QalaDarvoza(out _)).X / R * 0.62;
+        }
+
+        if (!BuxoroModels.Bor("shahar_devori"))
+        {
+            Vector3 sO = OrnakOlcham(Binolar.ShaharDevori());
+            double burchakQadam = Math.Max(4, sO.X) / R;
+            soni = Math.Max(8, (int)Math.Floor((Math.PI * 2 / burchakQadam) + 0.5)); // JS Math.round
+            r1 = R - (sO.Z / 2);
+            r2 = R + (sO.Z / 2);
+        }
+
+        double qadam = Math.PI * 2 / soni;
 
         // 18 years ago the Mongols razed the city; parts of the wall are still down.
         var buzilgan = new HashSet<int>(_w.Buzilgan);
@@ -752,7 +770,7 @@ public sealed class World
 
         // Door leaves — they swing open on defeat.
         Node3D? chap = null, ong = null;
-        foreach (Node n in darvoza.FindChildren("*", "", true, false).Prepend(darvoza))
+        foreach (Node n in BuxoroModels.Avlodlar<Node>(darvoza).Prepend(darvoza))
         {
             string nom = n.Name.ToString().ToLowerInvariant();
             if (n is Node3D n3 && Regex.IsMatch(nom, "tavaqa_l|door_l|gate_l"))
@@ -772,10 +790,18 @@ public sealed class World
         // Obstacles (band 7): the gate footprint + the whole ring as one belt, so the
         // gaps between segments cannot be slipped through. The belt's radial
         // thickness is one segment's Z size.
-        BinoTosiq(dunyo, darvoza, markazX + (Math.Cos(Math.PI) * R), (Math.Sin(Math.PI) * R) + z, Urinma(Math.PI), null, _w.Iz("qala_darvoza"));
-        TosiqQosh(dunyo, Tosiq.Halqa(markazX, z, _w.ShaharDevoriR1, _w.ShaharDevoriR2));
+        BinoTosiq(dunyo, darvoza, markazX + (Math.Cos(Math.PI) * R), (Math.Sin(Math.PI) * R) + z, Urinma(Math.PI), darvozaIz, _w.Iz("qala_darvoza"));
+        TosiqQosh(dunyo, Tosiq.Halqa(markazX, z, r1, r2));
 
         return new Darvoza(g, chap ?? new Node3D(), ong ?? new Node3D(), x, z);
+    }
+
+    /// <summary><c>olcham(m)</c>, world.js:374-378 — a sample's size; the sample is freed.</summary>
+    private static Vector3 OrnakOlcham(Node3D ornak)
+    {
+        BuxoroModels.Olcham(ornak, Transform3D.Identity, out Aabb q);
+        ornak.Free();
+        return q.Size;
     }
 
     /// <summary>
@@ -811,7 +837,7 @@ public sealed class World
 
             // A HUMO_TAYANCH empty in the GLB if there is one, else above the bbox.
             Node3D? nomli = null;
-            foreach (Node n in glb.FindChildren("*", "", true, false))
+            foreach (Node n in BuxoroModels.Avlodlar<Node>(glb))
             {
                 if (n is Node3D n3 && Regex.IsMatch(n.Name.ToString(), "humo|dome|gumbaz", RegexOptions.IgnoreCase))
                 {
@@ -832,9 +858,14 @@ public sealed class World
             return tayanch;
         }
 
-        // binolar.js arkQalasi() — step 5. ark_qalasi.glb exists today.
-        GD.PushWarning("[buxoro] ark_qalasi.glb missing — procedural Ark is step 5");
-        tayanch.Position = new Vector3(_w.ArkJoyi.X, 52, _w.ArkJoyi.Z);
+        // binolar.js arkQalasi(): Humo sits on the GUMBAZ.
+        Node3D g = Binolar.ArkQalasi();
+        g.Position = _w.ArkJoyi;
+        ota.AddChild(g);
+        Node3D? gum = g.FindChild("GUMBAZ", true, false) as Node3D;
+        tayanch.Position = gum != null
+            ? YigmaJoy(gum, g) + new Vector3(0, 5.6f, 0)
+            : new Vector3(_w.ArkJoyi.X, 52, _w.ArkJoyi.Z);
         ota.AddChild(tayanch);
         return tayanch;
     }
